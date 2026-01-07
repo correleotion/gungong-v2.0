@@ -32,3 +32,6 @@ pythainlp==5.0.4
 beautifulsoup4==4.12.3
 # playwright>=1.40.0
 playwright-stealth>=1.0.6
+
+# Language detection (v2.0)
+langdetect==1.0.9

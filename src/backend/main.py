@@ -16,8 +16,11 @@ from datetime import datetime
 from .core.config import settings
 from .services.blacklist_service import get_blacklist_service
 
-# Import routers
+# Import routers (v1.0)
 from .routers import health, blacklist, history, fraud, webhook
+
+# Import v2.0 routers
+from .routers import conversation, fraud_v2, verification
 
 # Configure logging
 logging.basicConfig(
@@ -71,12 +74,17 @@ app.add_middleware(
     allow_headers=["Content-Type", "X-Line-Signature", "ngrok-skip-browser-warning"],
 )
 
-# Register routers
+# Register v1.0 routers
 app.include_router(health.router, tags=["health"])
 app.include_router(blacklist.router, tags=["blacklist"])
 app.include_router(history.router, tags=["history"])
 app.include_router(fraud.router, tags=["fraud"])
 app.include_router(webhook.router, tags=["webhook"])
+
+# Register v2.0 routers
+app.include_router(conversation.router, tags=["v2-conversation"])
+app.include_router(fraud_v2.router, tags=["v2-fraud"])
+app.include_router(verification.router, tags=["v2-verification"])
 
 # Mount static files (frontend)
 frontend_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "frontend")

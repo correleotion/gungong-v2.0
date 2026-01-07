@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import './App.css';
 import './styles/main.css';
 import './styles/pdpa.css';
 import './styles/home.css';

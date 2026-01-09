@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GunGong - ตรวจสอบการฉ้อโกง</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <img src="../assets/icons/icon48.png" alt="GunGong Logo" class="logo" onerror="this.style.display='none'">
+      <h1 class="title">GunGong</h1>
+      <p class="subtitle">ตรวจสอบการฉ้อโกง</p>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="check">ตรวจสอบ</button>
+      <button class="tab-btn" data-tab="analyze">วิเคราะห์ข้อความ</button>
+      <button class="tab-btn" data-tab="history">ประวัติ</button>
+    </div>
+
+    <!-- Tab Content: ตรวจสอบ -->
+    <div class="tab-content active" id="tab-check">
+      <div class="form-group">
+        <label for="dataInput">หมายเลขโทรศัพท์หรือบัญชีธนาคาร</label>
+        <input
+          type="text"
+          id="dataInput"
+          placeholder="เช่น 0812345678 หรือ 1234567890"
+          class="input-field"
+        >
+      </div>
+
+      <button id="checkBtn" class="btn btn-primary">
+        <span class="btn-text">ตรวจสอบ</span>
+        <span class="spinner" style="display: none;">⏳</span>
+      </button>
+
+      <!-- Results -->
+      <div id="checkResults" class="results" style="display: none;">
+        <div class="result-card">
+          <div class="result-header">
+            <span class="result-label">ผลการตรวจสอบ</span>
+            <span id="resultBadge" class="badge"></span>
+          </div>
+          <div id="resultContent" class="result-content"></div>
+        </div>
+      </div>
+
+      <!-- Page Scan -->
+      <div class="divider"></div>
+      <button id="scanPageBtn" class="btn btn-secondary">
+        🔍 สแกนหน้าเว็บนี้
+      </button>
+      <div id="scanResults" class="scan-results" style="display: none;"></div>
+    </div>
+
+    <!-- Tab Content: วิเคราะห์ข้อความ -->
+    <div class="tab-content" id="tab-analyze">
+      <div class="form-group">
+        <label for="textInput">ข้อความที่ต้องการวิเคราะห์</label>
+        <textarea
+          id="textInput"
+          placeholder="วางข้อความที่ต้องการตรวจสอบความเสี่ยงจากการฉ้อโกง..."
+          class="textarea-field"
+          rows="6"
+        ></textarea>
+      </div>
+
+      <button id="analyzeBtn" class="btn btn-primary">
+        <span class="btn-text">วิเคราะห์</span>
+        <span class="spinner" style="display: none;">⏳</span>
+      </button>
+
+      <!-- Analysis Results -->
+      <div id="analyzeResults" class="results" style="display: none;">
+        <div class="result-card">
+          <div class="result-header">
+            <span class="result-label">ผลการวิเคราะห์</span>
+            <span id="analyzeBadge" class="badge"></span>
+          </div>
+          <div id="analyzeContent" class="result-content"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab Content: ประวัติ -->
+    <div class="tab-content" id="tab-history">
+      <div class="history-header">
+        <h3>ประวัติการตรวจสอบ</h3>
+        <button id="clearHistoryBtn" class="btn btn-text">ล้างประวัติ</button>
+      </div>
+
+      <div id="historyList" class="history-list">
+        <p class="empty-message">ยังไม่มีประวัติการตรวจสอบ</p>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <button id="settingsBtn" class="btn-icon" title="ตั้งค่า">⚙️</button>
+      <span class="version">v1.0.0</span>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

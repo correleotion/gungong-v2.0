@@ -1,7 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { banks } from '../utils/script';
 
 const Scanner = ({ onNavigate }) => {
   const [currentSubPage, setCurrentSubPage] = useState(null);
+  const [isBankDropdownOpen, setIsBankDropdownOpen] = useState(false);
+  const [selectedBank, setSelectedBank] = useState(null);
+  const bankDropdownRef = useRef(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (bankDropdownRef.current && !bankDropdownRef.current.contains(event.target)) {
+        setIsBankDropdownOpen(false);
+      }
+    };
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, []);
 
   const goBack = () => {
     setCurrentSubPage(null);
@@ -277,17 +292,58 @@ const Scanner = ({ onNavigate }) => {
               </svg>
               เลือกธนาคาร
             </label>
-            <div className="input-group">
-              <select id="bank-select" style={{ border: 'none', padding: '10px', width: '100%' }}>
-                <option value="">เลือกธนาคาร...</option>
-                <option value="004">กสิกรไทย (KBANK)</option>
-                <option value="014">ไทยพาณิชย์ (SCB)</option>
-                <option value="006">กรุงไทย (KTB)</option>
-                <option value="002">กรุงเทพ (BBL)</option>
-                <option value="030">ออมสิน (GSB)</option>
-              </select>
-              <input type="hidden" id="selected-bank-code" defaultValue="004" />
+
+            {/* Custom Bank Dropdown with Images */}
+            <div
+              className={`bank-select-wrapper ${isBankDropdownOpen ? 'active' : ''}`}
+              ref={bankDropdownRef}
+            >
+              <div
+                className="selected-bank-box"
+                onClick={() => setIsBankDropdownOpen(!isBankDropdownOpen)}
+              >
+                <div className="bank-info">
+                  {selectedBank ? (
+                    <>
+                      <img
+                        src={`/img/banks/${selectedBank.code}.png`}
+                        alt={selectedBank.name}
+                        className="bank-logo"
+                      />
+                      <span>{selectedBank.name}</span>
+                    </>
+                  ) : (
+                    <span className="placeholder-text">เลือกธนาคาร</span>
+                  )}
+                </div>
+                <svg className="dropdown-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </div>
+
+              <div className="bank-options-list">
+                {banks.map((bank) => (
+                  <div
+                    key={bank.code}
+                    className="bank-option-item"
+                    onClick={() => {
+                      setSelectedBank(bank);
+                      setIsBankDropdownOpen(false);
+                    }}
+                  >
+                    <img
+                      src={`/img/banks/${bank.code}.png`}
+                      alt={bank.name}
+                      className="bank-logo"
+                    />
+                    <span>{bank.name}</span>
+                  </div>
+                ))}
+              </div>
+
+              <input type="hidden" id="selected-bank-code" value={selectedBank?.code || ''} />
             </div>
+
             <label className="input-label" style={{ marginTop: '20px' }}>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <rect x="2" y="5" width="20" height="14" rx="2"></rect>

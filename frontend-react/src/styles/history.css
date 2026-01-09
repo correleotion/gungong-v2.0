@@ -210,6 +210,88 @@
   padding-bottom: 20px;
 }
 
+/* React History Item Styles */
+.history-item {
+  background: #fff;
+  border-radius: 16px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s;
+}
+
+.history-item:active {
+  transform: scale(0.98);
+}
+
+.history-icon {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 12px;
+  background: #E5E7EB;
+  flex-shrink: 0;
+}
+
+.history-icon svg {
+  width: 20px;
+  height: 20px;
+  stroke: #6B7280;
+  stroke-width: 2;
+}
+
+.history-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.history-value {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.history-date {
+  font-size: 12px;
+  color: #9CA3AF;
+}
+
+.history-status {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.history-status.status-safe {
+  background: #D1FAE5;
+  color: #10B981;
+}
+
+.history-status.status-warning {
+  background: #FEF3C7;
+  color: #F59E0B;
+}
+
+.history-status.status-danger {
+  background: #FFDada;
+  color: #FF5C5C;
+}
+
 .history-card {
   background: #fff;
   border-radius: 20px;

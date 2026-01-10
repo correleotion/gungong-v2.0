@@ -86,16 +86,24 @@ app.include_router(conversation.router, tags=["v2-conversation"])
 app.include_router(fraud_v2.router, tags=["v2-fraud"])
 app.include_router(verification.router, tags=["v2-verification"])
 
-# Mount static files (frontend)
+# Mount static files (frontend built by Vite)
+# Check for Vite build output first (production), then fallback to old frontend
+static_path = os.path.join(os.path.dirname(__file__), "static")
 frontend_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "frontend")
-if os.path.exists(frontend_path):
+
+if os.path.exists(static_path):
+    # Production: Serve Vite-built React app
+    app.mount("/assets", StaticFiles(directory=os.path.join(static_path, "assets")), name="assets")
+    logger.info(f"✅ Frontend (Vite build) mounted from {static_path}")
+elif os.path.exists(frontend_path):
+    # Fallback: Old frontend structure
     app.mount("/static", StaticFiles(directory=frontend_path), name="static")
     app.mount("/img", StaticFiles(directory=os.path.join(frontend_path, "img")), name="img")
     app.mount("/js", StaticFiles(directory=os.path.join(frontend_path, "js")), name="js")
     app.mount("/style", StaticFiles(directory=os.path.join(frontend_path, "style")), name="style")
     logger.info(f"✅ Frontend mounted from {frontend_path}")
 else:
-    logger.warning(f"⚠️ Frontend directory not found at {frontend_path}")
+    logger.warning(f"⚠️ Frontend directory not found")
 
 
 @app.on_event("startup")
@@ -120,6 +128,9 @@ async def startup_event():
 @app.get("/", response_class=FileResponse)
 async def root():
     """Serve the frontend index.html."""
-    if os.path.exists(os.path.join(frontend_path, "index.html")):
+    # Try Vite build first, then fallback
+    if os.path.exists(os.path.join(static_path, "index.html")):
+        return FileResponse(os.path.join(static_path, "index.html"))
+    elif os.path.exists(os.path.join(frontend_path, "index.html")):
         return FileResponse(os.path.join(frontend_path, "index.html"))
     return {"status": "healthy", "message": "Frontend not found, but API is running"}

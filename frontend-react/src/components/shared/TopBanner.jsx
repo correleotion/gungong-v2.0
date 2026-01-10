@@ -27,7 +27,7 @@ const TopBanner = ({ userProfile, onShare, isDarkMode, onToggleDarkMode }) => {
   return (
     <div className="top-banner">
       <img src="/img/mountain.png" alt="ภาพแบนเนอร์" />
-      <div className="miniapp-gungong">MINIAPP Gun Gong</div>
+      <div className="miniapp-gungong">Gun Gong</div>
 
       <div className="user-info">
         <div className="avatar-container">

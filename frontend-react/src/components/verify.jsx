@@ -1,38 +1,65 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 
 const Verify = ({ userProfile, onNavigate }) => {
   const [currentLevel, setCurrentLevel] = useState('silver');
-  const cardSliderRef = useRef(null);
-  const menuSliderRef = useRef(null);
+  const [touchStart, setTouchStart] = useState(0);
+  const [touchEnd, setTouchEnd] = useState(0);
 
   const levels = ['silver', 'gold', 'diamond'];
-  const levelIndex = levels.indexOf(currentLevel);
 
-  const switchCard = (level) => {
-    setCurrentLevel(level);
-    const index = levels.indexOf(level);
-    if (cardSliderRef.current) {
-      const width = cardSliderRef.current.offsetWidth;
-      cardSliderRef.current.scrollTo({ left: index * width, behavior: 'smooth' });
-    }
-    if (menuSliderRef.current) {
-      const width = menuSliderRef.current.offsetWidth;
-      menuSliderRef.current.scrollTo({ left: index * width, behavior: 'smooth' });
-    }
+  // Get card position based on current level
+  const getCardPosition = (cardLevel) => {
+    const currentIndex = levels.indexOf(currentLevel);
+    const cardIndex = levels.indexOf(cardLevel);
+    const diff = cardIndex - currentIndex;
+
+    // Normalize for circular carousel
+    if (diff === 0) return 'center';
+    if (diff === 1 || diff === -2) return 'right';
+    if (diff === -1 || diff === 2) return 'left';
+    return 'center';
   };
 
-  const handleCardScroll = () => {
-    if (cardSliderRef.current) {
-      const scrollLeft = cardSliderRef.current.scrollLeft;
-      const width = cardSliderRef.current.offsetWidth;
-      const activeIndex = Math.round(scrollLeft / width);
-      if (levels[activeIndex] !== currentLevel) {
-        setCurrentLevel(levels[activeIndex]);
-        if (menuSliderRef.current) {
-          menuSliderRef.current.scrollTo({ left: activeIndex * width, behavior: 'smooth' });
-        }
+  // Switch card handler
+  const switchCard = (level) => {
+    setCurrentLevel(level);
+  };
+
+  // Navigate to next/previous card
+  const navigateCarousel = useCallback((direction) => {
+    const currentIndex = levels.indexOf(currentLevel);
+    let newIndex;
+    if (direction === 'next') {
+      newIndex = (currentIndex + 1) % levels.length;
+    } else {
+      newIndex = (currentIndex - 1 + levels.length) % levels.length;
+    }
+    setCurrentLevel(levels[newIndex]);
+  }, [currentLevel, levels]);
+
+  // Touch handlers for swipe
+  const handleTouchStart = (e) => {
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchMove = (e) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    const distance = touchStart - touchEnd;
+    const minSwipeDistance = 50;
+
+    if (Math.abs(distance) > minSwipeDistance) {
+      if (distance > 0) {
+        navigateCarousel('next');
+      } else {
+        navigateCarousel('prev');
       }
     }
+    setTouchStart(0);
+    setTouchEnd(0);
   };
 
   const openFeature = (feature) => {
@@ -50,86 +77,89 @@ const Verify = ({ userProfile, onNavigate }) => {
     }
   };
 
-  const CardContent = ({ level, shieldImg }) => (
-    <div className={`verification-card level-${level} animate-card`}>
-      <img src={`/img/${level}_card.png`} className="card-bg" alt={`${level} Card`} />
-      <div className="card-content">
-        <div className="card-col-left">
-          <div className="card-header-row">
-            <div className="shield-circle">
-              <img src={shieldImg} alt={`${level} Shield`} />
+  // 3D Carousel Card Component
+  const CarouselCard = ({ level, shieldImg }) => {
+    const position = getCardPosition(level);
+
+    return (
+      <div className={`carousel-card card-${level} card-${position}`}>
+        <img src={`/img/${level}_card.png`} className="card-bg" alt={`${level} Card`} />
+        <div className="card-content">
+          <div className="card-col-left">
+            <div className="card-header-row">
+              <div className="shield-circle">
+                <img src={shieldImg} alt={`${level} Shield`} />
+              </div>
+              <div className="level-info-box">
+                <span className="level-label">ระดับการยืนยัน</span>
+                <h3 className="level-title">{level.toUpperCase()}</h3>
+              </div>
             </div>
-            <div className="level-info-box">
-              <span className="level-label">ระดับการยืนยัน</span>
-              <h3 className="level-title current-level-text">{level.toUpperCase()}</h3>
+            <div className="user-info-box">
+              <h2 className="card-user-name">
+                {userProfile?.displayName || '(Username)'}
+              </h2>
+              <p className="card-user-id">
+                User ID: {userProfile?.userId?.slice(0, 10) || '...'}
+              </p>
             </div>
           </div>
-          <div className="user-info-box">
-            <h2 className="card-user-name user-name-text">
-              {userProfile?.displayName || '(Username)'}
-            </h2>
-            <p className="card-user-id user-id-text">
-              User ID: {userProfile?.userId?.slice(0, 10) || '...'}
-            </p>
-          </div>
-        </div>
-        <div className="card-col-right">
-          <div className="profile-circle-box">
-            <img
-              src={userProfile?.pictureUrl || '/img/profile.png'}
-              className="card-avatar user-avatar-img"
-              alt="Profile"
-            />
-            <div className="mini-logo-badge">
-              <img src="/img/logo.png" alt="Logo" />
+          <div className="card-col-right">
+            <div className="profile-circle-box">
+              <img
+                src={userProfile?.pictureUrl || '/img/profile.png'}
+                className="card-avatar"
+                alt="Profile"
+              />
+              <div className="mini-logo-badge">
+                <img src="/img/logo.png" alt="Logo" />
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  };
 
-  const MenuContent = ({ level, items, description }) => (
-    <div className="verify-slide-item menu-slide">
-      <div className="slide-content-wrapper">
-        <div className="identification-header">
-          <h2>การยืนยันตัวตน</h2>
-        </div>
-        <div className="identification-desc">
-          <p>{description}</p>
-        </div>
-        <div className="verify-menu-list">
-          {items.map((item, index) => (
-            <div
-              key={index}
-              className="verify-menu-card animate-card"
-              onClick={() => openFeature(item.feature)}
-              style={{ animationDelay: `${0.05 + index * 0.1}s` }}
-            >
-              <div className={`verify-card-icon icon-${item.iconClass}`}>
-                {item.icon}
-              </div>
-              <div className="verify-card-text">
-                <h4>{item.title}</h4>
-                <p>{item.subtitle}</p>
-              </div>
-              <div className="verify-card-action">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <polyline points="9 18 15 12 9 6"></polyline>
-                </svg>
-              </div>
+  const MenuContent = ({ items, description }) => (
+    <div className="verify-menu-section">
+      <div className="identification-header">
+        <h2>การยืนยันตัวตน</h2>
+      </div>
+      <div className="identification-desc">
+        <p>{description}</p>
+      </div>
+      <div className="verify-menu-list">
+        {items.map((item, index) => (
+          <div
+            key={index}
+            className="verify-menu-card animate-card"
+            onClick={() => openFeature(item.feature)}
+            style={{ animationDelay: `${0.05 + index * 0.1}s` }}
+          >
+            <div className={`verify-card-icon icon-${item.iconClass}`}>
+              {item.icon}
             </div>
-          ))}
-          <div className="share-card-container" style={{ marginTop: '20px' }}>
-            <button className="share-card-btn" onClick={shareVerificationCard}>
+            <div className="verify-card-text">
+              <h4>{item.title}</h4>
+              <p>{item.subtitle}</p>
+            </div>
+            <div className="verify-card-action">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
-                <polyline points="16 6 12 2 8 6"></polyline>
-                <line x1="12" y1="2" x2="12" y2="15"></line>
+                <polyline points="9 18 15 12 9 6"></polyline>
               </svg>
-              แชร์บัตรประจำตัว
-            </button>
+            </div>
           </div>
+        ))}
+        <div className="share-card-container">
+          <button className="share-card-btn" onClick={shareVerificationCard}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+              <polyline points="16 6 12 2 8 6"></polyline>
+              <line x1="12" y1="2" x2="12" y2="15"></line>
+            </svg>
+            แชร์บัตรประจำตัว
+          </button>
         </div>
       </div>
     </div>
@@ -205,16 +235,27 @@ const Verify = ({ userProfile, onNavigate }) => {
     },
   ];
 
+  // Get current menu items based on level
+  const getCurrentMenuItems = () => {
+    switch (currentLevel) {
+      case 'gold': return { items: goldMenuItems, desc: 'เพื่อยกระดับความน่าเชื่อถือให้กับโปรไฟล์ของคุณ' };
+      case 'diamond': return { items: diamondMenuItems, desc: 'เพื่อยกระดับความน่าเชื่อถือให้กับองค์กรของคุณ' };
+      default: return { items: silverMenuItems, desc: 'เพื่อยกระดับความน่าเชื่อถือให้กับบัญชีของคุณ' };
+    }
+  };
+
+  const currentMenu = getCurrentMenuItems();
+
   return (
     <section id="verification-page">
       <div className="section-content">
-        {/* Level Selector */}
+        {/* Level Selector Tabs */}
         <div className="level-selector-container">
           <div className="badge-group">
             {levels.map((level) => (
               <span
                 key={level}
-                className={`badge-level ${currentLevel === level ? 'active' : ''}`}
+                className={`badge-level badge-${level} ${currentLevel === level ? 'active' : ''}`}
                 onClick={() => switchCard(level)}
               >
                 {level.toUpperCase()}
@@ -223,43 +264,22 @@ const Verify = ({ userProfile, onNavigate }) => {
           </div>
         </div>
 
-        {/* Card Slider */}
-        <div className="verification-card-container">
-          <div
-            className="verify-slider"
-            ref={cardSliderRef}
-            onScroll={handleCardScroll}
-          >
-            <div className="verify-slide-item">
-              <CardContent level="silver" shieldImg="/img/silver shield.png" />
-            </div>
-            <div className="verify-slide-item">
-              <CardContent level="gold" shieldImg="/img/gold shield.png" />
-            </div>
-            <div className="verify-slide-item">
-              <CardContent level="diamond" shieldImg="/img/dimond shield.png" />
-            </div>
+        {/* 3D Carousel Container */}
+        <div
+          className="carousel-container"
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+        >
+          <div className="carousel-track">
+            <CarouselCard level="silver" shieldImg="/img/silver shield.png" />
+            <CarouselCard level="gold" shieldImg="/img/gold shield.png" />
+            <CarouselCard level="diamond" shieldImg="/img/dimond shield.png" />
           </div>
         </div>
 
-        {/* Menu Slider */}
-        <div className="verify-slider" ref={menuSliderRef}>
-          <MenuContent
-            level="silver"
-            items={silverMenuItems}
-            description="เพื่อยกระดับความน่าเชื่อถือให้กับบัญชีของคุณ"
-          />
-          <MenuContent
-            level="gold"
-            items={goldMenuItems}
-            description="เพื่อยกระดับความน่าเชื่อถือให้กับโปรไฟล์ของคุณ"
-          />
-          <MenuContent
-            level="diamond"
-            items={diamondMenuItems}
-            description="เพื่อยกระดับความน่าเชื่อถือให้กับองค์กรของคุณ"
-          />
-        </div>
+        {/* Menu Section */}
+        <MenuContent items={currentMenu.items} description={currentMenu.desc} />
       </div>
     </section>
   );

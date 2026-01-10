@@ -145,52 +145,86 @@ const Scanner = ({ onNavigate }) => {
   if (currentSubPage === 'check-content') {
     return (
       <section id="check-content-page">
-        <div className="scanner-header">
-          <button className="back-btn" onClick={goBack}>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
-          </button>
-          <h2>ตรวจสอบเนื้อหา</h2>
-        </div>
-
-        <div className="scanner-tabs">
-          <button className={`scanner-tab ${contentTab === 'link' ? 'active' : ''}`} onClick={() => setContentTab('link')}>ลิงก์</button>
-          <button className={`scanner-tab ${contentTab === 'sms' ? 'active' : ''}`} onClick={() => setContentTab('sms')}>ข้อความ</button>
-        </div>
-
-        <div className="check-link-container">
-          {contentTab === 'link' ? (
-            <div className="input-section">
-              <label className="input-label">ใส่ลิงก์ที่ต้องการเช็ค</label>
-              <div className="input-group">
-                <input
-                  type="text"
-                  placeholder="https://bit.ly/xx"
-                  value={inputs.link}
-                  onChange={(e) => handleInputChange('link', e.target.value)}
-                />
-                <button className="clear-btn" onClick={() => clearInput('link')}>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                </button>
+        <div className="section-content">
+          <div className="scanner-subpage-header">
+            <button className="back-btn-modern" onClick={goBack}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            </button>
+            <div className="subpage-title-block">
+              <div className="subpage-icon icon-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                  <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+                </svg>
               </div>
-              <button className="check-btn" onClick={checkLink}>ตรวจสอบลิงก์</button>
-            </div>
-          ) : (
-            <div className="input-section">
-              <label className="input-label">ใส่ข้อความที่ต้องการเช็ค</label>
-              <div className="input-group">
-                <input
-                  type="text"
-                  placeholder="พิมพ์ข้อความ..."
-                  value={inputs.sms}
-                  onChange={(e) => handleInputChange('sms', e.target.value)}
-                />
-                <button className="clear-btn" onClick={() => clearInput('sms')}>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                </button>
+              <div>
+                <h2>ตรวจสอบเนื้อหา</h2>
+                <p className="subpage-subtitle">วิเคราะห์ลิงก์และข้อความ</p>
               </div>
-              <button className="check-btn" onClick={checkSMS}>ตรวจสอบข้อความ</button>
             </div>
-          )}
+          </div>
+
+          <div className="scanner-tabs-modern">
+            <button className={`tab-modern ${contentTab === 'link' ? 'active' : ''}`} onClick={() => setContentTab('link')}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+              </svg>
+              ลิงก์
+            </button>
+            <button className={`tab-modern ${contentTab === 'sms' ? 'active' : ''}`} onClick={() => setContentTab('sms')}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+              </svg>
+              ข้อความ
+            </button>
+          </div>
+
+          <div className="scanner-form-card">
+            {contentTab === 'link' ? (
+              <>
+                <label className="form-label">ใส่ลิงก์ที่ต้องการตรวจสอบ</label>
+                <div className="form-input-group">
+                  <input
+                    type="text"
+                    className="form-input"
+                    placeholder="https://bit.ly/example"
+                    value={inputs.link}
+                    onChange={(e) => handleInputChange('link', e.target.value)}
+                  />
+                  <button className="form-clear-btn" onClick={() => clearInput('link')}>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                  </button>
+                </div>
+                <p className="form-hint">ระบบจะวิเคราะห์ลิงก์ว่าเป็นอันตรายหรือไม่</p>
+                <button className="form-submit-btn" onClick={checkLink}>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>
+                  ตรวจสอบลิงก์
+                </button>
+              </>
+            ) : (
+              <>
+                <label className="form-label">ใส่ข้อความที่ต้องการตรวจสอบ</label>
+                <div className="form-input-group">
+                  <input
+                    type="text"
+                    className="form-input"
+                    placeholder="วางข้อความที่ได้รับ..."
+                    value={inputs.sms}
+                    onChange={(e) => handleInputChange('sms', e.target.value)}
+                  />
+                  <button className="form-clear-btn" onClick={() => clearInput('sms')}>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                  </button>
+                </div>
+                <p className="form-hint">AI จะวิเคราะห์ว่าข้อความนี้เป็น Scam หรือไม่</p>
+                <button className="form-submit-btn" onClick={checkSMS}>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>
+                  ตรวจสอบข้อความ
+                </button>
+              </>
+            )}
+          </div>
         </div>
       </section>
     );
@@ -199,15 +233,44 @@ const Scanner = ({ onNavigate }) => {
   if (currentSubPage === 'scan-qr') {
     return (
       <section id="scan-qr-page">
-        <div className="scanner-header">
-          <button className="back-btn" onClick={goBack}>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
-          </button>
-          <h2>สแกน QR Code</h2>
-        </div>
-        <div className="check-link-container">
-          <div className="input-section" style={{ textAlign: 'center' }}>
-            <button className="check-btn" onClick={scanCode}>เริ่มสแกน QR Code</button>
+        <div className="section-content">
+          <div className="scanner-subpage-header">
+            <button className="back-btn-modern" onClick={goBack}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            </button>
+            <div className="subpage-title-block">
+              <div className="subpage-icon icon-qrcode">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                  <circle cx="12" cy="13" r="4"></circle>
+                </svg>
+              </div>
+              <div>
+                <h2>สแกน QR Code</h2>
+                <p className="subpage-subtitle">ตรวจสอบ QR ที่น่าสงสัย</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="scanner-form-card qr-card">
+            <div className="qr-illustration">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" width="80" height="80">
+                <rect x="3" y="3" width="7" height="7"></rect>
+                <rect x="14" y="3" width="7" height="7"></rect>
+                <rect x="3" y="14" width="7" height="7"></rect>
+                <rect x="14" y="14" width="3" height="3"></rect>
+                <line x1="21" y1="14" x2="21" y2="21"></line>
+                <line x1="14" y1="21" x2="21" y2="21"></line>
+              </svg>
+            </div>
+            <p className="qr-description">กดปุ่มด้านล่างเพื่อเปิดกล้องและสแกน QR Code</p>
+            <button className="form-submit-btn" onClick={scanCode}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                <circle cx="12" cy="13" r="4"></circle>
+              </svg>
+              เริ่มสแกน QR Code
+            </button>
           </div>
         </div>
       </section>
@@ -217,54 +280,88 @@ const Scanner = ({ onNavigate }) => {
   if (currentSubPage === 'check-personal') {
     return (
       <section id="check-personal-page">
-        <div className="scanner-header">
-          <button className="back-btn" onClick={goBack}>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
-          </button>
-          <h2>ตรวจสอบข้อมูลส่วนตัว</h2>
-        </div>
-
-        <div className="scanner-tabs">
-          <button className={`scanner-tab ${personalTab === 'bank' ? 'active' : ''}`} onClick={() => setPersonalTab('bank')}>บัญชี</button>
-          <button className={`scanner-tab ${personalTab === 'phone' ? 'active' : ''}`} onClick={() => setPersonalTab('phone')}>เบอร์โทร</button>
-        </div>
-
-        <div className="check-link-container">
-          {personalTab === 'bank' ? (
-            <div className="input-section">
-              <label className="input-label">เลือกธนาคาร</label>
-              <BankDropdown />
-              <label className="input-label" style={{ marginTop: '20px' }}>ระบุเลขบัญชี</label>
-              <div className="input-group">
-                <input
-                  type="number"
-                  placeholder="เลขบัญชี 10-12 หลัก"
-                  value={inputs.bank}
-                  onChange={(e) => handleInputChange('bank', e.target.value)}
-                />
-                <button className="clear-btn" onClick={() => clearInput('bank')}>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                </button>
+        <div className="section-content">
+          <div className="scanner-subpage-header">
+            <button className="back-btn-modern" onClick={goBack}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            </button>
+            <div className="subpage-title-block">
+              <div className="subpage-icon icon-bank">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                  <line x1="1" y1="10" x2="23" y2="10"></line>
+                </svg>
               </div>
-              <button className="check-btn" onClick={checkBank}>ตรวจสอบบัญชี</button>
-            </div>
-          ) : (
-            <div className="input-section">
-              <label className="input-label">ระบุเบอร์โทรศัพท์</label>
-              <div className="input-group">
-                <input
-                  type="tel"
-                  placeholder="09x-xxx-xxxx"
-                  value={inputs.phone}
-                  onChange={(e) => handleInputChange('phone', e.target.value)}
-                />
-                <button className="clear-btn" onClick={() => clearInput('phone')}>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                </button>
+              <div>
+                <h2>ตรวจสอบข้อมูลส่วนตัว</h2>
+                <p className="subpage-subtitle">ค้นหาบัญชีและเบอร์ใน Blacklist</p>
               </div>
-              <button className="check-btn" onClick={checkPhone}>ตรวจสอบเบอร์โทร</button>
             </div>
-          )}
+          </div>
+
+          <div className="scanner-tabs-modern">
+            <button className={`tab-modern ${personalTab === 'bank' ? 'active' : ''}`} onClick={() => setPersonalTab('bank')}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                <line x1="1" y1="10" x2="23" y2="10"></line>
+              </svg>
+              บัญชี
+            </button>
+            <button className={`tab-modern ${personalTab === 'phone' ? 'active' : ''}`} onClick={() => setPersonalTab('phone')}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+              </svg>
+              เบอร์โทร
+            </button>
+          </div>
+
+          <div className="scanner-form-card">
+            {personalTab === 'bank' ? (
+              <>
+                <label className="form-label">เลือกธนาคาร</label>
+                <BankDropdown />
+                <label className="form-label" style={{ marginTop: '20px' }}>ระบุเลขบัญชี</label>
+                <div className="form-input-group">
+                  <input
+                    type="number"
+                    className="form-input"
+                    placeholder="เลขบัญชี 10-12 หลัก"
+                    value={inputs.bank}
+                    onChange={(e) => handleInputChange('bank', e.target.value)}
+                  />
+                  <button className="form-clear-btn" onClick={() => clearInput('bank')}>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                  </button>
+                </div>
+                <p className="form-hint">ตรวจสอบว่าเลขบัญชีอยู่ในรายชื่อมิจฉาชีพหรือไม่</p>
+                <button className="form-submit-btn" onClick={checkBank}>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>
+                  ตรวจสอบบัญชี
+                </button>
+              </>
+            ) : (
+              <>
+                <label className="form-label">ระบุเบอร์โทรศัพท์</label>
+                <div className="form-input-group">
+                  <input
+                    type="tel"
+                    className="form-input"
+                    placeholder="09x-xxx-xxxx"
+                    value={inputs.phone}
+                    onChange={(e) => handleInputChange('phone', e.target.value)}
+                  />
+                  <button className="form-clear-btn" onClick={() => clearInput('phone')}>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                  </button>
+                </div>
+                <p className="form-hint">ตรวจสอบว่าเบอร์นี้เป็น Call Center หลอกลวงหรือไม่</p>
+                <button className="form-submit-btn" onClick={checkPhone}>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>
+                  ตรวจสอบเบอร์โทร
+                </button>
+              </>
+            )}
+          </div>
         </div>
       </section>
     );
@@ -273,34 +370,67 @@ const Scanner = ({ onNavigate }) => {
   // Main Menu
   return (
     <section id="scanner-page">
-      <div className="section-content">
+      <div className="section-content scanner-wide">
         <div className="scanner-header"><h2>My Scanner</h2></div>
-        <div className="scanner-menu-list">
-          <div className="scanner-group animate-card" style={{ animationDelay: '0.05s' }}>
-            <div className="scanner-group-label"><span>ตรวจสอบเนื้อหา</span></div>
-            <div className="scanner-card" onClick={() => openFeature('check-content')}>
-              <div className="card-icon icon-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></div>
-              <div className="card-text"><h4>ตรวจสอบลิงก์ / ข้อความ</h4><p>URL, Domain และ Text Scam</p></div>
-              <div className="card-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 18 15 12 9 6"></polyline></svg></div>
+        <div className="scanner-card-grid">
+          {/* Card 1: Check Content */}
+          <div className="scanner-package-card animate-card" style={{ animationDelay: '0.05s' }} onClick={() => openFeature('check-content')}>
+            <div className="package-icon icon-link">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+              </svg>
             </div>
+            <h3 className="package-title">ตรวจสอบเนื้อหา</h3>
+            <p className="package-desc">วิเคราะห์ลิงก์และข้อความ</p>
+            <ul className="package-features">
+              <li className="feature-yes"><span className="check-icon">✓</span> ตรวจสอบลิงก์หลอกลวง</li>
+              <li className="feature-yes"><span className="check-icon">✓</span> วิเคราะห์ข้อความ SMS</li>
+              <li className="feature-yes"><span className="check-icon">✓</span> ตรวจจับ Phishing URL</li>
+              <li className="feature-no"><span className="cross-icon">✕</span> สแกน QR Code</li>
+              <li className="feature-no"><span className="cross-icon">✕</span> ตรวจสอบเลขบัญชี</li>
+            </ul>
+            <button className="package-btn">เลือกใช้งาน</button>
           </div>
 
-          <div className="scanner-group animate-card" style={{ animationDelay: '0.15s' }}>
-            <div className="scanner-group-label"><span>ตรวจสอบข้อมูลส่วนตัว</span></div>
-            <div className="scanner-card" onClick={() => openFeature('check-personal')}>
-              <div className="card-icon icon-bank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg></div>
-              <div className="card-text"><h4>ตรวจสอบบัญชี / เบอร์โทร</h4><p>ค้นหา Blacklist และ Call Center</p></div>
-              <div className="card-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 18 15 12 9 6"></polyline></svg></div>
+          {/* Card 2: Check Personal */}
+          <div className="scanner-package-card animate-card" style={{ animationDelay: '0.15s' }} onClick={() => openFeature('check-personal')}>
+            <div className="package-icon icon-bank">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                <line x1="1" y1="10" x2="23" y2="10"></line>
+              </svg>
             </div>
+            <h3 className="package-title">ตรวจสอบข้อมูลส่วนตัว</h3>
+            <p className="package-desc">ค้นหา Blacklist</p>
+            <ul className="package-features">
+              <li className="feature-yes"><span className="check-icon">✓</span> ตรวจสอบเลขบัญชี</li>
+              <li className="feature-yes"><span className="check-icon">✓</span> ตรวจสอบเบอร์โทร</li>
+              <li className="feature-yes"><span className="check-icon">✓</span> ค้นหา Call Center</li>
+              <li className="feature-no"><span className="cross-icon">✕</span> สแกน QR Code</li>
+              <li className="feature-no"><span className="cross-icon">✕</span> วิเคราะห์ข้อความ</li>
+            </ul>
+            <button className="package-btn">เลือกใช้งาน</button>
           </div>
 
-          <div className="scanner-group animate-card" style={{ animationDelay: '0.25s' }}>
-            <div className="scanner-group-label"><span>สแกน</span></div>
-            <div className="scanner-card" onClick={() => openFeature('scan-qr')}>
-              <div className="card-icon icon-qrcode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg></div>
-              <div className="card-text"><h4>สแกน QR Code</h4><p>เช็ค Payment QR</p></div>
-              <div className="card-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 18 15 12 9 6"></polyline></svg></div>
+          {/* Card 3: Scan QR */}
+          <div className="scanner-package-card animate-card" style={{ animationDelay: '0.25s' }} onClick={() => openFeature('scan-qr')}>
+            <div className="package-icon icon-qrcode">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                <circle cx="12" cy="13" r="4"></circle>
+              </svg>
             </div>
+            <h3 className="package-title">สแกน QR Code</h3>
+            <p className="package-desc">ตรวจสอบ QR อันตราย</p>
+            <ul className="package-features">
+              <li className="feature-yes"><span className="check-icon">✓</span> สแกน QR Code</li>
+              <li className="feature-yes"><span className="check-icon">✓</span> ตรวจ Payment QR</li>
+              <li className="feature-yes"><span className="check-icon">✓</span> เปิดลิงก์จาก QR</li>
+              <li className="feature-no"><span className="cross-icon">✕</span> ตรวจสอบเลขบัญชี</li>
+              <li className="feature-no"><span className="cross-icon">✕</span> วิเคราะห์ข้อความ</li>
+            </ul>
+            <button className="package-btn">เลือกใช้งาน</button>
           </div>
         </div>
       </div>

@@ -39,14 +39,60 @@ section {
   position: relative;
   width: 100%;
   box-sizing: border-box;
-  padding: 0 16px; }
+  padding: 0 32px;
+}
 
-section.active {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-  position: relative;
-  transition: opacity 0.3s ease-out, transform 0.3s ease-out;}
+/* Page transition animations - apply to section content */
+.section-content {
+  animation: pageSlideIn 0.4s ease-out forwards;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+@keyframes pageSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Card stagger animations - apply .animate-card class */
+.animate-card {
+  opacity: 0;
+  transform: translateY(15px);
+  animation: cardSlideIn 0.4s ease-out forwards;
+}
+
+@keyframes cardSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
 
 /* ==================== TOP BANNER ==================== */
 .top-banner {
@@ -314,5 +360,332 @@ section.active {
   color: white;
   letter-spacing: 0.3px;}
 
+/* ==================== THEME TOGGLE ==================== */
+.theme-toggle {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  margin-right: 5px;
+}
 
+.toggle-track {
+  width: 56px;
+  height: 28px;
+  background: #e8f5e9;
+  border-radius: 14px;
+  position: relative;
+  transition: background 0.3s ease;
+  display: flex;
+  align-items: center;
+  padding: 0 4px;
+}
 
+.toggle-track.dark {
+  background: #2d3748;
+}
+
+.toggle-icons {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 4px;
+  z-index: 1;
+}
+
+.toggle-icons svg {
+  width: 14px;
+  height: 14px;
+  stroke-width: 2;
+  transition: opacity 0.3s ease;
+}
+
+.sun-icon {
+  stroke: #f59e0b;
+}
+
+.moon-icon {
+  stroke: #94a3b8;
+}
+
+.toggle-track.light .sun-icon {
+  opacity: 1;
+}
+
+.toggle-track.light .moon-icon {
+  opacity: 0.4;
+}
+
+.toggle-track.dark .sun-icon {
+  opacity: 0.4;
+}
+
+.toggle-track.dark .moon-icon {
+  opacity: 1;
+  stroke: #fbbf24;
+}
+
+.toggle-thumb {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  background: white;
+  border-radius: 50%;
+  left: 3px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.toggle-track.dark .toggle-thumb {
+  transform: translateX(28px);
+  background: #1a202c;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+}
+
+/* ==================== DARK MODE THEME ==================== */
+html.dark-mode body {
+  background: linear-gradient(180deg, #1a202c 0%, #0d1117 100%);
+}
+
+html.dark-mode main {
+  background-color: #1e2530;
+  box-shadow: 0 -5px 20px rgba(0,0,0,0.3);
+}
+
+html.dark-mode .miniapp-gungong {
+  color: #4ade80;
+}
+
+html.dark-mode .text-group .user-name {
+  color: #4ade80;
+}
+
+html.dark-mode .text-group .username-id {
+  color: #94a3b8;
+}
+
+html.dark-mode .action-btn {
+  background: #374151;
+}
+
+html.dark-mode .action-btn svg {
+  stroke: #4ade80;
+}
+
+html.dark-mode .scanner-header h2 {
+  color: #e2e8f0;
+}
+
+html.dark-mode .scanner-card {
+  background: #2d3748;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+html.dark-mode .scanner-card .card-text h4 {
+  color: #e2e8f0;
+}
+
+html.dark-mode .scanner-card .card-text p {
+  color: #94a3b8;
+}
+
+html.dark-mode .scanner-card .card-action svg {
+  stroke: #94a3b8;
+}
+
+html.dark-mode .scanner-group-label span {
+  color: #94a3b8;
+}
+
+html.dark-mode .history-card {
+  background: #2d3748;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+html.dark-mode .history-card .type-label,
+html.dark-mode .history-card .timestamp {
+  color: #94a3b8;
+}
+
+html.dark-mode .history-card .main-text {
+  color: #e2e8f0;
+}
+
+html.dark-mode .history-controls .search-box {
+  background: #374151;
+  border-color: #4b5563;
+}
+
+html.dark-mode .history-controls .search-box input {
+  background: transparent;
+  color: #e2e8f0;
+}
+
+html.dark-mode .history-controls .search-box input::placeholder {
+  color: #6b7280;
+}
+
+html.dark-mode .filter-btn,
+html.dark-mode .sort-btn {
+  background: #374151;
+  border-color: #4b5563;
+}
+
+html.dark-mode .filter-btn svg,
+html.dark-mode .sort-btn svg {
+  stroke: #94a3b8;
+}
+
+html.dark-mode .bottom-nav {
+  background: #1e2530;
+  border-top-color: #374151;
+}
+
+html.dark-mode .nav-item {
+  color: #6b7280;
+}
+
+html.dark-mode .nav-item.active {
+  color: #4ade80;
+}
+
+html.dark-mode .social-card {
+  background: #2d3748;
+}
+
+html.dark-mode .social-card .post-author {
+  color: #e2e8f0;
+}
+
+html.dark-mode .social-card .post-content p {
+  color: #cbd5e1;
+}
+
+html.dark-mode .social-controls .post-input-box input {
+  background: #374151;
+  border-color: #4b5563;
+  color: #e2e8f0;
+}
+
+html.dark-mode .social-circle-btn {
+  background: #374151;
+}
+
+/* Dark mode for Social Cards */
+html.dark-mode .social-card {
+  background: transparent;
+}
+
+html.dark-mode .author-name {
+  color: #e2e8f0;
+}
+
+html.dark-mode .post-text {
+  color: #94a3b8;
+}
+
+html.dark-mode .s-card-bottom {
+  border-top-color: #374151;
+}
+
+html.dark-mode .social-action-btn {
+  background: transparent;
+  border-color: #4b5563;
+  color: #9ca3af;
+}
+
+html.dark-mode .social-action-btn:hover {
+  background: #374151;
+}
+
+html.dark-mode .summary-card,
+html.dark-mode .status-bar {
+  background: #2d3748;
+}
+
+html.dark-mode .summary-card h3,
+html.dark-mode .status-bar h3 {
+  color: #e2e8f0;
+}
+
+html.dark-mode .summary-card span,
+html.dark-mode .status-bar p {
+  color: #94a3b8;
+}
+
+html.dark-mode .check-link-container {
+  background: #2d3748;
+}
+
+html.dark-mode .input-label {
+  color: #e2e8f0;
+}
+
+html.dark-mode .input-group input {
+  background: #374151;
+  border-color: #4b5563;
+  color: #e2e8f0;
+}
+
+html.dark-mode .input-group input::placeholder {
+  color: #6b7280;
+}
+
+/* ==================== DARK MODE - VERIFY PAGE ==================== */
+html.dark-mode .badge-level {
+  background-color: #374151;
+  border-color: #4b5563;
+  color: #94a3b8;
+}
+
+html.dark-mode .badge-level.active {
+  color: #fff;
+}
+
+html.dark-mode .identification-header h2 {
+  color: #e2e8f0;
+}
+
+html.dark-mode .identification-desc p {
+  color: #94a3b8;
+}
+
+html.dark-mode .verify-menu-card {
+  background: #2d3748;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+html.dark-mode .verify-card-text h4 {
+  color: #e2e8f0;
+}
+
+html.dark-mode .verify-card-text p {
+  color: #94a3b8;
+}
+
+html.dark-mode .verify-card-action svg {
+  stroke: #94a3b8;
+}
+
+html.dark-mode .verification-card {
+  box-shadow: 0 1px 10px rgba(0, 0, 0, 0.3);
+}
+
+html.dark-mode .share-card-btn {
+  background: transparent;
+  color: #94a3b8;
+  border-color: #4b5563;
+}
+
+html.dark-mode .share-card-btn:hover {
+  background: #374151;
+  color: #e2e8f0;
+  border-color: #6b7280;
+}
+
+html.dark-mode .banner {
+  background: #2d3748;
+}
+
+html.dark-mode .banner-slide {
+  opacity: 0.9;
+}

@@ -242,7 +242,7 @@
 .verify-menu-list {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 12px;
   margin-top: -10px;}
 
 .verify-menu-card {
@@ -253,13 +253,50 @@
   align-items: center;
   box-shadow: 0 10px 20px rgba(187, 187, 187, 0.15);
   cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: transform 0.2s, box-shadow 0.2s, opacity 0.3s ease-out;
   border: none;
   width: 100%;
-  box-sizing: border-box;}
+  box-sizing: border-box;
+  opacity: 1;
+}
 
 .verify-menu-card:active {
   transform: scale(0.98);}
+
+/* Left accent line for verify cards */
+.verify-card-left-line {
+  width: 8px;
+  height: 100%;
+  flex-shrink: 0;
+  align-self: stretch;
+}
+
+.verify-card-left-line.line-phone {
+  background: #86EFAC;
+}
+
+.verify-card-left-line.line-bank {
+  background: #98d9e3;
+}
+
+.verify-card-left-line.line-id-card {
+  background: #FCA5A5;
+}
+
+.verify-card-left-line.line-face {
+  background: #FDBA74;
+}
+
+.verify-card-left-line.line-business {
+  background: #93C5FD;
+}
+
+.verify-card-content {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  padding: 12px 15px;
+}
 
 .verify-card-icon {
   width: 40px;
@@ -350,25 +387,37 @@
 .share-card-container {
   display: flex;
   justify-content: center;
-  margin-top: -20px;
+  margin-top: 20px;
   margin-bottom: 10px;}
 
 .share-card-btn {
-  background: #8ef168;
-  color: rgb(255, 255, 255);
-  border: none;
-  padding: 10px 24px;
-  border-radius: 25px;
+  background: transparent;
+  color: #6B7280;
+  border: 1px solid #E5E7EB;
+  padding: 8px 18px;
+  border-radius: 12px;
   font-family: "Noto Sans Thai", sans-serif;
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 13px;
+  font-weight: 500;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 8px;
-  box-shadow: 0 4px 12px rgba(100, 100, 100, 0.3);
-  transition: transform 0.2s, box-shadow 0.2s;}
+  gap: 6px;
+  box-shadow: none;
+  transition: all 0.2s;}
+
+.share-card-btn:hover {
+  background: #F3F4F6;
+  color: #374151;
+  border-color: #D1D5DB;
+}
+
+.share-card-btn:active {
+  transform: scale(0.95);
+}
 
 .share-card-btn svg {
-  width: 18px;
-  height: 18px;}
+  width: 16px;
+  height: 16px;
+  stroke: currentColor;}
+

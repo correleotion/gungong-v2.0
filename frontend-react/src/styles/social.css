@@ -1,171 +1,7 @@
-#report-page {
-  padding: 0px 20px 0px 20px;}
-
-/* ==================== SOCIAL PAGE LAYOUT FIX ==================== */
-#social-page .scanner-header {
-  display: none;}
-
-.social-controls {
-  margin-top: 80px;
-
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 0 0 20px 0;}
-
-/* ==================== SOCIAL CONTROLS ==================== */
-.social-controls {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 0 0 20px 0;}
-
-.post-input-box {
-  flex-grow: 1;
-  background: #ffffff;
-  border-radius: 25px;
-  height: 44px;
-  display: flex;
-  align-items: center;
-  padding: 0 5px 0 5px;
-  border: 1px solid #E5E7EB;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.02);
-  transition: all 0.2s;
+#social-page {
+  padding: 0px 20px 0px 20px;
 }
 
-.post-input-box:active {
-  transform: scale(0.98);
-  border-color: #3ACE00;
-}
-
-.user-mini-avatar {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  overflow: hidden;
-  margin-right: 8px;
-  flex-shrink: 0;
-}
-
-.user-mini-avatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.post-input-box input {
-  border: none;
-  background: transparent;
-  width: 100%;
-  height: 100%;
-  font-size: 14px;
-  color: #333;
-  font-family: "Noto Sans Thai", sans-serif;
-}
-
-.post-input-box input::placeholder {
-  color: #9CA3AF;
-}
-
-/* ปุ่มวงกลม (Filter & Add) */
-.social-circle-btn {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  border: 1px solid #E5E7EB;
-  background: #ffffff;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  flex-shrink: 0;
-  color: #64748b;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.02);
-  transition: all 0.2s;
-}
-
-.social-circle-btn:active {
-  transform: scale(0.95);
-}
-
-.social-circle-btn svg {
-  width: 20px;
-  height: 20px;
-}
-
-
-/* ==================== SOCIAL POPUP MENU ==================== */
-.social-popup {
-  position: absolute;
-  top: 55px;  /* ระยะห่างจากปุ่มลงมา */
-  left: -100px; /* ขยับไปทางซ้ายเพื่อให้เมนูไม่ออกนอกจอ */
-  width: 160px;
-
-  background: #9f9f9f; /* สีพื้นหลังเทาเข้มแบบในรูป */
-  color: white;
-
-  border-radius: 12px;
-  padding: 8px;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-
-  display: none; /* ซ่อนไว้ก่อน */
-  flex-direction: column;
-  gap: 5px;
-  z-index: 100;
-
-  /* Animation ตอนโผล่ */
-  transform-origin: top right;
-  animation: popIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.social-popup.active {
-  display: flex;
-}
-
-.popup-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 12px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.popup-item:hover {
-  background: rgba(255,255,255,0.1);
-}
-
-.popup-item:active {
-  background: rgba(255,255,255,0.2);
-}
-
-.popup-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.popup-icon svg {
-  width: 20px;
-  height: 20px;
-  stroke: white; /* ไอคอนสีขาว */
-}
-
-.popup-item span {
-  font-size: 14px;
-  font-weight: 500;
-  font-family: "Noto Sans Thai", sans-serif;
-}
-
-/* Animation */
-@keyframes popIn {
-  from { opacity: 0; transform: scale(0.8) translateY(-10px); }
-  to { opacity: 1; transform: scale(1) translateY(0); }
-}
-
-
-/* ==================== SOCIAL FEED ==================== */
 .social-feed {
   display: flex;
   flex-direction: column;
@@ -173,102 +9,205 @@
   padding-bottom: 20px;
 }
 
+/* ==================== SOCIAL CARD (เลียนแบบ History) ==================== */
 .social-card {
-  background: #ffffff;
+  background: #fff;
   border-radius: 20px;
-  padding: 15px;
+  position: relative;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-  border: 1px solid #f0f0f0;
+  display: flex;
+  overflow: hidden;
+  transition: transform 0.2s, opacity 0.3s ease-out;
+  min-height: 120px;
+  cursor: pointer;
 }
 
-.post-header {
+.social-card:active {
+  transform: scale(0.98);
+}
+
+/* เส้นขอบด้านข้าง */
+.social-card .card-left-line {
+  width: 8px;
+  flex-shrink: 0;
+  background: #E5E7EB; /* สี Default */
+}
+
+.social-card.warning .card-left-line {
+  background: #FDBA74; /* สีส้ม */
+}
+
+.social-card.danger .card-left-line {
+  background: #FCA5A5; /* สีแดง */
+}
+
+/* เนื้อหาภายใน */
+.s-card-content {
+  flex-grow: 1;
+  padding: 12px 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.s-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  color: #9CA3AF;
+  font-weight: 500;
+}
+
+.author-info {
   display: flex;
   align-items: center;
-  margin-bottom: 10px;
+  gap: 10px;
 }
 
-.post-avatar {
-  width: 40px;
-  height: 40px;
+.author-avatar {
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
   object-fit: cover;
-  margin-right: 10px;
-  border: 1px solid #eee;
+  border: 1px solid #e5e7eb;
 }
 
-.post-info {
-  flex-grow: 1;
+.author-details {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
-.post-author {
-  font-size: 14px;
-  font-weight: 700;
+.author-name {
+  font-weight: 600;
   color: #333;
-  margin: 0;
+  font-size: 14px;
 }
 
 .post-time {
   font-size: 11px;
-  color: #999;
+  color: #9CA3AF;
 }
 
 .more-btn {
   background: none;
   border: none;
-  color: #bbb;
-  font-size: 18px;
+  color: #9CA3AF;
+  font-size: 22px;
   cursor: pointer;
-  padding: 0 5px;
+  padding: 5px;
 }
 
-.post-content p {
-  font-size: 14px;
-  color: #555;
-  line-height: 1.5;
-  margin: 0 0 10px 0;
+.more-btn:hover {
+  color: #6B7280;
 }
 
-.post-image-container {
-  margin-top: 10px;
+.s-card-main {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+/* ไอคอน */
+.s-icon {
+  width: 40px;
+  height: 40px;
   border-radius: 12px;
-  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
 }
 
-.post-image-container img {
+.s-icon svg {
+  width: 20px;
+  height: 20px;
+  stroke: #fff;
+}
+
+.s-icon.icon-warning { background-color: #FDBA74; }
+.s-icon.icon-danger { background-color: #FCA5A5; }
+.s-icon.icon-default { background-color: #E5E7EB; }
+
+.s-text-group {
+  flex: 1;
+}
+
+.post-text {
+  font-size: 14px;
+  font-weight: 600;
+  color: #4B5563;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.post-image {
   width: 100%;
-  height: auto;
+  border-radius: 12px;
+  margin-top: 10px;
   display: block;
 }
 
-.post-actions {
+/* ส่วนล่างและปุ่ม Action */
+.s-card-bottom {
   display: flex;
-  gap: 15px;
-  margin-top: 5px;
-  padding-top: 10px;
-  border-top: 1px solid #f9f9f9;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 8px;
+  border-top: 1px solid #F3F4F6;
 }
 
-.action-item {
-  background: none;
-  border: none;
+.badge-community {
+  background: #DCFCE7;
+  color: #16A34A;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+.action-group {
+  display: flex;
+  gap: 8px;
+}
+
+.social-action-btn {
+  background: transparent;
+  border: 1px solid #E5E7EB;
+  border-radius: 10px;
+  padding: 4px 8px;
+  font-size: 11px;
+  color: #6B7280;
   display: flex;
   align-items: center;
-  gap: 5px;
-  color: #888;
-  font-size: 13px;
-  cursor: pointer;
-  transition: color 0.2s;
+  gap: 4px;
+  transition: all 0.2s;
 }
 
-.action-item svg {
-  width: 18px;
-  height: 18px;
+.social-action-btn:hover {
+  background: #F9FAFB;
 }
 
-.action-item:hover {
-  color: #3ACE00;
+.social-action-btn svg {
+  width: 14px;
+  height: 14px;
 }
 
+/* Dark Mode Support */
+html.dark-mode .social-card {
+  background: #2D3748;
+}
 
-@keyframes fadeIn { to { opacity: 1; } }
-@keyframes slideUp { to { transform: translateY(0); } }
+html.dark-mode .author-name {
+  color: #E2E8F0;
+}
+
+html.dark-mode .post-text {
+  color: #E2E8F0;
+}
+
+html.dark-mode .social-action-btn {
+  border-color: #4A5568;
+  color: #A0AEC0;
+}

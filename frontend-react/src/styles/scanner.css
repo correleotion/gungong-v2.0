@@ -36,7 +36,72 @@
 .scanner-menu-list {
   display: flex;
   flex-direction: column;
-  gap: 15px;}
+  gap: 20px;}
+
+/* Scanner Groups */
+.scanner-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.scanner-group-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #9CA3AF;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding-left: 5px;
+}
+
+.scanner-group-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Scanner Tabs */
+.scanner-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 15px;
+  background: #f5f5f5;
+  padding: 6px;
+  border-radius: 12px;
+}
+
+.scanner-tab {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 16px;
+  border: none;
+  background: transparent;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #9CA3AF;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: "Noto Sans Thai", sans-serif;
+}
+
+.scanner-tab svg {
+  width: 18px;
+  height: 18px;
+}
+
+.scanner-tab.active {
+  background: #ffffff;
+  color: #3ACE00;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.scanner-tab:hover:not(.active) {
+  color: #6B7280;
+}
 
 .scanner-card {
   background: #ffffff;
@@ -46,10 +111,12 @@
   align-items: center;
   box-shadow: 0 10px 20px rgba(187, 187, 187, 0.15);
   cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: transform 0.2s, box-shadow 0.2s, opacity 0.3s ease-out;
   border: none;
   width: 100%;
-  box-sizing: border-box;}
+  box-sizing: border-box;
+  opacity: 1;
+}
 
 .scanner-card:active {
   transform: scale(0.98);}

@@ -21,6 +21,11 @@ function App() {
   const [userProfile, setUserProfile] = useState(null);
   const [showPDPA, setShowPDPA] = useState(false);
   const [isLiffReady, setIsLiffReady] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    // Load dark mode preference from localStorage
+    const saved = localStorage.getItem('gungong_dark_mode');
+    return saved === 'true';
+  });
 
   useEffect(() => {
     // Check PDPA consent
@@ -32,6 +37,20 @@ function App() {
     // Initialize LIFF if available
     initLiff();
   }, []);
+
+  // Apply dark mode class to document
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark-mode');
+    } else {
+      document.documentElement.classList.remove('dark-mode');
+    }
+    localStorage.setItem('gungong_dark_mode', isDarkMode.toString());
+  }, [isDarkMode]);
+
+  const toggleDarkMode = () => {
+    setIsDarkMode(prev => !prev);
+  };
 
   const initLiff = async () => {
     try {
@@ -122,10 +141,15 @@ function App() {
   };
 
   return (
-    <div className="app">
+    <div className={`app ${isDarkMode ? 'dark-mode' : ''}`}>
       <PDPAModal isOpen={showPDPA} onAccept={handlePDPAAccept} />
 
-      <TopBanner userProfile={userProfile} onShare={handleShare} />
+      <TopBanner
+        userProfile={userProfile}
+        onShare={handleShare}
+        isDarkMode={isDarkMode}
+        onToggleDarkMode={toggleDarkMode}
+      />
 
       <main>
         {renderPage()}
@@ -137,3 +161,4 @@ function App() {
 }
 
 export default App;
+

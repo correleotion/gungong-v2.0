@@ -202,57 +202,59 @@ const Verify = ({ userProfile, onNavigate }) => {
 
   return (
     <section id="verification-page">
-      {/* Level Selector */}
-      <div className="level-selector-container">
-        <div className="badge-group">
-          {levels.map((level) => (
-            <span
-              key={level}
-              className={`badge-level ${currentLevel === level ? 'active' : ''}`}
-              onClick={() => switchCard(level)}
-            >
-              {level.toUpperCase()}
-            </span>
-          ))}
-        </div>
-      </div>
-
-      {/* Card Slider */}
-      <div className="verification-card-container">
-        <div
-          className="verify-slider"
-          ref={cardSliderRef}
-          onScroll={handleCardScroll}
-        >
-          <div className="verify-slide-item">
-            <CardContent level="silver" shieldImg="/img/silver shield.png" />
-          </div>
-          <div className="verify-slide-item">
-            <CardContent level="gold" shieldImg="/img/gold shield.png" />
-          </div>
-          <div className="verify-slide-item">
-            <CardContent level="diamond" shieldImg="/img/dimond shield.png" />
+      <div className="section-content">
+        {/* Level Selector */}
+        <div className="level-selector-container">
+          <div className="badge-group">
+            {levels.map((level) => (
+              <span
+                key={level}
+                className={`badge-level ${currentLevel === level ? 'active' : ''}`}
+                onClick={() => switchCard(level)}
+              >
+                {level.toUpperCase()}
+              </span>
+            ))}
           </div>
         </div>
-      </div>
 
-      {/* Menu Slider */}
-      <div className="verify-slider" ref={menuSliderRef}>
-        <MenuContent
-          level="silver"
-          items={silverMenuItems}
-          description="เพื่อยกระดับความน่าเชื่อถือให้กับบัญชีของคุณ"
-        />
-        <MenuContent
-          level="gold"
-          items={goldMenuItems}
-          description="เพื่อยกระดับความน่าเชื่อถือให้กับโปรไฟล์ของคุณ"
-        />
-        <MenuContent
-          level="diamond"
-          items={diamondMenuItems}
-          description="เพื่อยกระดับความน่าเชื่อถือให้กับองค์กรของคุณ"
-        />
+        {/* Card Slider */}
+        <div className="verification-card-container">
+          <div
+            className="verify-slider"
+            ref={cardSliderRef}
+            onScroll={handleCardScroll}
+          >
+            <div className="verify-slide-item">
+              <CardContent level="silver" shieldImg="/img/silver shield.png" />
+            </div>
+            <div className="verify-slide-item">
+              <CardContent level="gold" shieldImg="/img/gold shield.png" />
+            </div>
+            <div className="verify-slide-item">
+              <CardContent level="diamond" shieldImg="/img/dimond shield.png" />
+            </div>
+          </div>
+        </div>
+
+        {/* Menu Slider */}
+        <div className="verify-slider" ref={menuSliderRef}>
+          <MenuContent
+            level="silver"
+            items={silverMenuItems}
+            description="เพื่อยกระดับความน่าเชื่อถือให้กับบัญชีของคุณ"
+          />
+          <MenuContent
+            level="gold"
+            items={goldMenuItems}
+            description="เพื่อยกระดับความน่าเชื่อถือให้กับโปรไฟล์ของคุณ"
+          />
+          <MenuContent
+            level="diamond"
+            items={diamondMenuItems}
+            description="เพื่อยกระดับความน่าเชื่อถือให้กับองค์กรของคุณ"
+          />
+        </div>
       </div>
     </section>
   );

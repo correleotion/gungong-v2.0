@@ -40,3 +40,8 @@ class Settings(BaseSettings):
 
 # Singleton instance
 settings = Settings()
+
+#เพิ่มใหม่
+def get_settings() -> Settings:
+    """Get the singleton settings instance."""
+    return settings

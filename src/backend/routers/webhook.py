@@ -22,6 +22,7 @@ from ..services.fraud_message_service import get_fraud_message_service
 from ..services.prescreen_service import get_prescreen_service
 from ..services.feedback_service import get_feedback_service
 from ..services.gambling_domain_service import get_gambling_domain_service
+from ..services.id_card_service import get_id_card_service
 from ..utils.message_helpers import is_analysis_request, is_bot_mentioned
 from ..core.logger import get_logger
 
@@ -700,7 +701,125 @@ async def webhook(
                 except:
                     pass
 
-        # --- 2. Handle Postback Events for Feedback ---
+        # --- 2. Handle Image Messages (ID Card Scanning) ---
+        elif event.get("type") == "message" and event["message"].get("type") == "image":
+            message_id = event["message"].get("id")
+            user_id = source.get("userId")
+
+            if not message_id:
+                continue
+
+            print(f"📸 Received image from user: {user_id}")
+
+            try:
+                line_service = get_line_service()
+                id_card_service = get_id_card_service()
+
+                # Import LINE SDK components for image download
+                from linebot.v3.messaging import MessagingApi, MessagingApiBlob, ApiClient
+
+                # Download image from LINE
+                with ApiClient(line_service.configuration) as api_client:
+                    line_bot_blob_api = MessagingApiBlob(api_client)
+
+                    # Get image binary content
+                    image_content = line_bot_blob_api.get_message_content(message_id)
+
+                    # Convert to base64
+                    import base64
+                    image_base64 = base64.b64encode(image_content).decode('utf-8')
+
+                    print(f"✅ Image downloaded, size: {len(image_content)} bytes")
+
+                    # Verify ID card
+                    print("🔍 Starting ID card verification...")
+                    result = id_card_service.verify_id_card(image_base64)
+
+                    if not result.get("success"):
+                        error_msg = result.get("error", "Unknown error")
+                        print(f"❌ ID card verification failed: {error_msg}")
+                        line_service.reply_message(
+                            reply_token,
+                            text=f"❌ ไม่สามารถอ่านบัตรประชาชนได้\n\n"
+                                 f"กรุณาถ่ายรูปให้ชัดเจนและแสงสว่างเพียงพอ\n"
+                                 f"ตรวจสอบว่าบัตรอยู่ในกรอบทั้งหมด"
+                        )
+                        continue
+
+                    # Extract data
+                    extracted_data = result.get("extracted_data", {})
+                    id_number = result.get("id_number", "-")
+                    name_th = extracted_data.get("name_th", "")
+                    surname_th = extracted_data.get("surname_th", "")
+                    date_of_birth = extracted_data.get("date_of_birth", "-")
+                    address = extracted_data.get("address", "-")
+
+                    is_blacklisted = result.get("is_blacklisted", False)
+                    is_valid_format = result.get("is_valid_format", False)
+                    risk_level = result.get("risk_level", "LOW")
+                    reports_count = result.get("reports_count", 0)
+
+                    # Determine status icon and message
+                    if is_blacklisted:
+                        icon = "⚠️"
+                        status = "พบในบัญชีดำ"
+                        safety = "ไม่ปลอดภัย"
+                        warning_msg = f"• ระวัง! เลขบัตรนี้มี {reports_count} รายงานการฉ้อโกง"
+                    elif not is_valid_format:
+                        icon = "⚠️"
+                        status = "รูปแบบไม่ถูกต้อง"
+                        safety = "ควรตรวจสอบ"
+                        warning_msg = "• เลขบัตรไม่ผ่านการตรวจสอบ checksum"
+                    else:
+                        icon = "✅"
+                        status = "ปลอดภัย"
+                        safety = "ปลอดภัย"
+                        warning_msg = "• ไม่พบข้อมูลในบัญชีดำ"
+
+                    # Build response message
+                    response_text = f"""
+{icon} ผลการตรวจสอบบัตรประชาชน
+
+📋 ข้อมูลบัตร:
+• เลขบัตร: {id_number}
+• ชื่อ-นามสกุล: {name_th} {surname_th}
+• วันเกิด: {date_of_birth}
+• ที่อยู่: {address[:50]}{"..." if len(address) > 50 else ""}
+
+🔍 ผลการตรวจสอบ:
+• สถานะ: {status}
+• ระดับความเสี่ยง: {risk_level}
+• จำนวนรายงาน: {reports_count} ครั้ง
+• ความปลอดภัย: {safety}
+
+⚠️ คำแนะนำ:
+{warning_msg}
+{'• ควรตรวจสอบกับหน่วยงานราชการเพิ่มเติม' if is_blacklisted else '• ยังคงควรระมัดระวังในการติดต่อ'}
+                    """.strip()
+
+                    print(f"✅ ID card verified: {id_number[:4]}****{id_number[-2:]}, "
+                          f"blacklisted: {is_blacklisted}, risk: {risk_level}")
+
+                    # Reply to user
+                    line_service.reply_message(reply_token, text=response_text)
+
+            except Exception as e:
+                print(f"❌ Image processing error: {e}")
+                import traceback
+                traceback.print_exc()
+
+                try:
+                    line_service = get_line_service()
+                    line_service.reply_message(
+                        reply_token,
+                        text="❌ เกิดข้อผิดพลาดในการประมวลผลรูปภาพ\n\n"
+                             "กรุณาลองใหม่อีกครั้ง หรือถ่ายรูปให้ชัดเจนกว่านี้"
+                    )
+                except:
+                    pass
+            continue
+
+        # --- 3. Handle Postback Events for Feedback ---
         elif event.get("type") == "postback":
             postback_data = event["postback"].get("data")
             user_id = event["source"].get("userId")
@@ -720,13 +839,14 @@ async def webhook(
     return {"status": "ok"}
 
 
-@app.exception_handler(Exception)
-async def global_exception_handler(request: Request, exc: Exception):
-    """Global exception handler."""
-    return JSONResponse(
-        status_code=500,
-        content={"detail": f"Internal server error: {str(exc)}"}
-    )
+# Note: Global exception handlers should be defined in main.py, not in routers
+# @app.exception_handler(Exception)
+# async def global_exception_handler(request: Request, exc: Exception):
+#     """Global exception handler."""
+#     return JSONResponse(
+#         status_code=500,
+#         content={"detail": f"Internal server error: {str(exc)}"}
+#     )
 
 
 if __name__ == "__main__":

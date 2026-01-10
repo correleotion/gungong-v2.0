@@ -137,7 +137,12 @@ function App() {
       case 'home':
         return <Home />;
       case 'verify':
-        return <Verify userProfile={userProfile} onNavigate={handleNavigate} />;
+      case 'verify-phone':
+      case 'verify-bank':
+      case 'verify-id-card':
+      case 'verify-face':
+      case 'verify-business':
+        return <Verify userProfile={userProfile} onNavigate={handleNavigate} currentSubPage={activeSection} />;
       case 'scanner':
         return <Scanner onNavigate={handleNavigate} />;
       case 'social':

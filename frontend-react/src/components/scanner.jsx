@@ -98,48 +98,7 @@ const Scanner = ({ onNavigate }) => {
     window.Swal?.fire({ icon: 'info', title: 'กำลังตรวจสอบ...', text: phone, confirmButtonColor: '#3ACE00' });
   };
 
-  // Reusable Bank Dropdown Component เพื่อลดความซ้ำซ้อน
-  const BankDropdown = () => (
-    <div
-      className={`bank-select-wrapper ${isBankDropdownOpen ? 'active' : ''}`}
-      ref={bankDropdownRef}
-    >
-      <div
-        className="selected-bank-box"
-        onClick={() => setIsBankDropdownOpen(!isBankDropdownOpen)}
-      >
-        <div className="bank-info">
-          {selectedBank ? (
-            <>
-              <img src={`/img/banks/${selectedBank.code}.png`} alt={selectedBank.name} className="bank-logo" />
-              <span>{selectedBank.name}</span>
-            </>
-          ) : (
-            <span className="placeholder-text">เลือกธนาคาร</span>
-          )}
-        </div>
-        <svg className="dropdown-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <polyline points="6 9 12 15 18 9"></polyline>
-        </svg>
-      </div>
 
-      <div className="bank-options-list">
-        {banks.map((bank) => (
-          <div
-            key={bank.code}
-            className="bank-option-item"
-            onClick={() => {
-              setSelectedBank(bank);
-              setIsBankDropdownOpen(false);
-            }}
-          >
-            <img src={`/img/banks/${bank.code}.png`} alt={bank.name} className="bank-logo" />
-            <span>{bank.name}</span>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
 
   // Sub-pages Logic
   if (currentSubPage === 'check-content') {
@@ -319,7 +278,45 @@ const Scanner = ({ onNavigate }) => {
             {personalTab === 'bank' ? (
               <>
                 <label className="form-label">เลือกธนาคาร</label>
-                <BankDropdown />
+                <div
+                  className={`bank-select-wrapper ${isBankDropdownOpen ? 'active' : ''}`}
+                  ref={bankDropdownRef}
+                >
+                  <div
+                    className="selected-bank-box"
+                    onClick={() => setIsBankDropdownOpen(!isBankDropdownOpen)}
+                  >
+                    <div className="bank-info">
+                      {selectedBank ? (
+                        <>
+                          <img src={`/img/banks/${selectedBank.code}.png`} alt={selectedBank.name} className="bank-logo" />
+                          <span>{selectedBank.name}</span>
+                        </>
+                      ) : (
+                        <span className="placeholder-text">เลือกธนาคาร</span>
+                      )}
+                    </div>
+                    <svg className="dropdown-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                  </div>
+
+                  <div className="bank-options-list">
+                    {banks.map((bank) => (
+                      <div
+                        key={bank.code}
+                        className="bank-option-item"
+                        onClick={() => {
+                          setSelectedBank(bank);
+                          setIsBankDropdownOpen(false);
+                        }}
+                      >
+                        <img src={`/img/banks/${bank.code}.png`} alt={bank.name} className="bank-logo" />
+                        <span>{bank.name}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
                 <label className="form-label" style={{ marginTop: '20px' }}>ระบุเลขบัญชี</label>
                 <div className="form-input-group">
                   <input

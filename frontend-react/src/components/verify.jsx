@@ -1,11 +1,21 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 
-const Verify = ({ userProfile, onNavigate }) => {
+const Verify = ({ userProfile, onNavigate, currentSubPage }) => {
   const [currentLevel, setCurrentLevel] = useState('silver');
   const [touchStart, setTouchStart] = useState(0);
   const [touchEnd, setTouchEnd] = useState(0);
+  const [activeSubPage, setActiveSubPage] = useState(null);
 
   const levels = ['silver', 'gold', 'diamond'];
+
+  // Handle external navigation to subpages
+  useEffect(() => {
+    if (currentSubPage && currentSubPage !== 'verify') {
+      setActiveSubPage(currentSubPage);
+    } else {
+      setActiveSubPage(null);
+    }
+  }, [currentSubPage]);
 
   // Get card position based on current level
   const getCardPosition = (cardLevel) => {
@@ -200,9 +210,10 @@ const Verify = ({ userProfile, onNavigate }) => {
       icon: (
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
           <rect x="3" y="4" width="18" height="16" rx="2" ry="2"></rect>
-          <line x1="7" y1="8" x2="7" y2="8"></line>
-          <line x1="7" y1="12" x2="7" y2="12"></line>
-          <line x1="7" y1="16" x2="7" y2="16"></line>
+          <circle cx="9" cy="10" r="2"></circle>
+          <path d="M15 8h2"></path>
+          <path d="M15 12h2"></path>
+          <path d="M7 16h10"></path>
         </svg>
       ),
     },
@@ -245,6 +256,167 @@ const Verify = ({ userProfile, onNavigate }) => {
   };
 
   const currentMenu = getCurrentMenuItems();
+
+  // Go back to main verify page
+  const goBack = () => {
+    onNavigate('verify');
+  };
+
+  // Render subpage content
+  const renderSubPage = () => {
+    const subPageConfig = {
+      'verify-phone': {
+        title: 'ผูกเบอร์โทรศัพท์',
+        subtitle: 'กรอกเบอร์โทรศัพท์ของคุณ',
+        iconClass: 'icon-call',
+        icon: (
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+          </svg>
+        ),
+        inputLabel: 'เบอร์โทรศัพท์',
+        inputPlaceholder: '0812345678',
+        inputType: 'tel',
+      },
+      'verify-bank': {
+        title: 'ผูกบัญชีธนาคาร',
+        subtitle: 'กรอกข้อมูลบัญชีธนาคาร',
+        iconClass: 'icon-bank',
+        icon: (
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+            <line x1="1" y1="10" x2="23" y2="10"></line>
+          </svg>
+        ),
+        inputLabel: 'เลขบัญชีธนาคาร',
+        inputPlaceholder: '1234567890',
+        inputType: 'text',
+      },
+      'verify-id-card': {
+        title: 'ยืนยันบัตรประชาชน',
+        subtitle: 'กรอกเลขบัตรประชาชน 13 หลัก',
+        iconClass: 'icon-text',
+        icon: (
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <rect x="3" y="4" width="18" height="16" rx="2" ry="2"></rect>
+            <circle cx="9" cy="10" r="2"></circle>
+            <path d="M15 8h2"></path>
+            <path d="M15 12h2"></path>
+            <path d="M7 16h10"></path>
+          </svg>
+        ),
+        inputLabel: 'เลขบัตรประชาชน',
+        inputPlaceholder: '1-2345-67890-12-3',
+        inputType: 'text',
+      },
+      'verify-face': {
+        title: 'สแกนใบหน้า',
+        subtitle: 'ยืนยันตัวตนด้วยใบหน้า',
+        iconClass: 'icon-qrcode',
+        icon: (
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M2 12s4-8 10-8 10 8 10 8-4 8-10 8-10-8-10-8Z"></path>
+            <circle cx="12" cy="12" r="3"></circle>
+          </svg>
+        ),
+        inputLabel: null,
+        isFaceScan: true,
+      },
+      'verify-business': {
+        title: 'เลขทะเบียนการค้า',
+        subtitle: 'กรอกเลขทะเบียนนิติบุคคล',
+        iconClass: 'icon-link',
+        icon: (
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+            <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"></path>
+          </svg>
+        ),
+        inputLabel: 'เลขทะเบียนนิติบุคคล',
+        inputPlaceholder: '0123456789012',
+        inputType: 'text',
+      },
+    };
+
+    const config = subPageConfig[activeSubPage] || subPageConfig['verify-phone'];
+
+    return (
+      <section id="verify-subpage">
+        <div className="section-content">
+          <div className="scanner-subpage-header">
+            <button className="back-btn-modern" onClick={goBack}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            </button>
+            <div className="subpage-title-block">
+              <div className={`subpage-icon ${config.iconClass}`}>
+                {config.icon}
+              </div>
+              <div>
+                <h2>{config.title}</h2>
+                <p className="subpage-subtitle">{config.subtitle}</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="scanner-form-card">
+            {config.isFaceScan ? (
+              <>
+                <div className="qr-illustration" style={{ marginBottom: '20px', textAlign: 'center' }}>
+                  <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="1.5">
+                    <circle cx="12" cy="8" r="4"></circle>
+                    <path d="M4 20v-2a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v2"></path>
+                    <rect x="1" y="1" width="6" height="6" rx="1"></rect>
+                    <rect x="17" y="1" width="6" height="6" rx="1"></rect>
+                    <rect x="1" y="17" width="6" height="6" rx="1"></rect>
+                    <rect x="17" y="17" width="6" height="6" rx="1"></rect>
+                  </svg>
+                </div>
+                <p className="form-hint" style={{ textAlign: 'center', marginBottom: '20px' }}>
+                  กดปุ่มด้านล่างเพื่อเปิดกล้องและสแกนใบหน้าของคุณ
+                </p>
+                <button className="form-submit-btn">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                    <circle cx="12" cy="13" r="4"></circle>
+                  </svg>
+                  เปิดกล้อง
+                </button>
+              </>
+            ) : (
+              <>
+                <label className="form-label">{config.inputLabel}</label>
+                <div className="form-input-group">
+                  <input
+                    type={config.inputType}
+                    className="form-input"
+                    placeholder={config.inputPlaceholder}
+                  />
+                  <button className="form-clear-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <line x1="18" y1="6" x2="6" y2="18"></line>
+                      <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                  </button>
+                </div>
+                <p className="form-hint">กรุณากรอกข้อมูลให้ถูกต้อง</p>
+                <button className="form-submit-btn">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                  ยืนยัน
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      </section>
+    );
+  };
+
+  // If on a subpage, render that instead
+  if (activeSubPage && activeSubPage !== 'verify') {
+    return renderSubPage();
+  }
 
   return (
     <section id="verification-page">

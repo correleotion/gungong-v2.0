@@ -390,11 +390,21 @@
   height: 20px;
   stroke: #fff;}
 
-.icon-verify-phone     { background-color: #86EFAC; }
-.icon-verify-bank      { background-color: #98d9e3; }
-.icon-verify-id-card   { background-color: #FCA5A5; }
-.icon-verify-face      { background-color: #FDBA74; }
-.icon-verify-business  { background-color: #93C5FD; }
+/* Standardized Icon Colors (matching user request) */
+.icon-verify-phone, .icon-call     { background-color: #86EFAC !important; color: #fff !important; }
+.icon-verify-bank, .icon-bank      { background-color: #98d9e3 !important; color: #fff !important; }
+.icon-verify-id-card, .icon-text   { background-color: #FCA5A5 !important; color: #fff !important; }
+.icon-verify-face, .icon-qrcode    { background-color: #FDBA74 !important; color: #fff !important; }
+.icon-verify-business, .icon-link  { background-color: #93C5FD !important; color: #fff !important; }
+
+/* SVG Stroke Control */
+.icon-verify-phone svg, .icon-call svg,
+.icon-verify-bank svg, .icon-bank svg,
+.icon-verify-id-card svg, .icon-text svg,
+.icon-verify-face svg, .icon-qrcode svg,
+.icon-verify-business svg, .icon-link svg {
+  stroke: currentColor !important;
+}
 
 .verify-card-text {
   flex-grow: 1;

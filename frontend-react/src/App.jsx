@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import './styles/main.css';
 import './styles/pdpa.css';
 import './styles/home.css';
@@ -53,13 +53,13 @@ function App() {
     localStorage.setItem('gungong_dark_mode', isDarkMode.toString());
   }, [isDarkMode]);
 
-  const toggleDarkMode = () => {
+  const toggleDarkMode = useCallback(() => {
     setIsDarkMode(prev => !prev);
-  };
+  }, []);
 
-  const toggleSidebar = () => {
+  const toggleSidebar = useCallback(() => {
     setIsSidebarCollapsed(prev => !prev);
-  };
+  }, []);
 
   const initLiff = async () => {
     try {
@@ -78,11 +78,11 @@ function App() {
     }
   };
 
-  const handleNavigate = (section) => {
+  const handleNavigate = useCallback((section) => {
     setActiveSection(section);
     // Scroll to top when changing sections
     window.scrollTo(0, 0);
-  };
+  }, []);
 
   const handleShare = async () => {
     if (!window.liff || !window.liff.isApiAvailable('shareTargetPicker')) {
@@ -176,6 +176,35 @@ function App() {
 
         {/* BottomNav hidden on desktop via CSS media queries usually, but let's keep it structurally here */}
         <BottomNav activeSection={activeSection} onNavigate={handleNavigate} />
+
+
+
+        {/* TEMPORARY: Reset PDPA Button */}
+        <button
+          onClick={() => {
+            localStorage.removeItem('gungong_pdpa_accepted');
+            window.location.reload();
+          }}
+          style={{
+            position: 'fixed',
+            bottom: '80px',
+            right: '20px',
+            zIndex: 9999,
+            backgroundColor: 'red',
+            color: 'white',
+            border: 'none',
+            padding: '10px 15px',
+            borderRadius: '5px',
+            fontWeight: 'bold',
+            boxShadow: '0 2px 5px rgba(0,0,0,0.3)',
+            cursor: 'pointer'
+          }}
+        >
+          Reset PDPA ชั่วคราว
+        </button>
+
+
+
       </div>
     </div>
   );

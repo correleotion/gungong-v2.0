@@ -265,4 +265,4 @@ const Verify = ({ userProfile, onNavigate }) => {
   );
 };
 
-export default Verify;
+export default React.memo(Verify);

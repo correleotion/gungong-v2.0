@@ -543,3 +543,143 @@ html.dark-mode .share-card-btn:hover {
   color: #e2e8f0;
 }
 
+/* ==================== FORM STYLES (Copied from Scanner for consistency) ==================== */
+.scanner-form-card {
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 28px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  margin-top: 20px;
+}
+
+.form-label {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 12px;
+}
+
+.form-input-group {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.form-input {
+  flex: 1;
+  padding: 12px 16px;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #333;
+  outline: none;
+  transition: all 0.2s;
+  font-family: "Noto Sans Thai", sans-serif;
+}
+
+.form-input::placeholder {
+  color: #D1D5DB;
+}
+
+.form-input:focus {
+  border-color: #3ACE00;
+  box-shadow: 0 0 0 4px rgba(58, 206, 0, 0.1);
+}
+
+.form-clear-btn {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  border: none;
+  background: #f3f4f6;
+  border-radius: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.form-clear-btn:hover {
+  background: #e5e7eb;
+}
+
+.form-clear-btn svg {
+  width: 20px;
+  height: 20px;
+  stroke: #9ca3af;
+}
+
+.form-hint {
+  font-size: 13px;
+  color: #9ca3af;
+  margin: 0 0 20px 0;
+}
+
+.form-submit-btn {
+  width: 100%;
+  padding: 16px;
+  background: #3ACE00;
+  color: white;
+  border: none;
+  border-radius: 14px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all 0.3s ease;
+  font-family: "Noto Sans Thai", sans-serif;
+}
+
+.form-submit-btn:hover {
+  background: #34b800;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(58, 206, 0, 0.3);
+}
+
+/* Dark Mode Form Styles */
+html.dark-mode .scanner-form-card {
+  background: #2d3748;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+html.dark-mode .form-label {
+  color: #e2e8f0;
+}
+
+html.dark-mode .form-input {
+  background: #374151;
+  border-color: #4b5563;
+  color: #e2e8f0;
+}
+
+html.dark-mode .form-input::placeholder {
+  color: #6b7280;
+}
+
+html.dark-mode .form-input:focus {
+  border-color: #3ACE00;
+  box-shadow: 0 0 0 4px rgba(58, 206, 0, 0.15);
+}
+
+html.dark-mode .form-clear-btn {
+  background: #374151;
+}
+
+html.dark-mode .form-clear-btn:hover {
+  background: #4b5563;
+}
+
+html.dark-mode .form-clear-btn svg {
+  stroke: #94a3b8;
+}
+
+html.dark-mode .form-hint {
+  color: #6b7280;
+}
+

@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { loadHistory, formatTime, getTypeName } from '../utils/script';
+import HistoryCalendar from './shared/HistoryCalendar';
 
 const History = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [expanded, setExpanded] = useState(false);
   const [historyData, setHistoryData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(null);
 
   // Sample history data (will be replaced by API data)
   const sampleHistoryItems = [
@@ -204,7 +206,17 @@ const History = () => {
 
   const filteredItems = historyData.filter(item => {
     const text = item.message_text || item.account_number || item.phone_number || '';
-    return text.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSearch = text.toLowerCase().includes(searchQuery.toLowerCase());
+
+    // Date filtering
+    if (selectedDate) {
+      const itemDate = new Date(item.created_at);
+      const matchesDate = itemDate.getFullYear() === selectedDate.getFullYear() &&
+                         itemDate.getMonth() === selectedDate.getMonth() &&
+                         itemDate.getDate() === selectedDate.getDate();
+      return matchesSearch && matchesDate;
+    }
+    return matchesSearch;
   });
 
   const displayedItems = expanded ? filteredItems : filteredItems.slice(0, 3);
@@ -215,6 +227,19 @@ const History = () => {
         <div className="scanner-header">
           <h2>My History</h2>
         </div>
+
+        <div className="history-layout">
+          {/* Calendar Sidebar */}
+          <div className="history-calendar-sidebar">
+            <HistoryCalendar
+              historyItems={historyData}
+              selectedDate={selectedDate}
+              onDateSelect={setSelectedDate}
+            />
+          </div>
+
+          {/* History Content */}
+          <div className="history-main-content">
 
         <div className="history-controls animate-card" style={{ animationDelay: '0.05s' }}>
           <div className="search-box">
@@ -274,10 +299,14 @@ const History = () => {
                   onClick={() => handleCardClick(item)}
                 >
                   <div className="card-left-line"></div>
+                  <div className="card-date-block">
+                    <span className="date-day">{new Date(item.created_at).getDate()}</span>
+                    <span className="date-month">{new Date(item.created_at).toLocaleString('th-TH', { month: 'short' })}</span>
+                    <span className="date-time">{new Date(item.created_at).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' })}</span>
+                  </div>
                   <div className="h-card-content">
                     <div className="h-card-top">
                       <span className="type-label">Type : {getTypeLabelName(item.type)}</span>
-                      <span className="timestamp">{timeStr}</span>
                     </div>
                     <div className="h-card-main">
                       <div className={`h-icon ${iconClass}`}>
@@ -329,6 +358,10 @@ const History = () => {
             </button>
           </div>
         )}
+          </div>
+          {/* End history-main-content */}
+        </div>
+        {/* End history-layout */}
       </div>
     </section>
   );

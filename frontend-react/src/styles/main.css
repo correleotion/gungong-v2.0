@@ -49,6 +49,11 @@ section {
   margin: 0 auto;
 }
 
+/* History page needs more width for calendar layout */
+#history-page .section-content {
+  max-width: 800px;
+}
+
 @keyframes pageSlideIn {
   from {
     opacity: 0;
@@ -525,6 +530,90 @@ html.dark-mode .history-card {
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
+html.dark-mode .card-date-block {
+  background: linear-gradient(135deg, #374151 0%, #2d3748 100%);
+  border-right-color: rgba(255, 255, 255, 0.1);
+}
+
+html.dark-mode .card-date-block .date-day {
+  color: #e2e8f0;
+}
+
+html.dark-mode .card-date-block .date-month {
+  color: #94a3b8;
+}
+
+html.dark-mode .card-date-block .date-time {
+  color: #64748b;
+}
+
+html.dark-mode .history-card.safe .card-date-block {
+  background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+}
+
+html.dark-mode .history-card.safe .card-date-block .date-day {
+  color: #059669;
+}
+
+html.dark-mode .history-card.dangerous .card-date-block {
+  background: linear-gradient(135deg, #fef2f2 0%, #fecaca 100%);
+}
+
+html.dark-mode .history-card.dangerous .card-date-block .date-day {
+  color: #dc2626;
+}
+
+/* Calendar Widget Dark Mode */
+html.dark-mode .history-calendar {
+  background: #2d3748;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+html.dark-mode .calendar-title {
+  color: #e2e8f0;
+}
+
+html.dark-mode .calendar-nav-btn {
+  background: #374151;
+}
+
+html.dark-mode .calendar-nav-btn:hover {
+  background: #4b5563;
+}
+
+html.dark-mode .calendar-nav-btn svg {
+  stroke: #94a3b8;
+}
+
+html.dark-mode .weekday-name {
+  color: #64748b;
+}
+
+html.dark-mode .calendar-day .day-number {
+  color: #e2e8f0;
+}
+
+html.dark-mode .calendar-day:hover:not(.empty) {
+  background: #374151;
+}
+
+html.dark-mode .calendar-day.today {
+  background: #064e3b;
+}
+
+html.dark-mode .calendar-day.today .day-number {
+  color: #6EE7B7;
+}
+
+html.dark-mode .clear-date-btn {
+  background: #374151;
+  color: #94a3b8;
+}
+
+html.dark-mode .clear-date-btn:hover {
+  background: #4b5563;
+}
+
 html.dark-mode .history-card .type-label,
 html.dark-mode .history-card .timestamp {
   color: #94a3b8;
@@ -532,6 +621,10 @@ html.dark-mode .history-card .timestamp {
 
 html.dark-mode .history-card .main-text {
   color: #e2e8f0;
+}
+
+html.dark-mode .history-controls {
+  background: #1a202c;
 }
 
 html.dark-mode .history-controls .search-box {

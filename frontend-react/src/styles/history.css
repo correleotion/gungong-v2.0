@@ -1,10 +1,192 @@
 #history-page {
   padding: 0px 20px 0px 20px;}
 
+/* ==================== TWO-COLUMN LAYOUT ==================== */
+.history-layout {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.history-calendar-sidebar {
+  flex-shrink: 0;
+  position: sticky;
+  top: 20px;
+}
+
+.history-main-content {
+  flex-grow: 1;
+  min-width: 0;
+}
+
+/* Mobile: Stack vertically */
+@media (max-width: 768px) {
+  .history-layout {
+    flex-direction: column;
+  }
+
+  .history-calendar-sidebar {
+    position: static;
+    width: 100%;
+  }
+}
+
+/* ==================== CALENDAR WIDGET ==================== */
+.history-calendar {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  width: 260px;
+}
+
+.calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.calendar-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #333;
+}
+
+.calendar-nav-btn {
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: #f3f4f6;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.calendar-nav-btn:hover {
+  background: #e5e7eb;
+}
+
+.calendar-nav-btn svg {
+  width: 16px;
+  height: 16px;
+  stroke: #666;
+}
+
+.calendar-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  margin-bottom: 8px;
+}
+
+.weekday-name {
+  text-align: center;
+  font-size: 10px;
+  font-weight: 600;
+  color: #9ca3af;
+  padding: 4px 0;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+
+.calendar-day {
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.calendar-day:hover:not(.empty) {
+  background: #f3f4f6;
+}
+
+.calendar-day.empty {
+  cursor: default;
+}
+
+.calendar-day .day-number {
+  font-size: 12px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.calendar-day.today {
+  background: #ecfdf5;
+}
+
+.calendar-day.today .day-number {
+  color: #059669;
+  font-weight: 700;
+}
+
+.calendar-day.selected {
+  background: #3ACE00;
+}
+
+.calendar-day.selected .day-number {
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.calendar-day.has-history .history-dot {
+  width: 4px;
+  height: 4px;
+  background: #3ACE00;
+  border-radius: 50%;
+  margin-top: 2px;
+}
+
+.calendar-day.selected .history-dot {
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.clear-date-btn {
+  width: 100%;
+  margin-top: 12px;
+  padding: 8px;
+  background: #f3f4f6;
+  border: none;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #666;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  transition: all 0.2s;
+  font-family: "Noto Sans Thai", sans-serif;
+}
+
+.clear-date-btn:hover {
+  background: #e5e7eb;
+}
+
 .history-controls {
   display: flex;
   gap: 10px;
-  margin-bottom: 20px;}
+  margin-bottom: 20px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: #ffffff;
+  padding: 10px 0;
+  margin-top: -10px;
+}
 
 /* ==================== Search/Filter/Sort ==================== */
 .search-box {
@@ -241,6 +423,66 @@
   background: #6EE7B7;
 }
 
+/* Dark Mode Left Line - same as light mode */
+html.dark-mode .history-card.dangerous .card-left-line {
+  background: #FF8A8A;
+}
+
+html.dark-mode .history-card.safe .card-left-line {
+  background: #6EE7B7;
+}
+
+/* ==================== CALENDAR DATE BLOCK ==================== */
+.card-date-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 12px;
+  min-width: 55px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-right: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.card-date-block .date-day {
+  font-size: 22px;
+  font-weight: 800;
+  color: #333;
+  line-height: 1;
+}
+
+.card-date-block .date-month {
+  font-size: 11px;
+  font-weight: 600;
+  color: #666;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+.card-date-block .date-time {
+  font-size: 10px;
+  font-weight: 500;
+  color: #999;
+  margin-top: 4px;
+}
+
+/* Status color accent for date block */
+.history-card.safe .card-date-block {
+  background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+}
+
+.history-card.safe .card-date-block .date-day {
+  color: #059669;
+}
+
+.history-card.dangerous .card-date-block {
+  background: linear-gradient(135deg, #fef2f2 0%, #fecaca 100%);
+}
+
+.history-card.dangerous .card-date-block .date-day {
+  color: #dc2626;
+}
+
 .h-card-content {
   flex-grow: 1;
   padding: 12px 15px 12px 12px;
@@ -302,6 +544,19 @@
   background-color: #E5E7EB;
 }
 
+/* Dark Mode Icon Backgrounds - same as light mode */
+html.dark-mode .h-icon.icon-safe {
+  background-color: #86EFAC;
+}
+
+html.dark-mode .h-icon.icon-dangerous {
+  background-color: #FCA5A5;
+}
+
+html.dark-mode .h-icon.icon-unknown {
+  background-color: #E5E7EB;
+}
+
 .main-text {
   font-size: 15px;
   font-weight: 600;
@@ -354,6 +609,25 @@
   stroke: #10B981;
 }
 
+/* Dark Mode Status Badges - same as light mode */
+html.dark-mode .badge-dangerous {
+  background: #FFDada;
+  color: #FF5C5C;
+}
+
+html.dark-mode .badge-dangerous svg {
+  stroke: #FF5C5C;
+}
+
+html.dark-mode .badge-safe {
+  background: #D1FAE5;
+  color: #10B981;
+}
+
+html.dark-mode .badge-safe svg {
+  stroke: #10B981;
+}
+
 .more-link {
   font-size: 11px;
   color: #bbb;
@@ -384,6 +658,16 @@
 
 .see-more-btn:hover {
   background: #e0e0e0;
+}
+
+/* Dark Mode See More Button */
+html.dark-mode .see-more-btn {
+  background: #374151;
+  color: #e2e8f0;
+}
+
+html.dark-mode .see-more-btn:hover {
+  background: #4b5563;
 }
 
 .feedback-btn {

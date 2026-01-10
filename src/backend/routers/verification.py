@@ -14,7 +14,13 @@ from slowapi.util import get_remote_address
 from datetime import datetime
 
 from ..services.verification_service import get_verification_service
+from ..services.id_card_service import get_id_card_service
 from ..core.logger import get_logger
+from ..core.models import (
+    IDCardVerificationRequest,
+    IDCardVerificationResponse,
+    IDCardData
+)
 
 # Initialize router
 router = APIRouter(prefix="/api/v2", tags=["Verification"])
@@ -312,6 +318,109 @@ async def verify_social(http_request: Request, request: SocialVerificationReques
         raise HTTPException(
             status_code=500,
             detail=f"Social verification failed: {str(e)}"
+        )
+
+
+@router.post("/verify-id-card", response_model=IDCardVerificationResponse)
+@limiter.limit("20/minute")
+async def verify_id_card(request: Request, req_body: IDCardVerificationRequest):
+    """
+    Verify Thai National ID card through image scanning.
+
+    **Features:**
+    - OCR extraction using Google Gemini Vision
+    - 13-digit checksum validation (Thai ID algorithm)
+    - Blacklist checking against fraud database
+    - Extract name, DOB, address, etc.
+
+    **Input:**
+    - image_base64: Base64 encoded ID card image (JPEG/PNG)
+    - user_id: Optional user identifier
+
+    **Output:**
+    - id_number: Extracted ID number
+    - is_valid_format: Whether checksum is valid
+    - is_blacklisted: Whether ID is in blacklist
+    - is_safe: Overall safety status
+    - extracted_data: Full card data (name, DOB, address, etc.)
+    - risk_level: LOW, MEDIUM, HIGH, CRITICAL
+
+    **Example:**
+    ```json
+    POST /api/v2/verify-id-card
+    {
+        "image_base64": "/9j/4AAQSkZJRgABAQAA..."
+    }
+
+    Response:
+    {
+        "id_number": "1234567890123",
+        "is_valid_format": true,
+        "is_blacklisted": false,
+        "is_safe": true,
+        "reports_count": 0,
+        "risk_level": "LOW",
+        "extracted_data": {
+            "id_number": "1234567890123",
+            "name_th": "สมชาย",
+            "surname_th": "ใจดี",
+            "date_of_birth": "1990-05-15",
+            "address": "123 ถนนสุขุมวิท..."
+        }
+    }
+    ```
+
+    **Rate Limit:** 20 requests/minute (lower due to image processing)
+    """
+    try:
+        logger.info(f"🪪 Verifying ID card for user: {req_body.user_id}")
+
+        # Get ID card service
+        id_card_service = get_id_card_service()
+
+        # Verify ID card
+        result = id_card_service.verify_id_card(req_body.image_base64)
+
+        if not result.get("success"):
+            raise HTTPException(
+                status_code=400,
+                detail=result.get("error", "ID card verification failed")
+            )
+
+        # Build response
+        extracted_data = result.get("extracted_data")
+        id_card_data = IDCardData(
+            id_number=extracted_data.get("id_number"),
+            name_th=extracted_data.get("name_th"),
+            surname_th=extracted_data.get("surname_th"),
+            date_of_birth=extracted_data.get("date_of_birth"),
+            address=extracted_data.get("address"),
+            issue_date=extracted_data.get("issue_date"),
+            expiry_date=extracted_data.get("expiry_date")
+        ) if extracted_data else None
+
+        logger.info(f"✅ ID card verified: {result['id_number'][:4]}****{result['id_number'][-2:]}, "
+                   f"safe: {result['is_safe']}, risk: {result['risk_level']}")
+
+        return IDCardVerificationResponse(
+            id_number=result["id_number"],
+            is_valid_format=result["is_valid_format"],
+            is_blacklisted=result["is_blacklisted"],
+            is_safe=result["is_safe"],
+            reports_count=result["reports_count"],
+            risk_level=result["risk_level"],
+            extracted_data=id_card_data,
+            category=result.get("category"),
+            timestamp=datetime.now()
+        )
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"❌ ID card verification failed: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"ID card verification failed: {str(e)}"
         )
 
 

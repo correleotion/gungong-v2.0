@@ -35,3 +35,6 @@ playwright-stealth>=1.0.6
 
 # Language detection (v2.0)
 langdetect==1.0.9
+
+# Image processing (for ID card OCR)
+Pillow==10.4.0

@@ -3,8 +3,253 @@
 #check-sms-page,
 #scan-qr-page,
 #check-bank-page,
-#check-phone-page
+#check-phone-page,
+#check-content-page,
+#check-personal-page
 {padding: 0px 20px 0px 20px;}
+
+/* ==================== MODERN SUBPAGE STYLES ==================== */
+.scanner-subpage-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.back-btn-modern {
+  width: 44px;
+  height: 44px;
+  border: none;
+  background: #f3f4f6;
+  border-radius: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.back-btn-modern:hover {
+  background: #e5e7eb;
+}
+
+.back-btn-modern svg {
+  width: 22px;
+  height: 22px;
+  stroke: #6b7280;
+}
+
+.subpage-title-block {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.subpage-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.subpage-icon svg {
+  width: 24px;
+  height: 24px;
+  stroke: #fff;
+}
+
+/* Specific colors for subpage icons to match theme */
+.subpage-icon.icon-link   { background-color: #93C5FD; }
+.subpage-icon.icon-text   { background-color: #D8B4FE; }
+.subpage-icon.icon-qrcode { background-color: #86EFAC; }
+.subpage-icon.icon-bank   { background-color: #FDBA74; }
+.subpage-icon.icon-call   { background-color: #FCA5A5; }
+
+.subpage-title-block h2 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #333;
+  margin: 0;
+}
+
+.subpage-subtitle {
+  font-size: 13px;
+  color: #9ca3af;
+  margin: 4px 0 0 0;
+}
+
+/* Modern Tabs */
+.scanner-tabs-modern {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  background: #f3f4f6;
+  padding: 6px;
+  border-radius: 14px;
+}
+
+.tab-modern {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border: none;
+  background: transparent;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #9CA3AF;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: "Noto Sans Thai", sans-serif;
+}
+
+.tab-modern svg {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+}
+
+.tab-modern.active {
+  background: #ffffff;
+  color: #3ACE00;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.tab-modern:hover:not(.active) {
+  color: #6B7280;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* Scanner Form Card */
+.scanner-form-card {
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 28px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+}
+
+.form-label {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 12px;
+}
+
+.form-input-group {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.form-input {
+  flex: 1;
+  padding: 16px 18px;
+  border: 2px solid #e5e7eb;
+  border-radius: 14px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #374151;
+  outline: none;
+  transition: all 0.2s;
+  font-family: "Noto Sans Thai", sans-serif;
+}
+
+.form-input::placeholder {
+  color: #9ca3af;
+}
+
+.form-input:focus {
+  border-color: #3ACE00;
+  box-shadow: 0 0 0 4px rgba(58, 206, 0, 0.1);
+}
+
+.form-clear-btn {
+  width: 54px;
+  height: 54px;
+  flex-shrink: 0;
+  border: none;
+  background: #f3f4f6;
+  border-radius: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.form-clear-btn:hover {
+  background: #e5e7eb;
+}
+
+.form-clear-btn svg {
+  width: 20px;
+  height: 20px;
+  stroke: #9ca3af;
+}
+
+.form-hint {
+  font-size: 13px;
+  color: #9ca3af;
+  margin: 0 0 20px 0;
+}
+
+.form-submit-btn {
+  width: 100%;
+  padding: 16px;
+  background: #3ACE00;
+  color: white;
+  border: none;
+  border-radius: 14px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all 0.3s ease;
+  font-family: "Noto Sans Thai", sans-serif;
+}
+
+.form-submit-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+.form-submit-btn:hover {
+  background: #34b800;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(58, 206, 0, 0.3);
+}
+
+/* QR Scan Card Special Styles */
+.qr-card {
+  text-align: center;
+  padding: 40px 28px;
+}
+
+.qr-illustration {
+  margin-bottom: 20px;
+}
+
+.qr-illustration svg {
+  stroke: #9ca3af;
+}
+
+.qr-description {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0 0 24px 0;
+  line-height: 1.5;
+}
 
 .scanner-header {
   display: flex;
@@ -36,7 +281,222 @@
 .scanner-menu-list {
   display: flex;
   flex-direction: column;
-  gap: 15px;}
+  gap: 20px;}
+
+/* Scanner Groups */
+.scanner-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.scanner-group-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #9CA3AF;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding-left: 5px;
+}
+
+.scanner-group-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Scanner page wider layout */
+.scanner-wide {
+  max-width: 800px !important;
+}
+
+/* Vertical Card Grid */
+.scanner-card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+/* Responsive: 2 columns on smaller screens */
+@media (max-width: 680px) {
+  .scanner-card-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Responsive: 1 column on very small screens */
+@media (max-width: 450px) {
+  .scanner-card-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Netflix Package Card Style */
+.scanner-package-card {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.scanner-package-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(58, 206, 0, 0.15);
+  background: #f0fdf4;
+}
+
+.scanner-package-card:active {
+  transform: scale(0.98);
+}
+
+/* Package Icon */
+.package-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.package-icon svg {
+  width: 30px;
+  height: 30px;
+  stroke: #fff;
+}
+
+.package-icon.icon-link   { background-color: #93C5FD; }
+.package-icon.icon-text   { background-color: #D8B4FE; }
+.package-icon.icon-qrcode { background-color: #86EFAC; }
+.package-icon.icon-bank   { background-color: #FDBA74; }
+.package-icon.icon-call   { background-color: #FCA5A5; }
+
+/* Package Title & Description */
+.package-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #333;
+  margin: 0 0 6px 0;
+}
+
+.package-desc {
+  font-size: 12px;
+  color: #999;
+  margin: 0 0 16px 0;
+}
+
+/* Package Features List */
+.package-features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 20px 0;
+  text-align: left;
+  width: 100%;
+}
+
+.package-features li {
+  font-size: 12px;
+  padding: 6px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.package-features li:last-child {
+  border-bottom: none;
+}
+
+.feature-yes {
+  color: #333;
+}
+
+.feature-no {
+  color: #bbb;
+}
+
+.check-icon {
+  color: #10B981;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.cross-icon {
+  color: #dc2626;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+/* Package Button */
+.package-btn {
+  width: 100%;
+  padding: 12px;
+  background: #1de165;
+  border: none;
+  border-radius: 12px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: "Noto Sans Thai", sans-serif;
+}
+
+.package-btn:hover {
+  background: #34b800;
+  transform: scale(1.02);
+}
+
+/* Scanner Tabs */
+.scanner-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 15px;
+  background: #f5f5f5;
+  padding: 6px;
+  border-radius: 12px;
+}
+
+.scanner-tab {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 16px;
+  border: none;
+  background: transparent;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #9CA3AF;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: "Noto Sans Thai", sans-serif;
+}
+
+.scanner-tab svg {
+  width: 18px;
+  height: 18px;
+}
+
+.scanner-tab.active {
+  background: #ffffff;
+  color: #3ACE00;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.scanner-tab:hover:not(.active) {
+  color: #6B7280;
+}
 
 .scanner-card {
   background: #ffffff;
@@ -46,10 +506,12 @@
   align-items: center;
   box-shadow: 0 10px 20px rgba(187, 187, 187, 0.15);
   cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: transform 0.2s, box-shadow 0.2s, opacity 0.3s ease-out;
   border: none;
   width: 100%;
-  box-sizing: border-box;}
+  box-sizing: border-box;
+  opacity: 1;
+}
 
 .scanner-card:active {
   transform: scale(0.98);}
@@ -187,18 +649,21 @@
 
 .input-section {
   background: white;
-  border-radius: 16px;
-  padding: 24px;
+  border-radius: 20px;
+  padding: 28px;
   margin-bottom: 20px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);}
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
 
 .input-label {
   display: flex;
   align-items: center;
   gap: 8px;
-  color: #9CA3AF;
-  font-size: 14px;
-  margin-bottom: 12px;}
+  color: #6d6d6d;
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 14px;
+}
 
 .input-label svg {
   width: 18px;
@@ -269,10 +734,10 @@
 .check-btn {
   width: 100%;
   padding: 16px;
-  background: linear-gradient(135deg, #89E266 0%, #BFE0B2 100%);
+  background: #3ACE00;
   color: white;
   border: none;
-  border-radius: 12px;
+  border-radius: 14px;
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
@@ -280,16 +745,20 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  transition: all 0.2s;
-  font-family: "Noto Sans Thai", sans-serif;}
+  transition: all 0.3s ease;
+  font-family: "Noto Sans Thai", sans-serif;
+}
 
 .check-btn svg {
   width: 20px;
-  height: 20px;}
+  height: 20px;
+}
 
 .check-btn:hover {
+  background: #34b800;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);}
+  box-shadow: 0 6px 20px rgba(58, 206, 0, 0.3);
+}
 
 /* ==================== BANK SELECTOR ==================== */
 .bank-select-wrapper {

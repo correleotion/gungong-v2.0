@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import './styles/main.css';
 import './styles/pdpa.css';
 import './styles/home.css';
@@ -6,9 +6,11 @@ import './styles/verify.css';
 import './styles/scanner.css';
 import './styles/social.css';
 import './styles/history.css';
+import './styles/sidebar.css';
 
 import TopBanner from './components/shared/TopBanner';
 import BottomNav from './components/shared/BottomNav';
+import Sidebar from './components/shared/Sidebar';
 import PDPAModal from './components/shared/PDPAModal';
 import Home from './components/home';
 import Verify from './components/verify';
@@ -21,6 +23,14 @@ function App() {
   const [userProfile, setUserProfile] = useState(null);
   const [showPDPA, setShowPDPA] = useState(false);
   const [isLiffReady, setIsLiffReady] = useState(false);
+  // Sidebar State
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    // Load dark mode preference from localStorage
+    const saved = localStorage.getItem('gungong_dark_mode');
+    return saved === 'true';
+  });
 
   useEffect(() => {
     // Check PDPA consent
@@ -31,6 +41,24 @@ function App() {
 
     // Initialize LIFF if available
     initLiff();
+  }, []);
+
+  // Apply dark mode class to document
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark-mode');
+    } else {
+      document.documentElement.classList.remove('dark-mode');
+    }
+    localStorage.setItem('gungong_dark_mode', isDarkMode.toString());
+  }, [isDarkMode]);
+
+  const toggleDarkMode = useCallback(() => {
+    setIsDarkMode(prev => !prev);
+  }, []);
+
+  const toggleSidebar = useCallback(() => {
+    setIsSidebarCollapsed(prev => !prev);
   }, []);
 
   const initLiff = async () => {
@@ -50,11 +78,11 @@ function App() {
     }
   };
 
-  const handleNavigate = (section) => {
+  const handleNavigate = useCallback((section) => {
     setActiveSection(section);
     // Scroll to top when changing sections
     window.scrollTo(0, 0);
-  };
+  }, []);
 
   const handleShare = async () => {
     if (!window.liff || !window.liff.isApiAvailable('shareTargetPicker')) {
@@ -109,7 +137,12 @@ function App() {
       case 'home':
         return <Home />;
       case 'verify':
-        return <Verify userProfile={userProfile} onNavigate={handleNavigate} />;
+      case 'verify-phone':
+      case 'verify-bank':
+      case 'verify-id-card':
+      case 'verify-face':
+      case 'verify-business':
+        return <Verify userProfile={userProfile} onNavigate={handleNavigate} currentSubPage={activeSection} />;
       case 'scanner':
         return <Scanner onNavigate={handleNavigate} />;
       case 'social':
@@ -122,18 +155,65 @@ function App() {
   };
 
   return (
-    <div className="app">
+    <div className={`app ${isDarkMode ? 'dark-mode' : ''}`}>
       <PDPAModal isOpen={showPDPA} onAccept={handlePDPAAccept} />
 
-      <TopBanner userProfile={userProfile} onShare={handleShare} />
+      {/* Sidebar for Desktop/Tablet */}
+      <Sidebar
+        isCollapsed={isSidebarCollapsed}
+        onToggle={toggleSidebar}
+        currentPage={activeSection}
+        onNavigate={handleNavigate}
+      />
 
-      <main>
-        {renderPage()}
-      </main>
+      {/* Main Content Wrapper allowing space for Sidebar */}
+      <div className={`app-container ${isSidebarCollapsed ? 'sidebar-collapsed' : ''} has-sidebar`}>
+        <TopBanner
+          userProfile={userProfile}
+          onShare={handleShare}
+          isDarkMode={isDarkMode}
+          onToggleDarkMode={toggleDarkMode}
+        />
 
-      <BottomNav activeSection={activeSection} onNavigate={handleNavigate} />
+        <main>
+          {renderPage()}
+        </main>
+
+        {/* BottomNav hidden on desktop via CSS media queries usually, but let's keep it structurally here */}
+        <BottomNav activeSection={activeSection} onNavigate={handleNavigate} />
+
+
+
+        {/* TEMPORARY: Reset PDPA Button */}
+        <button
+          onClick={() => {
+            localStorage.removeItem('gungong_pdpa_accepted');
+            window.location.reload();
+          }}
+          style={{
+            position: 'fixed',
+            bottom: '80px',
+            right: '20px',
+            zIndex: 9999,
+            backgroundColor: 'red',
+            color: 'white',
+            border: 'none',
+            padding: '10px 15px',
+            borderRadius: '5px',
+            fontWeight: 'bold',
+            boxShadow: '0 2px 5px rgba(0,0,0,0.3)',
+            cursor: 'pointer'
+          }}
+        >
+          Reset PDPA ชั่วคราว
+        </button>
+
+
+
+      </div>
     </div>
   );
 }
 
 export default App;
+

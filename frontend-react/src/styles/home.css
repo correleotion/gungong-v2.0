@@ -68,7 +68,15 @@
   margin-bottom: 20px;
   box-shadow: 0 10px 20px rgba(187, 187, 187, 0.15);
   width: 100%;
-  box-sizing: border-box;}
+  box-sizing: border-box;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s, opacity 0.3s ease-out;
+  /* opacity: 1 removed */
+}
+
+.status-bar:active {
+  transform: scale(0.98);
+}
 
 .status-icon-bg {
   width: 40px;

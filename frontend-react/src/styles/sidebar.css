@@ -1,0 +1,244 @@
+/* ==================== SIDEBAR STYLES ==================== */
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100vh;
+  background: #ffffff;
+  box-shadow: 2px 0 15px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+  transition: width 0.3s ease;
+  overflow: visible; /* Allow toggle button to overlap if needed, but we'll put it inside */
+}
+
+.sidebar.expanded {
+  width: 260px; /* Increased width */
+}
+
+.sidebar.collapsed {
+  width: 80px; /* Increased collapsed width */
+}
+
+/* Toggle Button */
+.sidebar-toggle {
+  position: absolute;
+  top: 20px;
+  right: 15px; /* Fully inside */
+  width: 32px; /* Bigger button */
+  height: 32px;
+  border-radius: 50%;
+  background: white; /* White background */
+  border: 2px solid #e5e7eb; /* Subtle border */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1100;
+  transition: all 0.2s ease;
+  color: #3ACE00; /* Icon color */
+}
+
+.sidebar-toggle:hover {
+  transform: scale(1.05);
+  background: #f9fafb;
+  border-color: #3ACE00;
+}
+
+.sidebar-toggle svg {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor; /* Use text color */
+  stroke-width: 2.5;
+}
+
+/* Brand Section */
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 15px;
+  border-bottom: 1px solid #f0f0f0;
+  min-height: 70px;
+}
+
+.sidebar-logo-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #3ace00; /* Optional: Green border */
+  padding: 2px; /* Optional: Space between border and image */
+}
+
+.brand-text {
+  font-size: 20px;
+  font-weight: 800;
+  color: #3ACE00;
+  white-space: nowrap;
+  letter-spacing: 0.5px;
+}
+
+/* Navigation */
+.sidebar-nav {
+  flex: 1;
+  padding: 15px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  overflow-y: auto;
+}
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border: none;
+  background: transparent;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  width: 100%;
+  text-align: left;
+}
+
+.sidebar-item:hover {
+  background: #f0fdf0;
+}
+
+.sidebar-item.active {
+  background: linear-gradient(135deg, #e8fbe4, #d4f5cc);
+}
+
+.sidebar-item.active .item-icon svg {
+  stroke: #3ACE00;
+}
+
+.sidebar-item.active .item-label {
+  color: #3ACE00;
+  font-weight: 600;
+}
+
+.item-icon {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.item-icon svg {
+  width: 22px;
+  height: 22px;
+  stroke: #6B7280;
+  transition: stroke 0.2s;
+}
+
+.sidebar-item:hover .item-icon svg {
+  stroke: #3ACE00;
+}
+
+.item-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+  white-space: nowrap;
+  transition: color 0.2s;
+  font-family: "Noto Sans Thai", sans-serif;
+}
+
+.sidebar-item:hover .item-label {
+  color: #3ACE00;
+}
+
+/* Footer */
+.sidebar-footer {
+  padding: 15px 10px;
+}
+
+/* Collapsed State */
+.sidebar.collapsed .sidebar-brand {
+  justify-content: center;
+  padding: 20px 10px;
+}
+
+.sidebar.collapsed .sidebar-item {
+  justify-content: center;
+  padding: 12px 10px;
+}
+
+.sidebar.collapsed .sidebar-toggle {
+  right: -15px; /* Keep position consistent */
+  top: 25px; /* Slightly lower to align with center of logo if desired, or keep same */
+}
+
+/* ==================== DARK MODE ==================== */
+html.dark-mode .sidebar {
+  background: #1f2937;
+  box-shadow: 2px 0 15px rgba(0, 0, 0, 0.3);
+}
+
+html.dark-mode .sidebar-brand {
+  border-bottom-color: #374151;
+}
+
+
+
+html.dark-mode .sidebar-item:hover {
+  background: #374151;
+}
+
+html.dark-mode .sidebar-item.active {
+  background: linear-gradient(135deg, #1a3a12, #2d5a24);
+}
+
+html.dark-mode .item-icon svg {
+  stroke: #9CA3AF;
+}
+
+html.dark-mode .sidebar-item:hover .item-icon svg,
+html.dark-mode .sidebar-item.active .item-icon svg {
+  stroke: #3ACE00;
+}
+
+html.dark-mode .item-label {
+  color: #E5E7EB;
+}
+
+html.dark-mode .sidebar-item:hover .item-label,
+html.dark-mode .sidebar-item.active .item-label {
+  color: #3ACE00;
+}
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 768px) {
+  .sidebar {
+    display: none; /* Hide on mobile - use BottomNav instead */
+  }
+}
+
+@media (min-width: 769px) {
+  /* Add padding to main content when sidebar is visible */
+  .app-container.has-sidebar {
+    padding-left: 260px;
+    transition: padding-left 0.3s ease;
+  }
+
+  .app-container.has-sidebar.sidebar-collapsed {
+    padding-left: 80px;
+  }
+
+  /* Adjust BottomNav to respect Sidebar */
+  .app-container.has-sidebar .bottom-nav {
+    left: 260px; /* Start after sidebar */
+    transition: left 0.3s ease;
+  }
+
+  .app-container.has-sidebar.sidebar-collapsed .bottom-nav {
+    left: 80px; /* Start after collapsed sidebar */
+  }
+}

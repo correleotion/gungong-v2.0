@@ -1,6 +1,7 @@
 # ===========================================
 # Multi-Stage Dockerfile for GunGong
 # Frontend (React) + Backend (FastAPI)
+# WITHOUT Playwright (for faster startup)
 # ===========================================
 
 # ============================================
@@ -37,9 +38,8 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 # Copy requirements
 COPY requirements.txt .
 
-# Install Python dependencies to /install directory
+# Install Python dependencies to /install directory (WITHOUT playwright)
 RUN pip install --prefix=/install --no-cache-dir -r requirements.txt
-RUN pip install --prefix=/install playwright
 
 # ============================================
 # Stage 3: Final Production Image
@@ -49,17 +49,10 @@ FROM python:3.10-slim
 WORKDIR /app
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1 \
-    PLAYWRIGHT_BROWSERS_PATH=/app/pw-browsers
+    PYTHONUNBUFFERED=1
 
 # Copy Python packages from builder
 COPY --from=backend-builder /install /usr/local
-
-# Install system dependencies for Playwright
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    wget \
-    && playwright install-deps chromium \
-    && rm -rf /var/lib/apt/lists/*
 
 # Copy backend source code
 COPY src/backend/ ./src/backend/
@@ -71,9 +64,7 @@ COPY --from=frontend-builder /frontend/dist ./src/backend/static
 RUN useradd -m -u 1000 appuser && \
     chown -R appuser:appuser /app
 
-# Install Chromium as appuser
 USER appuser
-RUN playwright install chromium
 
 EXPOSE 8080
 

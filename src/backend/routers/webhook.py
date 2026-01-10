@@ -8,7 +8,7 @@ from fastapi import APIRouter, Request, HTTPException, Header
 from urllib.parse import parse_qs
 
 from ..core.config import get_settings
-from ..core.fraud_detector import get_fraud_detector
+from ..services.gemini_service import get_fraud_detector
 from ..core.performance_config import (
     get_performance_config,
     should_skip_ai,

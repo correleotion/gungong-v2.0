@@ -2,6 +2,7 @@
 fastapi==0.115.5
 uvicorn[standard]==0.32.1
 slowapi==0.1.9  # Rate limiting
+python-multipart==0.0.9  # Form data support
 
 # Environment variables
 python-dotenv==1.0.1

@@ -1,0 +1,20 @@
+# Simple Cloud Build - Build image only (no deploy)
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-f'
+      - 'deployment/Dockerfile.fullstack'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/gungong-fullstack:latest'
+      - '.'
+    timeout: 1800s
+
+images:
+  - 'gcr.io/$PROJECT_ID/gungong-fullstack:latest'
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+  machineType: 'E2_HIGHCPU_8'
+
+timeout: 2400s

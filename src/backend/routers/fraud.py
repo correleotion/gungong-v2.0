@@ -8,13 +8,12 @@ from pydantic import BaseModel
 from slowapi import Limiter
 from slowapi.util import get_remote_address
 
-from ..core.fraud_detector import get_fraud_detector
+from ..services.gemini_service import get_fraud_detector
 from ..services.database_service import get_database_service
 from ..services.virustotal_service import get_virustotal_service
 from ..services.fraud_message_service import get_fraud_message_service
 from ..services.similarity_service import get_similarity_service
 from ..services.prescreen_service import get_prescreen_service
-from ..core.utils import extract_urls
 from ..core.logger import get_logger
 
 router = APIRouter()

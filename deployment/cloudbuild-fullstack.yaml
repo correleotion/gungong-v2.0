@@ -12,7 +12,7 @@ steps:
       - '-f'
       - 'deployment/Dockerfile.fullstack'
       - '-t'
-      - 'gcr.io/$PROJECT_ID/gungong-fullstack:$COMMIT_SHA'
+      - 'gcr.io/$PROJECT_ID/gungong-fullstack:$BUILD_ID'
       - '-t'
       - 'gcr.io/$PROJECT_ID/gungong-fullstack:latest'
       - '.'
@@ -20,7 +20,7 @@ steps:
 
   # 2. Push Image to Container Registry
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'gcr.io/$PROJECT_ID/gungong-fullstack:$COMMIT_SHA']
+    args: ['push', 'gcr.io/$PROJECT_ID/gungong-fullstack:$BUILD_ID']
 
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'gcr.io/$PROJECT_ID/gungong-fullstack:latest']
@@ -33,7 +33,7 @@ steps:
       - 'deploy'
       - 'gungong-fullstack'
       - '--image'
-      - 'gcr.io/$PROJECT_ID/gungong-fullstack:$COMMIT_SHA'
+      - 'gcr.io/$PROJECT_ID/gungong-fullstack:$BUILD_ID'
       - '--region'
       - 'asia-southeast1'
       - '--allow-unauthenticated'
@@ -50,11 +50,15 @@ steps:
       - '10'
       - '--min-instances'
       - '0'
+      - '--startup-probe-period-seconds'
+      - '600'
+      - '--startup-probe-timeout-seconds'
+      - '600'
       - '--set-env-vars'
       - 'DEBUG=False'
 
 images:
-  - 'gcr.io/$PROJECT_ID/gungong-fullstack:$COMMIT_SHA'
+  - 'gcr.io/$PROJECT_ID/gungong-fullstack:$BUILD_ID'
   - 'gcr.io/$PROJECT_ID/gungong-fullstack:latest'
 
 options:

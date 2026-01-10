@@ -65,12 +65,22 @@
   gap: 10px;
 }
 
-.author-avatar {
+.author-avatar-svg {
   width: 42px;
   height: 42px;
   border-radius: 50%;
-  object-fit: cover;
+  background: #E5E7EB; /* Grey background */
+  color: #9CA3AF; /* Icon color */
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border: 1px solid #e5e7eb;
+  overflow: hidden;
+}
+
+.author-avatar-svg svg {
+  width: 28px; /* Percentage or px size relative to container */
+  height: 28px;
 }
 
 .author-details {
@@ -201,6 +211,12 @@ html.dark-mode .social-card {
 
 html.dark-mode .author-name {
   color: #E2E8F0;
+}
+
+html.dark-mode .author-avatar-svg {
+  background: #4A5568;
+  color: #E2E8F0;
+  border-color: #4A5568;
 }
 
 html.dark-mode .post-text {

@@ -264,7 +264,7 @@ const History = () => {
               const iconClass = isFraud ? 'icon-dangerous' : (isSafe ? 'icon-safe' : 'icon-unknown');
               const timeStr = getTimeString(item.created_at);
               const displayText = item.message_text || item.account_number || item.phone_number || 'No content';
-              const animDelay = `${0.1 + index * 0.08}s`;
+              const animDelay = `${0.05 + index * 0.08}s`;
 
               return (
                 <div

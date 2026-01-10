@@ -6,9 +6,11 @@ import './styles/verify.css';
 import './styles/scanner.css';
 import './styles/social.css';
 import './styles/history.css';
+import './styles/sidebar.css';
 
 import TopBanner from './components/shared/TopBanner';
 import BottomNav from './components/shared/BottomNav';
+import Sidebar from './components/shared/Sidebar';
 import PDPAModal from './components/shared/PDPAModal';
 import Home from './components/home';
 import Verify from './components/verify';
@@ -21,6 +23,9 @@ function App() {
   const [userProfile, setUserProfile] = useState(null);
   const [showPDPA, setShowPDPA] = useState(false);
   const [isLiffReady, setIsLiffReady] = useState(false);
+  // Sidebar State
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+
   const [isDarkMode, setIsDarkMode] = useState(() => {
     // Load dark mode preference from localStorage
     const saved = localStorage.getItem('gungong_dark_mode');
@@ -50,6 +55,10 @@ function App() {
 
   const toggleDarkMode = () => {
     setIsDarkMode(prev => !prev);
+  };
+
+  const toggleSidebar = () => {
+    setIsSidebarCollapsed(prev => !prev);
   };
 
   const initLiff = async () => {
@@ -144,18 +153,30 @@ function App() {
     <div className={`app ${isDarkMode ? 'dark-mode' : ''}`}>
       <PDPAModal isOpen={showPDPA} onAccept={handlePDPAAccept} />
 
-      <TopBanner
-        userProfile={userProfile}
-        onShare={handleShare}
-        isDarkMode={isDarkMode}
-        onToggleDarkMode={toggleDarkMode}
+      {/* Sidebar for Desktop/Tablet */}
+      <Sidebar
+        isCollapsed={isSidebarCollapsed}
+        onToggle={toggleSidebar}
+        currentPage={activeSection}
+        onNavigate={handleNavigate}
       />
 
-      <main>
-        {renderPage()}
-      </main>
+      {/* Main Content Wrapper allowing space for Sidebar */}
+      <div className={`app-container ${isSidebarCollapsed ? 'sidebar-collapsed' : ''} has-sidebar`}>
+        <TopBanner
+          userProfile={userProfile}
+          onShare={handleShare}
+          isDarkMode={isDarkMode}
+          onToggleDarkMode={toggleDarkMode}
+        />
 
-      <BottomNav activeSection={activeSection} onNavigate={handleNavigate} />
+        <main>
+          {renderPage()}
+        </main>
+
+        {/* BottomNav hidden on desktop via CSS media queries usually, but let's keep it structurally here */}
+        <BottomNav activeSection={activeSection} onNavigate={handleNavigate} />
+      </div>
     </div>
   );
 }

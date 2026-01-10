@@ -31,11 +31,19 @@ const TopBanner = ({ userProfile, onShare, isDarkMode, onToggleDarkMode }) => {
 
       <div className="user-info">
         <div className="avatar-container">
-          <img
-            className="avatar"
-            src={userProfile?.pictureUrl || '/img/profile.png'}
-            alt="avatar"
-          />
+          {userProfile?.pictureUrl ? (
+            <img
+              className="avatar"
+              src={userProfile.pictureUrl}
+              alt="avatar"
+            />
+          ) : (
+            <div className="avatar-svg">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+              </svg>
+            </div>
+          )}
         </div>
         <div className="text-group">
           <div className="user-name">{userProfile?.displayName || '(Username)'}</div>

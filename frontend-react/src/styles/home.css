@@ -71,7 +71,7 @@
   box-sizing: border-box;
   cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s, opacity 0.3s ease-out;
-  opacity: 1;
+  /* opacity: 1 removed */
 }
 
 .status-bar:active {

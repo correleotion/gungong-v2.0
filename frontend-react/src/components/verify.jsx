@@ -51,7 +51,7 @@ const Verify = ({ userProfile, onNavigate }) => {
   };
 
   const CardContent = ({ level, shieldImg }) => (
-    <div className={`verification-card level-${level}`}>
+    <div className={`verification-card level-${level} animate-card`}>
       <img src={`/img/${level}_card.png`} className="card-bg" alt={`${level} Card`} />
       <div className="card-content">
         <div className="card-col-left">
@@ -100,7 +100,12 @@ const Verify = ({ userProfile, onNavigate }) => {
         </div>
         <div className="verify-menu-list">
           {items.map((item, index) => (
-            <div key={index} className="verify-menu-card" onClick={() => openFeature(item.feature)}>
+            <div
+              key={index}
+              className="verify-menu-card animate-card"
+              onClick={() => openFeature(item.feature)}
+              style={{ animationDelay: `${0.05 + index * 0.1}s` }}
+            >
               <div className={`verify-card-icon icon-${item.iconClass}`}>
                 {item.icon}
               </div>

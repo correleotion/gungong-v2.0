@@ -275,7 +275,7 @@ const Verify = ({ userProfile, onNavigate, currentSubPage }) => {
           </svg>
         ),
         inputLabel: 'เบอร์โทรศัพท์',
-        inputPlaceholder: '0812345678',
+        inputPlaceholder: '09x-xxx-xxxx',
         inputType: 'tel',
       },
       'verify-bank': {
@@ -289,7 +289,7 @@ const Verify = ({ userProfile, onNavigate, currentSubPage }) => {
           </svg>
         ),
         inputLabel: 'เลขบัญชีธนาคาร',
-        inputPlaceholder: '1234567890',
+        inputPlaceholder: 'เลขบัญชี 10-12 หลัก',
         inputType: 'text',
       },
       'verify-id-card': {

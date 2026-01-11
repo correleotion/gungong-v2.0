@@ -1,12 +1,142 @@
 # 🛡️ GunGong (กันโกง) - AI Fraud Detection Bot
 
-LINE Bot ที่ใช้ Gemini AI และเทคโนโลยีหลายชั้นเพื่อตรวจจับข้อความฉ้อโกง Spam, Phishing และการหลอกลวง พร้อม LIFF Mini App สำหรับตรวจสอบลิงก์ บัญชีธนาคาร และเบอร์โทรศัพท์
+LINE Bot ที่ใช้ Gemini AI และเทคโนโลยีหลายชั้นเพื่อตรวจจับข้อความฉ้อโกง Spam, Phishing และการหลอกลวง พร้อม LIFF Mini App สำหรับตรวจสอบลิงก์ บัญชีธนาคาร เบอร์โทรศัพท์ และวิเคราะห์ภาพอัจฉริยะ
+
+---
+
+## 📱 เริ่มใช้งาน LINE Bot
+
+### วิธีเพิ่มเพื่อน GunGong Bot
+
+1. **สแกน QR Code นี้** หรือค้นหา LINE ID: **@357asclq**
+
+```
+█████████████████████████████
+█████████████████████████████
+████ ▄▄▄▄▄ █▀█ █▄▀▄ ▄▄▄▄▄ ████
+████ █   █ █▀▀▀█ ▄█ █   █ ████
+████ █▄▄▄█ █▀ █▀▀ ▀ █▄▄▄█ ████
+████▄▄▄▄▄▄▄█▄▀ ▀▄█ █▄▄▄▄▄▄████
+████ ▄▄ ▄ ▄  ▀▄▀▄█▄ █▄▄  █████
+████▄ █▀█▀▄▀ ▄▄ ▀▄▀▀█▀▀▄█▀████
+████▄▄▀ ▄▀▄█▄▄▄█ █ ▄▀▄█▄▀▄████
+████ ▄▄▄▄▄ █▄ ▀ ▄█▀█ ▀█  █████
+████ █   █ █  █▀▀▄▀██▀▀▄█▀████
+████ █▄▄▄█ █ ██ ▄▄ ▄█▄▀▄██████
+████▄▄▄▄▄▄▄█▄▄███▄▄█▄██▄▄▄████
+█████████████████████████████
+█████████████████████████████
+```
+
+**หรือคลิกลิงก์**: https://line.me/R/ti/p/@357asclq
+
+2. **กดเพิ่มเพื่อน** และเริ่มส่งข้อความได้เลย!
+
+---
+
+## 👥 วิธีใช้งานสำหรับผู้ใช้ทั่วไป
+
+### 💬 1. ตรวจสอบข้อความต้องสงสัย
+
+**ส่งข้อความตรง ๆ ไปที่บอทได้เลย**
+
+```
+ตัวอย่าง:
+"🎰 สมัครคาสิโนออนไลน์ รับโบนัส 100%"
+```
+
+บอทจะตอบกลับทันทีว่า:
+- 🚨 ข้อความนี้เป็นฉ้อโกงหรือไม่
+- 📊 ระดับความเสี่ยง (ต่ำ/กลาง/สูง/วิกฤต)
+- 💡 เหตุผลว่าทำไมถึงอันตราย
+- ⚠️ คำแนะนำในการป้องกัน
+
+### 🔗 2. ตรวจสอบลิงก์ต้องสงสัย
+
+**ส่งลิงก์มาให้บอทตรวจสอบ**
+
+```
+ตัวอย่าง:
+"https://bit.ly/xxxxx"
+"line.me/R/xxxxx"
+```
+
+บอทจะ:
+- 🔍 เปิดลิงก์จริง (ถ้าเป็น short URL)
+- 🛡️ ตรวจสอบกับ VirusTotal
+- 🎯 วิเคราะห์ด้วย Gemini AI
+- ⚡ บอกผลภายใน 3-8 วินาที
+
+### 📷 3. ตรวจสอบภาพ (ฟีเจอร์ใหม่! 🆕)
+
+**ส่งรูปภาพที่ต้องสงสัยมาได้เลย**
+
+บอทจะวิเคราะห์อัตโนมัติว่าเป็น:
+
+#### 📱 **QR Code**
+```
+ส่งภาพ QR Code → บอทจะ:
+✅ อ่าน QR Code และแปลงเป็นลิงก์
+✅ ตรวจสอบว่าลิงก์อันตรายหรือไม่
+✅ เตือนถ้าพบว่าเป็น Phishing/Scam
+```
+
+#### 🪪 **บัตรประชาชน**
+```
+ส่งภาพบัตรประชาชน → บอทจะ:
+✅ แสกนข้อมูลด้วย OCR (Gemini Vision)
+✅ ตรวจสอบเลข 13 หลัก (checksum)
+✅ ตรวจสอบกับฐานข้อมูล blacklist
+✅ บอกว่าปลอดภัยหรือมีประวัติฉ้อโกง
+```
+
+#### 🖼️ **รูปทั่วไป**
+```
+ส่งรูปสัตว์เลี้ยง, อาหาร, คน, ทิวทัศน์
+→ บอทจะไม่ตอบกลับ (ไม่รบกวน)
+```
+
+### 🏦 4. ตรวจสอบบัญชีธนาคาร
+
+**เปิด LIFF Mini App** (กดเมนูด้านล่างใน LINE)
+
+```
+1. เลือก "🏦 Check Bank Account"
+2. ใส่เลขบัญชี (เช่น 123-4-56789-0)
+3. เลือกธนาคาร (KBANK, SCB, BBL, ฯลฯ)
+4. กด "ตรวจสอบ"
+```
+
+ระบบจะบอกว่า:
+- ✅ บัญชีปลอดภัย หรือ
+- 🚨 เป็นบัญชีมิจฉาชีพ (มีประวัติรับเงินโกง)
+
+### ☎️ 5. ตรวจสอบเบอร์โทรศัพท์
+
+**เปิด LIFF Mini App**
+
+```
+1. เลือก "☎️ Check Phone Number"
+2. ใส่เบอร์ (เช่น 081-234-5678)
+3. กด "ตรวจสอบ"
+```
+
+ระบบจะบอกว่า:
+- จำนวนครั้งที่ถูกรายงาน
+- ประเภทการฉ้อโกง (โทรหลอกลวง, นายหน้าเงินกู้นอกระบบ)
+- ระดับความเสี่ยง
+
+### 📜 6. ดูประวัติการตรวจสอบ
+
+**เปิด LIFF Mini App → "📜 View History"**
+
+ดูย้อนหลังว่าเคยตรวจอะไรบ้าง พร้อมผลลัพธ์
 
 ---
 
 ## 🎯 Features
 
-### 🤖 Detection Capabilities
+### 🤖 AI Detection Capabilities
 - ✅ โฆษณาการพนันออนไลน์ (FRAUD_GAMBLING_AD)
 - ✅ Phishing/มัลแวร์ (SCAM_MALICIOUS)
 - ✅ หลอกลวงทางการเงิน (FRAUD_FINANCIAL)
@@ -15,8 +145,14 @@ LINE Bot ที่ใช้ Gemini AI และเทคโนโลยีหล
 - ✅ เนื้อหาสำหรับผู้ใหญ่ (ADULT_CONTENT)
 - ✅ ข้อความปลอดภัย (SAFE_NORMAL)
 
+### 📸 Intelligent Image Analysis (NEW! 🆕)
+- ✅ **QR Code Detection** - แสกน QR Code และตรวจสอบลิงก์ที่อันตราย
+- ✅ **ID Card OCR** - อ่านบัตรประชาชนไทยและตรวจสอบ blacklist
+- ✅ **Smart Filtering** - ไม่รบกวนเมื่อส่งรูปทั่วไป (สัตว์เลี้ยง, อาหาร, คน)
+
 ### 🔧 Technology Stack
-- 🤖 **Gemini 2.5 Flash** - AI Classification
+- 🤖 **Gemini 2.5 Flash** - AI Text Classification
+- 👁️ **Gemini Vision** - Intelligent Image Analysis
 - 🔍 **VirusTotal** - Malicious URL Detection
 - 🎯 **Pattern Matching** - Instant Recognition
 - 📊 **TF-IDF** - Similarity Analysis
@@ -26,6 +162,9 @@ LINE Bot ที่ใช้ Gemini AI และเทคโนโลยีหล
 
 ### 🌐 User Interfaces
 - 📱 **LINE Official Account** - Chat with Bot
+  - 💬 Text Message Analysis
+  - 🔗 URL Verification
+  - 📷 Image Classification (QR/ID Card/General)
 - 🌐 **LIFF Mini App** - Web Interface
   - 🔗 Check Link
   - 📱 Check SMS
@@ -68,7 +207,10 @@ gungong/
 │   │       ├── gambling_detector.py    # Gambling detection
 │   │       ├── homoglyph_detector.py   # Unicode spoofing
 │   │       ├── blacklist_service.py    # Bank/Phone blacklist
-│   │       └── feedback_service.py     # User feedback
+│   │       ├── feedback_service.py     # User feedback
+│   │       ├── image_classifier_service.py  # Image classification (NEW!)
+│   │       ├── id_card_service.py      # ID card verification
+│   │       └── verification_service.py # Multi-verification hub
 │   └── frontend/                        # LIFF Mini App
 │       ├── index.html
 │       ├── js/
@@ -178,6 +320,11 @@ uvicorn src.backend.main:app --reload --port 8000
 | POST | `/analyze-message` | TF-IDF analysis | fraud.py |
 | POST | `/check-bank` | Bank account check | blacklist.py |
 | POST | `/check-phone` | Phone number check | blacklist.py |
+| POST | `/api/v2/verify-phone` | Phone verification (v2) | verification.py |
+| POST | `/api/v2/verify-bank` | Bank verification (v2) | verification.py |
+| POST | `/api/v2/verify-social` | Social profile check | verification.py |
+| POST | `/api/v2/verify-id-card` | ID card OCR + verify | verification.py |
+| POST | `/api/v2/verify-id-number` | ID number only verify | verification.py |
 | GET | `/cache-entries` | History (paginated) | history.py |
 | GET | `/history/{id}` | Single history entry | history.py |
 | GET | `/cache-stats` | Cache statistics | history.py |
@@ -191,6 +338,7 @@ uvicorn src.backend.main:app --reload --port 8000
 
 ## 🔄 System Flow
 
+### Text Message Flow
 ```
 User Message
     │
@@ -229,6 +377,42 @@ User Message
          │
          ▼
      Response
+```
+
+### Image Message Flow (NEW! 🆕)
+```
+User Image
+    │
+    ▼
+┌─────────────────────────┐
+│  Image Classification   │
+│  (Gemini Vision)        │
+│  • QR Code?             │
+│  • ID Card?             │
+│  • General Photo?       │
+└────────┬────────────────┘
+         │
+         ├─→ QR Code ─────────┐
+         │                    ▼
+         │            ┌───────────────┐
+         │            │ Decode QR URL │
+         │            │ Check Fraud   │
+         │            └───────────────┘
+         │
+         ├─→ ID Card ─────────┐
+         │                    ▼
+         │            ┌───────────────┐
+         │            │ OCR Scan      │
+         │            │ Checksum Test │
+         │            │ Blacklist Chk │
+         │            └───────────────┘
+         │
+         └─→ General ─────────┐
+                              ▼
+                      ┌──────────────┐
+                      │ No Response  │
+                      │ (Don't spam) │
+                      └──────────────┘
 ```
 
 ### Routing Strategy
@@ -278,7 +462,7 @@ User Message
 
 ## 🧪 Testing
 
-### REST API Test
+### 1. Fraud Detection API Test
 
 ```bash
 curl -X POST http://localhost:8000/check-fraud \
@@ -299,12 +483,58 @@ Expected Response:
 }
 ```
 
-### LINE Webhook Test
+### 2. ID Card Verification API Test (NEW! 🆕)
+
+```bash
+# Read image as base64
+IMAGE_BASE64=$(base64 -i test_id_card.jpg)
+
+curl -X POST http://localhost:8000/api/v2/verify-id-card \
+  -H "Content-Type: application/json" \
+  -d "{
+    \"image_base64\": \"$IMAGE_BASE64\"
+  }"
+```
+
+Expected Response:
+```json
+{
+  "id_number": "1234567890123",
+  "is_valid_format": true,
+  "is_blacklisted": false,
+  "is_safe": true,
+  "reports_count": 0,
+  "risk_level": "LOW",
+  "extracted_data": {
+    "id_number": "1234567890123",
+    "name_th": "สมชาย",
+    "surname_th": "ใจดี",
+    "date_of_birth": "1990-05-15",
+    "address": "123 ถนนสุขุมวิท..."
+  }
+}
+```
+
+### 3. Phone/Bank Verification Test
+
+```bash
+# Phone verification
+curl -X POST http://localhost:8000/api/v2/verify-phone \
+  -H "Content-Type: application/json" \
+  -d '{"phone": "0812345678"}'
+
+# Bank verification
+curl -X POST http://localhost:8000/api/v2/verify-bank \
+  -H "Content-Type: application/json" \
+  -d '{"account_number": "1234567890", "bank_code": "KBANK"}'
+```
+
+### 4. LINE Webhook Test
 
 1. Start server: `uvicorn src.backend.main:app --reload --port 8000`
 2. Start ngrok: `ngrok http 8000`
 3. Configure LINE webhook: `https://xxxx.ngrok-free.app/webhook`
-4. Send message to bot
+4. Send text message, image, or QR code to bot
 
 ---
 
@@ -331,6 +561,45 @@ docker-compose stop
 
 # Clean up
 docker-compose down
+```
+
+---
+
+## 💡 Real-World Use Cases
+
+### 🛒 For Online Shoppers
+```
+Scenario: ได้รับข้อความโปรโมชั่นพร้อมลิงก์
+Action: Forward ข้อความไปที่ GunGong Bot
+Result: บอทตรวจสอบลิงก์และเตือนถ้าเป็น Phishing
+```
+
+### 💰 For Transfer Money
+```
+Scenario: จะโอนเงินให้คนที่ไม่รู้จัก
+Action: ใช้ LIFF App ตรวจสอบเลขบัญชี + เบอร์โทร
+Result: ได้รู้ว่าเป็นบัญชีมิจฉาชีพหรือไม่
+```
+
+### 📱 For QR Code Payments
+```
+Scenario: แสกน QR Code จากร้านค้าที่ไม่รู้จัก
+Action: ถ่ายภาพ QR Code และส่งให้บอท
+Result: บอทอ่าน QR และเตือนถ้าเป็นลิงก์อันตราย
+```
+
+### 🆔 For Document Verification
+```
+Scenario: ผู้ประกอบการต้องตรวจสอบบัตรประชาชนลูกค้า
+Action: ถ่ายภาพบัตรประชาชนและส่งให้บอท
+Result: บอทแสกนข้อมูล + ตรวจสอบว่ามีประวัติฉ้อโกงหรือไม่
+```
+
+### 👥 For Group Chats
+```
+Scenario: มีคนส่งข้อความน่าสงสัยในกลุ่ม
+Action: แท็ก @GunGong พร้อมข้อความ
+Result: บอททำงานในกลุ่มและเตือนสมาชิกทุกคน
 ```
 
 ---
@@ -402,6 +671,14 @@ uvicorn src.backend.main:app --reload
 ---
 
 ## 📝 Recent Updates
+
+### v2.1.0 - Intelligent Image Analysis (2026-01-11) 🆕
+- ✅ Added Gemini Vision AI for image classification
+- ✅ QR Code detection and fraud checking
+- ✅ Thai ID Card OCR and verification
+- ✅ Smart filtering (no response for general photos)
+- ✅ Integrated image classifier service
+- ✅ Updated verification router with image endpoints
 
 ### v2.0.0 - Modular Refactoring (2025-12-01)
 - ✅ Refactored main.py from 1,662 lines → 122 lines (93% reduction)

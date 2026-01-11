@@ -52,17 +52,20 @@ class DatabaseService:
             # Check if using Firebase Emulator
             use_emulator = os.getenv("USE_FIREBASE_EMULATOR", "false").lower() == "true"
             
+            # Get database name from environment or use project_id as database name
+            database_name = os.getenv("FIRESTORE_DATABASE_ID", project_id)
+
             if use_emulator:
                 # Use Firebase Emulator
                 # Docker containers need to use host.docker.internal to access host machine
                 emulator_host = os.getenv("FIRESTORE_EMULATOR_HOST", "host.docker.internal:8080")
                 os.environ["FIRESTORE_EMULATOR_HOST"] = emulator_host
-                self.db = firestore.Client(project=project_id)
-                print(f"🔧 Firestore initialized with EMULATOR (Project: {self.db.project}, HOST: {emulator_host})")
+                self.db = firestore.Client(project=project_id, database=database_name)
+                print(f"🔧 Firestore initialized with EMULATOR (Project: {self.db.project}, Database: {database_name}, HOST: {emulator_host})")
             else:
                 # Use production Firestore
-                self.db = firestore.Client(project=project_id)
-                print(f"✅ Firestore initialized successfully (Project: {self.db.project})")
+                self.db = firestore.Client(project=project_id, database=database_name)
+                print(f"✅ Firestore initialized successfully (Project: {self.db.project}, Database: {database_name})")
             
         except Exception as e:
             print(f"❌ Error initializing Firestore: {e}")

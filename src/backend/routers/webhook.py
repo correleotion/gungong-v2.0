@@ -23,6 +23,7 @@ from ..services.prescreen_service import get_prescreen_service
 from ..services.feedback_service import get_feedback_service
 from ..services.gambling_domain_service import get_gambling_domain_service
 from ..services.id_card_service import get_id_card_service
+from ..services.similarity_service import get_similarity_service
 from ..utils.message_helpers import is_analysis_request, is_bot_mentioned
 from ..core.logger import get_logger
 

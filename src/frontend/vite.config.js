@@ -4,4 +4,6 @@ import react from '@vitejs/plugin-react'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
+  // อ่าน .env จากโฟลเดอร์ root (gungong-v2.0/)
+  envDir: '../../',
 })

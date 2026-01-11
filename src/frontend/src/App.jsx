@@ -7,7 +7,9 @@ import './styles/scanner.css';
 import './styles/social.css';
 import './styles/history.css';
 import './styles/sidebar.css';
+import './styles/auth.css';
 
+import { AuthProvider, useAuth } from './contexts/AuthContext';
 import TopBanner from './components/shared/TopBanner';
 import BottomNav from './components/shared/BottomNav';
 import Sidebar from './components/shared/Sidebar';
@@ -215,5 +217,12 @@ function App() {
   );
 }
 
-export default App;
+// Wrap App with AuthProvider
+const AppWithAuth = () => (
+  <AuthProvider>
+    <App />
+  </AuthProvider>
+);
+
+export default AppWithAuth;
 

@@ -620,12 +620,12 @@ html.dark-mode .share-card-btn:hover {
 
 .form-submit-btn {
   width: 100%;
-  padding: 16px;
-  background: #3ACE00;
+  padding: 12px;
+  background: #1de165;
   color: white;
   border: none;
-  border-radius: 14px;
-  font-size: 16px;
+  border-radius: 12px;
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
   display: flex;
@@ -638,8 +638,7 @@ html.dark-mode .share-card-btn:hover {
 
 .form-submit-btn:hover {
   background: #34b800;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(58, 206, 0, 0.3);
+  transform: scale(1.02);
 }
 
 /* Dark Mode Form Styles */

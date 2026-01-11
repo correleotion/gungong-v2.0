@@ -17,6 +17,12 @@ steps:
       - '.'
     timeout: 1800s
 
+  # 2. Push Docker Image to GCR
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'gcr.io/$PROJECT_ID/gungong-fullstack:$BUILD_ID'
+
   # 3. Deploy to Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud

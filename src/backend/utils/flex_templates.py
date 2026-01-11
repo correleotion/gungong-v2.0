@@ -54,8 +54,8 @@ def create_id_card_verification_flex(
         safety_text = "ปลอดภัย"
         safety_percentage = "100%"
 
-    # Truncate address if too long
-    display_address = address[:80] + "..." if len(address) > 80 else address
+    # Display full address without truncation
+    display_address = address
 
     # Build Flex Message
     bubble = FlexBubble(
@@ -251,13 +251,15 @@ def create_id_card_verification_flex(
                             text="ระดับความเสี่ยง:",
                             size="sm",
                             color="#666666",
-                            flex=2
+                            flex=0
                         ),
                         FlexText(
                             text=risk_level,
                             size="sm",
                             color="#333333",
-                            flex=5
+                            flex=0,
+                            wrap=True,
+                            margin="sm"
                         )
                     ],
                     margin="sm"
@@ -271,13 +273,15 @@ def create_id_card_verification_flex(
                             text="จำนวนรายงาน:",
                             size="sm",
                             color="#666666",
-                            flex=2
+                            flex=0
                         ),
                         FlexText(
                             text=f"{reports_count} ครั้ง",
                             size="sm",
                             color="#333333",
-                            flex=5
+                            flex=0,
+                            wrap=True,
+                            margin="sm"
                         )
                     ],
                     margin="sm"

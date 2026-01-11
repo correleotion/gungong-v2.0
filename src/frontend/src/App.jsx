@@ -19,6 +19,7 @@ import Verify from './components/verify';
 import Scanner from './components/scanner';
 import Social from './components/social';
 import History from './components/history';
+import IDCardScanner from './components/IDCardScanner';
 
 function App() {
   const [activeSection, setActiveSection] = useState('home');
@@ -135,6 +136,11 @@ function App() {
   };
 
   const renderPage = () => {
+    // Handle ID card scanner route
+    if (activeSection === 'id-card-scanner') {
+      return <IDCardScanner onNavigate={handleNavigate} />;
+    }
+
     // Get the main section from activeSection
     const mainSection = activeSection.startsWith('verify-') ? 'verify' :
                         activeSection.startsWith('check-') || activeSection === 'scan-qr' ? 'scanner' :

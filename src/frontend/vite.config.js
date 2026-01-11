@@ -6,4 +6,13 @@ export default defineConfig({
   plugins: [react()],
   // อ่าน .env จากโฟลเดอร์ root (gungong-v2.0/)
   envDir: '../../',
+  server: {
+    host: true, // Allow external access
+    proxy: {
+      '/api': {
+        target: 'http://localhost:8000',
+        changeOrigin: true,
+      }
+    }
+  }
 })

@@ -66,3 +66,15 @@ lerna-debug.log*
 *.sln
 src/frontend/dist/
 
+# Test files and temporary files
+test_*.html
+test_*.jpg
+test_*.png
+*.exe
+base64_output.txt
+nul
+ngrok
+ngrok.exe
+add_test_*.py
+convert_*.py
+

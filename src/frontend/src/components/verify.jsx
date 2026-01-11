@@ -129,7 +129,12 @@ const Verify = ({ userProfile, onNavigate, currentSubPage }) => {
   };
 
   const openFeature = (feature) => {
-    onNavigate(feature);
+    // Special handling for ID card verification - open camera scanner
+    if (feature === 'verify-id-card') {
+      onNavigate('id-card-scanner');
+    } else {
+      onNavigate(feature);
+    }
   };
 
   const shareVerificationCard = () => {

@@ -1,9 +1,8 @@
 name: Deploy to Cloud Run
 
+# Workflow disabled - Using Cloud Build Triggers instead
 on:
-  push:
-    branches:
-      - main  # Deploy เมื่อ push ไป main branch
+  workflow_dispatch:  # Manual trigger only
 
 env:
   PROJECT_ID: gungong-ai

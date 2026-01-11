@@ -102,37 +102,37 @@ if os.path.exists(static_path):
     img_path = os.path.join(static_path, "img")
     if os.path.exists(img_path):
         app.mount("/img", StaticFiles(directory=img_path), name="img")
-        logger.info(f"✅ Images mounted from {img_path}")
+        logger.info(f"Images mounted from {img_path}")
 
-    logger.info(f"✅ Frontend (Vite build) mounted from {static_path}")
+    logger.info(f"Frontend (Vite build) mounted from {static_path}")
 elif os.path.exists(frontend_path):
     # Fallback: Old frontend structure
     app.mount("/static", StaticFiles(directory=frontend_path), name="static")
     app.mount("/img", StaticFiles(directory=os.path.join(frontend_path, "img")), name="img")
     app.mount("/js", StaticFiles(directory=os.path.join(frontend_path, "js")), name="js")
     app.mount("/style", StaticFiles(directory=os.path.join(frontend_path, "style")), name="style")
-    logger.info(f"✅ Frontend mounted from {frontend_path}")
+    logger.info(f"Frontend mounted from {frontend_path}")
 else:
-    logger.warning(f"⚠️ Frontend directory not found")
+    logger.warning(f"Frontend directory not found")
 
 
 @app.on_event("startup")
 async def startup_event():
     """Run on startup."""
-    logger.info("🚀 Application starting up...")
+    logger.info("Application starting up...")
 
     # Seed mock blacklist data
     try:
         blacklist_service = get_blacklist_service()
         if blacklist_service:
             blacklist_service.seed_mock_data()
-            logger.info("✅ Mock blacklist data seeded")
+            logger.info("Mock blacklist data seeded")
     except Exception as e:
-        logger.warning(f"⚠️ Failed to seed mock data: {e}")
+        logger.warning(f"Failed to seed mock data: {e}")
 
     # Playwright browser warmup disabled to prevent Cloud Run startup timeout
     # Browser will be initialized on first use (lazy loading)
-    logger.info("✅ Startup complete (browser will lazy load)")
+    logger.info("Startup complete (browser will lazy load)")
 
 
 @app.get("/", response_class=FileResponse)

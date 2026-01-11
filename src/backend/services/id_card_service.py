@@ -65,7 +65,7 @@ class IDCardService:
             return {"is_blacklisted": False}
 
         except Exception as e:
-            print(f"❌ Error checking ID blacklist: {e}")
+            print(f"[ERROR] Error checking ID blacklist: {e}")
             return {
                 "is_blacklisted": False,
                 "error": str(e)
@@ -100,11 +100,11 @@ class IDCardService:
             >>> print(f"Safe: {result['is_safe']}, Risk: {result['risk_level']}")
         """
         # Step 1: Extract data from image using OCR
-        print("📸 Starting OCR extraction...")
+        print("[OCR] Starting OCR extraction...")
         ocr_result = self.ocr_service.extract_id_card_data(image_base64)
 
         if not ocr_result.get("success"):
-            print(f"❌ OCR failed: {ocr_result.get('error')}")
+            print(f"[ERROR] OCR failed: {ocr_result.get('error')}")
             return {
                 "success": False,
                 "error": "OCR failed: " + ocr_result.get("error", "Unknown error"),
@@ -118,7 +118,7 @@ class IDCardService:
         id_number = ocr_result.get("id_number")
 
         if not id_number:
-            print("❌ Could not extract ID number")
+            print("[ERROR] Could not extract ID number")
             return {
                 "success": False,
                 "error": "Could not extract ID number from card",
@@ -129,14 +129,14 @@ class IDCardService:
                 "risk_level": "UNKNOWN"
             }
 
-        print(f"✅ OCR successful, extracted ID: {id_number[:4]}****{id_number[-2:]}")
+        print(f"[OK] OCR successful, extracted ID: {id_number[:4]}****{id_number[-2:]}")
 
         # Step 2: Validate format using checksum
         is_valid_format = validate_thai_id(id_number)
-        print(f"🔍 Format validation: {'✅ Valid' if is_valid_format else '⚠️ Invalid'}")
+        print(f"[VALIDATION] Format validation: {'Valid' if is_valid_format else 'Invalid'}")
 
         # Step 3: Check blacklist
-        print("🔍 Checking blacklist...")
+        print("[CHECK] Checking blacklist...")
         blacklist_result = self.check_id_blacklist(id_number)
         is_blacklisted = blacklist_result.get("is_blacklisted", False)
 
@@ -155,7 +155,7 @@ class IDCardService:
             else:
                 risk_level = "LOW"
 
-            print(f"⚠️ BLACKLISTED: {report_count} reports, risk: {risk_level}")
+            print(f"[WARNING] BLACKLISTED: {report_count} reports, risk: {risk_level}")
 
             return {
                 "success": True,
@@ -173,7 +173,7 @@ class IDCardService:
         else:
             # Not blacklisted
             risk_level = "LOW" if is_valid_format else "MEDIUM"
-            print(f"✅ Safe: Not in blacklist, risk: {risk_level}")
+            print(f"[OK] Safe: Not in blacklist, risk: {risk_level}")
 
             return {
                 "success": True,

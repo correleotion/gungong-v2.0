@@ -25,6 +25,7 @@ from ..services.gambling_domain_service import get_gambling_domain_service
 from ..services.id_card_service import get_id_card_service
 from ..services.similarity_service import get_similarity_service
 from ..utils.message_helpers import is_analysis_request, is_bot_mentioned
+from ..utils.flex_templates import create_id_card_verification_flex
 from ..core.logger import get_logger
 
 # Check LINE service availability
@@ -730,18 +731,18 @@ async def webhook(
                     import base64
                     image_base64 = base64.b64encode(image_content).decode('utf-8')
 
-                    print(f"✅ Image downloaded, size: {len(image_content)} bytes")
+                    print(f"[OK] Image downloaded, size: {len(image_content)} bytes")
 
                     # Verify ID card
-                    print("🔍 Starting ID card verification...")
+                    print("[VERIFY] Starting ID card verification...")
                     result = id_card_service.verify_id_card(image_base64)
 
                     if not result.get("success"):
                         error_msg = result.get("error", "Unknown error")
-                        print(f"❌ ID card verification failed: {error_msg}")
+                        print(f"[ERROR] ID card verification failed: {error_msg}")
                         line_service.reply_message(
                             reply_token,
-                            text=f"❌ ไม่สามารถอ่านบัตรประชาชนได้\n\n"
+                            text=f"[X] ไม่สามารถอ่านบัตรประชาชนได้\n\n"
                                  f"กรุณาถ่ายรูปให้ชัดเจนและแสงสว่างเพียงพอ\n"
                                  f"ตรวจสอบว่าบัตรอยู่ในกรอบทั้งหมด"
                         )
@@ -777,35 +778,57 @@ async def webhook(
                         safety = "ปลอดภัย"
                         warning_msg = "• ไม่พบข้อมูลในบัญชีดำ"
 
-                    # Build response message
-                    response_text = f"""
+                    # Build Flex Message response
+                    try:
+                        print("[FLEX] Creating Flex Message...")
+                        flex_message_obj = create_id_card_verification_flex(
+                            id_number=id_number,
+                            name_th=name_th,
+                            surname_th=surname_th,
+                            date_of_birth=date_of_birth,
+                            address=address,
+                            is_blacklisted=is_blacklisted,
+                            is_valid_format=is_valid_format,
+                            risk_level=risk_level,
+                            reports_count=reports_count
+                        )
+
+                        print(f"[OK] ID card verified: {id_number[:4]}****{id_number[-2:]}, "
+                              f"blacklisted: {is_blacklisted}, risk: {risk_level}")
+
+                        # Convert FlexMessage to dict for reply_message
+                        flex_message_dict = {
+                            "alt_text": flex_message_obj.alt_text,
+                            "contents": flex_message_obj.contents.to_dict()
+                        }
+
+                        print("[FLEX] Sending Flex Message...")
+                        # Reply to user with Flex Message
+                        line_service.reply_message(reply_token, flex_message=flex_message_dict)
+                        print("[FLEX] Flex Message sent successfully!")
+                    except Exception as flex_error:
+                        print(f"[ERROR] Flex Message creation failed: {flex_error}")
+                        import traceback
+                        traceback.print_exc()
+
+                        # Fallback to text message
+                        fallback_text = f"""
 {icon} ผลการตรวจสอบบัตรประชาชน
 
-📋 ข้อมูลบัตร:
+ข้อมูลบัตร:
 • เลขบัตร: {id_number}
 • ชื่อ-นามสกุล: {name_th} {surname_th}
 • วันเกิด: {date_of_birth}
-• ที่อยู่: {address[:50]}{"..." if len(address) > 50 else ""}
 
-🔍 ผลการตรวจสอบ:
+ผลการตรวจสอบ:
 • สถานะ: {status}
 • ระดับความเสี่ยง: {risk_level}
 • จำนวนรายงาน: {reports_count} ครั้ง
-• ความปลอดภัย: {safety}
-
-⚠️ คำแนะนำ:
-{warning_msg}
-{'• ควรตรวจสอบกับหน่วยงานราชการเพิ่มเติม' if is_blacklisted else '• ยังคงควรระมัดระวังในการติดต่อ'}
-                    """.strip()
-
-                    print(f"✅ ID card verified: {id_number[:4]}****{id_number[-2:]}, "
-                          f"blacklisted: {is_blacklisted}, risk: {risk_level}")
-
-                    # Reply to user
-                    line_service.reply_message(reply_token, text=response_text)
+                        """.strip()
+                        line_service.reply_message(reply_token, text=fallback_text)
 
             except Exception as e:
-                print(f"❌ Image processing error: {e}")
+                print(f"[ERROR] Image processing error: {e}")
                 import traceback
                 traceback.print_exc()
 
@@ -813,7 +836,7 @@ async def webhook(
                     line_service = get_line_service()
                     line_service.reply_message(
                         reply_token,
-                        text="❌ เกิดข้อผิดพลาดในการประมวลผลรูปภาพ\n\n"
+                        text="[X] เกิดข้อผิดพลาดในการประมวลผลรูปภาพ\n\n"
                              "กรุณาลองใหม่อีกครั้ง หรือถ่ายรูปให้ชัดเจนกว่านี้"
                     )
                 except:

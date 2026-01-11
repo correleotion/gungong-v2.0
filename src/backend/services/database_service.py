@@ -2,6 +2,7 @@
 
 import hashlib
 import json
+import sys
 from datetime import datetime, timedelta, timezone
 from typing import Optional, Dict, Any, List
 from google.cloud import firestore
@@ -16,6 +17,15 @@ from ..core.models import (
     COLLECTION_FRAUD_MESSAGES,
     COLLECTION_FEEDBACK_LOGS
 )
+
+
+def safe_print(message: str):
+    """Print message with safe encoding handling for Windows."""
+    try:
+        print(message)
+    except UnicodeEncodeError:
+        # Fallback to ASCII encoding if UTF-8 fails
+        print(message.encode('ascii', 'replace').decode('ascii'))
 
 
 def now_utc() -> datetime:
@@ -47,7 +57,7 @@ class DatabaseService:
                     cred_path = os.path.join(base_dir, cred_path)
                 
                 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = cred_path
-                print(f"🔑 Set GOOGLE_APPLICATION_CREDENTIALS to: {cred_path}")
+                safe_print(f"[CREDENTIALS] Set GOOGLE_APPLICATION_CREDENTIALS to: {cred_path}")
 
             # Check if using Firebase Emulator
             use_emulator = os.getenv("USE_FIREBASE_EMULATOR", "false").lower() == "true"
@@ -61,14 +71,14 @@ class DatabaseService:
                 emulator_host = os.getenv("FIRESTORE_EMULATOR_HOST", "host.docker.internal:8080")
                 os.environ["FIRESTORE_EMULATOR_HOST"] = emulator_host
                 self.db = firestore.Client(project=project_id, database=database_name)
-                print(f"🔧 Firestore initialized with EMULATOR (Project: {self.db.project}, Database: {database_name}, HOST: {emulator_host})")
+                print(f"[EMULATOR] Firestore initialized with EMULATOR (Project: {self.db.project}, Database: {database_name}, HOST: {emulator_host})")
             else:
                 # Use production Firestore
                 self.db = firestore.Client(project=project_id, database=database_name)
-                print(f"✅ Firestore initialized successfully (Project: {self.db.project}, Database: {database_name})")
-            
+                print(f"[OK] Firestore initialized successfully (Project: {self.db.project}, Database: {database_name})")
+
         except Exception as e:
-            print(f"❌ Error initializing Firestore: {e}")
+            print(f"[ERROR] Error initializing Firestore: {e}")
             raise
 
     @staticmethod

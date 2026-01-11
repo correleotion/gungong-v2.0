@@ -379,18 +379,6 @@ const IDCardScanner = ({ onNavigate }) => {
             </div>
           )}
 
-          {/* Instructions */}
-          {!showPreview && !stream && !showManualInput && (
-            <div className="instruction-box" style={{ marginBottom: '20px', padding: '15px', background: '#F0F8FF', borderRadius: '8px' }}>
-              <h4 style={{ margin: '0 0 10px 0', color: '#2196F3' }}>📝 วิธีถ่ายรูปให้ชัด</h4>
-              <ul style={{ margin: 0, paddingLeft: '20px', color: '#555' }}>
-                <li>วางบัตรบนพื้นเรียบ แสงสว่างเพียงพอ</li>
-                <li>ถ่ายรูปด้านหน้าบัตร ให้เห็นข้อมูลชัดเจน</li>
-                <li>หลีกเลี่ยงแสงสะท้อนและเงา</li>
-              </ul>
-            </div>
-          )}
-
           {/* Video Stream */}
           {stream && !showPreview && (
             <>

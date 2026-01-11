@@ -97,6 +97,12 @@ const Scanner = ({ onNavigate, currentSubPage: externalSubPage }) => {
   }, [inputs.link, inputs.sms, contentTab, currentSubPage]);
 
   const goBack = () => {
+    // If coming from scan-qr, go back to scan-image (mode selection)
+    if (currentSubPage === 'scan-qr' && onNavigate) {
+      onNavigate('scan-image');
+      return;
+    }
+
     setCurrentSubPage(null);
     // Clear all inputs when exiting subpages
     setInputs({ link: '', sms: '', bank: '', phone: '' });
@@ -290,15 +296,15 @@ const Scanner = ({ onNavigate, currentSubPage: externalSubPage }) => {
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
             </button>
             <div className="subpage-title-block">
-              <div className="subpage-icon icon-qrcode">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <div className="subpage-icon" style={{ background: 'linear-gradient(135deg, #FFA726 0%, #FB8C00 100%)' }}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
                   <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
                   <circle cx="12" cy="13" r="4"></circle>
                 </svg>
               </div>
               <div>
                 <h2>ตรวจสอบรูปภาพ</h2>
-                <p className="subpage-subtitle">ตรวจสอบ QR หรือบัตรประชาชนที่น่าสงสัย</p>
+                <p className="subpage-subtitle">ตรวจสอบ QR</p>
               </div>
             </div>
           </div>

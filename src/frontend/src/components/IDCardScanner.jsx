@@ -299,17 +299,15 @@ const IDCardScanner = ({ onNavigate }) => {
             </svg>
           </button>
           <div className="subpage-title-block">
-            <div className="subpage-icon icon-id-card">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <rect x="3" y="4" width="18" height="16" rx="2" ry="2"></rect>
-                <line x1="7" y1="8" x2="7.01" y2="8"></line>
-                <line x1="7" y1="12" x2="17" y2="12"></line>
-                <line x1="7" y1="16" x2="17" y2="16"></line>
+            <div className="subpage-icon" style={{ background: 'linear-gradient(135deg, #FFA726 0%, #FB8C00 100%)' }}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
+                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                <circle cx="12" cy="13" r="4"></circle>
               </svg>
             </div>
             <div>
-              <h2>ยืนยันบัตรประชาชน</h2>
-              <p className="subpage-subtitle">สแกนบัตรประชาชนด้วยกล้อง</p>
+              <h2>ตรวจสอบรูปภาพ</h2>
+              <p className="subpage-subtitle">ตรวจสอบบัตรประชาชน</p>
             </div>
           </div>
         </div>

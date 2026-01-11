@@ -58,7 +58,7 @@ const Sidebar = ({ isCollapsed, onToggle, currentPage, onNavigate }) => {
 
   // Auto-expand scanner submenu when navigating to a scanner sub-page
   useEffect(() => {
-    const scannerSubPages = ['check-content', 'check-personal', 'scan-qr'];
+    const scannerSubPages = ['check-content', 'check-personal', 'scan-image', 'scan-qr', 'id-card-scanner'];
     if (scannerSubPages.includes(currentPage)) {
       setExpandedMenus(prev => ({ ...prev, scanner: true }));
     }
@@ -136,7 +136,7 @@ const Sidebar = ({ isCollapsed, onToggle, currentPage, onNavigate }) => {
               ),
             },
             {
-              id: 'scan-qr',
+              id: 'scan-image',
               label: 'Scan Image',
               icon: (
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

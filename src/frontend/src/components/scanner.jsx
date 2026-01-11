@@ -8,6 +8,8 @@ const Scanner = ({ onNavigate, currentSubPage: externalSubPage }) => {
   const [contentTab, setContentTab] = useState('link'); // 'link' or 'sms'
   const [personalTab, setPersonalTab] = useState('bank'); // 'bank' or 'phone'
   const bankDropdownRef = useRef(null);
+  const linkTextareaRef = useRef(null);
+  const smsTextareaRef = useRef(null);
 
   // --- Point A Refactor: State สำหรับจัดการ Input ทั้งหมด ---
   const [inputs, setInputs] = useState({
@@ -82,8 +84,24 @@ const Scanner = ({ onNavigate, currentSubPage: externalSubPage }) => {
     return () => document.removeEventListener('click', handleClickOutside);
   }, []);
 
+  // Auto-resize textareas when values exist on mount
+  useEffect(() => {
+    const resizeTextarea = (ref) => {
+      if (ref.current) {
+        ref.current.style.height = 'auto';
+        ref.current.style.height = Math.max(ref.current.scrollHeight, 100) + 'px';
+      }
+    };
+    resizeTextarea(linkTextareaRef);
+    resizeTextarea(smsTextareaRef);
+  }, [inputs.link, inputs.sms, contentTab, currentSubPage]);
+
   const goBack = () => {
     setCurrentSubPage(null);
+    // Clear all inputs when exiting subpages
+    setInputs({ link: '', sms: '', bank: '', phone: '' });
+    setInputWarnings({ bank: false, phone: false });
+    setSelectedBank(null);
     // Also notify parent to update activeSection if needed
     if (onNavigate) {
       onNavigate('scanner');
@@ -210,12 +228,16 @@ const Scanner = ({ onNavigate, currentSubPage: externalSubPage }) => {
               <>
                 <label className="form-label">ใส่ลิงก์ที่ต้องการตรวจสอบ</label>
                 <div className="form-input-group">
-                  <input
-                    type="text"
-                    className="form-input"
+                  <textarea
+                    ref={linkTextareaRef}
+                    key={`link-textarea-${contentTab}`}
+                    className="form-input form-textarea"
                     placeholder="https://bit.ly/example"
                     value={inputs.link}
                     onChange={(e) => handleInputChange('link', e.target.value)}
+                    rows={4}
+                    style={{ resize: 'none', overflow: 'hidden' }}
+                    onInput={(e) => { e.target.style.height = 'auto'; e.target.style.height = Math.max(e.target.scrollHeight, 100) + 'px'; }}
                   />
                   <button className="form-clear-btn" onClick={() => clearInput('link')}>
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
@@ -231,12 +253,16 @@ const Scanner = ({ onNavigate, currentSubPage: externalSubPage }) => {
               <>
                 <label className="form-label">ใส่ข้อความที่ต้องการตรวจสอบ</label>
                 <div className="form-input-group">
-                  <input
-                    type="text"
-                    className="form-input"
+                  <textarea
+                    ref={smsTextareaRef}
+                    key={`sms-textarea-${contentTab}`}
+                    className="form-input form-textarea"
                     placeholder="วางข้อความที่ได้รับ..."
                     value={inputs.sms}
                     onChange={(e) => handleInputChange('sms', e.target.value)}
+                    rows={4}
+                    style={{ resize: 'none', overflow: 'hidden' }}
+                    onInput={(e) => { e.target.style.height = 'auto'; e.target.style.height = Math.max(e.target.scrollHeight, 100) + 'px'; }}
                   />
                   <button className="form-clear-btn" onClick={() => clearInput('sms')}>
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
@@ -271,8 +297,8 @@ const Scanner = ({ onNavigate, currentSubPage: externalSubPage }) => {
                 </svg>
               </div>
               <div>
-                <h2>สแกน QR Code</h2>
-                <p className="subpage-subtitle">ตรวจสอบ QR ที่น่าสงสัย</p>
+                <h2>ตรวจสอบรูปภาพ</h2>
+                <p className="subpage-subtitle">ตรวจสอบ QR หรือบัตรประชาชนที่น่าสงสัย</p>
               </div>
             </div>
           </div>
@@ -288,13 +314,13 @@ const Scanner = ({ onNavigate, currentSubPage: externalSubPage }) => {
                 <line x1="14" y1="21" x2="21" y2="21"></line>
               </svg>
             </div>
-            <p className="qr-description">กดปุ่มด้านล่างเพื่อเปิดกล้องและสแกน QR Code</p>
+            <p className="qr-description">กดปุ่มด้านล่างเพื่อเปิดกล้องและสแกนรูปภาพ</p>
             <button className="form-submit-btn" onClick={scanCode}>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
                 <circle cx="12" cy="13" r="4"></circle>
               </svg>
-              เริ่มสแกน QR Code
+              เริ่มสแกนรูปภาพ
             </button>
           </div>
         </div>

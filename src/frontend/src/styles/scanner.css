@@ -160,6 +160,10 @@
   outline: none;
   transition: all 0.2s;
   font-family: "Noto Sans Thai", sans-serif;
+  min-width: 0;
+  overflow-x: auto;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .form-input::placeholder {
@@ -169,6 +173,14 @@
 .form-input:focus {
   border-color: #3ACE00;
   box-shadow: 0 0 0 4px rgba(58, 206, 0, 0.1);
+}
+
+/* Textarea styles for auto-expanding */
+.form-textarea {
+  white-space: pre-wrap;
+  word-break: break-word;
+  min-height: 100px;
+  line-height: 1.5;
 }
 
 .form-clear-btn {
@@ -898,4 +910,34 @@
 @keyframes slideDown {
   from { opacity: 0; transform: translateY(-10px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+/* ==================== SUBPAGE ENTRANCE ANIMATION ==================== */
+@keyframes subpageSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+#check-content-page .section-content,
+#check-personal-page .section-content,
+#scan-qr-page .section-content {
+  animation: subpageSlideIn 0.4s ease-out;
+}
+
+.scanner-subpage-header {
+  animation: subpageSlideIn 0.3s ease-out;
+}
+
+.scanner-form-card {
+  animation: subpageSlideIn 0.4s ease-out 0.1s both;
+}
+
+.scanner-tabs-modern {
+  animation: subpageSlideIn 0.4s ease-out 0.15s both;
 }

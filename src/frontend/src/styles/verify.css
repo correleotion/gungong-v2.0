@@ -682,3 +682,31 @@ html.dark-mode .form-hint {
   color: #6b7280;
 }
 
+/* ==================== SUBPAGE ENTRANCE ANIMATION ==================== */
+@keyframes subpageSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+#verify-phone-page .section-content,
+#verify-bank-page .section-content,
+#verify-id-card-page .section-content,
+#verify-face-page .section-content,
+#verify-business-page .section-content {
+  animation: subpageSlideIn 0.4s ease-out;
+}
+
+.verify-subpage-header {
+  animation: subpageSlideIn 0.3s ease-out;
+}
+
+.verify-form-card,
+.scanner-form-card {
+  animation: subpageSlideIn 0.4s ease-out 0.1s both;
+}

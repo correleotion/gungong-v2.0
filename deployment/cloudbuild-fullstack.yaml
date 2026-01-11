@@ -11,9 +11,9 @@ steps:
       - '-f'
       - 'deployment/Dockerfile.fullstack'
       - '-t'
-      - 'gcr.io/$PROJECT_ID/gungong-fullstack:$BUILD_ID'
+      - 'asia-southeast1-docker.pkg.dev/$PROJECT_ID/gungong/gungong-fullstack:$BUILD_ID'
       - '-t'
-      - 'gcr.io/$PROJECT_ID/gungong-fullstack:latest'
+      - 'asia-southeast1-docker.pkg.dev/$PROJECT_ID/gungong/gungong-fullstack:latest'
       - '.'
     timeout: 1800s
 
@@ -25,7 +25,7 @@ steps:
       - 'deploy'
       - 'gungong-fullstack'
       - '--image'
-      - 'gcr.io/$PROJECT_ID/gungong-fullstack:latest'
+      - 'asia-southeast1-docker.pkg.dev/$PROJECT_ID/gungong/gungong-fullstack:latest'
       - '--region'
       - 'asia-southeast1'
       - '--allow-unauthenticated'
@@ -46,8 +46,8 @@ steps:
       - 'DEBUG=False,GOOGLE_API_KEY=${_GOOGLE_API_KEY},FIRESTORE_PROJECT_ID=$PROJECT_ID,GEMINI_MODEL=gemini-2.5-flash-lite,LINE_CHANNEL_ACCESS_TOKEN=${_LINE_CHANNEL_ACCESS_TOKEN},LINE_CHANNEL_SECRET=${_LINE_CHANNEL_SECRET}'
 
 images:
-  - 'gcr.io/$PROJECT_ID/gungong-fullstack:$BUILD_ID'
-  - 'gcr.io/$PROJECT_ID/gungong-fullstack:latest'
+  - 'asia-southeast1-docker.pkg.dev/$PROJECT_ID/gungong/gungong-fullstack:$BUILD_ID'
+  - 'asia-southeast1-docker.pkg.dev/$PROJECT_ID/gungong/gungong-fullstack:latest'
 
 options:
   logging: CLOUD_LOGGING_ONLY

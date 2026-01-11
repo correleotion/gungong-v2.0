@@ -5,6 +5,8 @@ const IDCardScanner = ({ onNavigate }) => {
   const [capturedImage, setCapturedImage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
+  const [showManualInput, setShowManualInput] = useState(false);
+  const [manualIdNumber, setManualIdNumber] = useState('');
 
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
@@ -106,6 +108,55 @@ const IDCardScanner = ({ onNavigate }) => {
       setShowPreview(true);
     };
     reader.readAsDataURL(file);
+  };
+
+  // Verify ID card by manual input
+  const verifyManualIdCard = async () => {
+    if (!manualIdNumber || manualIdNumber.length !== 13) {
+      window.Swal?.fire({
+        icon: 'warning',
+        title: 'กรุณากรอกเลขบัตร',
+        text: 'กรุณากรอกเลขบัตรประชาชน 13 หลัก',
+        confirmButtonColor: '#3ACE00'
+      });
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const response = await fetch('/api/v2/verify-id-number', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id_number: manualIdNumber,
+          user_id: 'web-user'
+        })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.detail || 'API Error');
+      }
+
+      // Show result
+      showResult(data);
+      setManualIdNumber('');
+
+    } catch (error) {
+      console.error('Verification error:', error);
+      window.Swal?.fire({
+        icon: 'error',
+        title: 'เกิดข้อผิดพลาด',
+        text: error.message || 'ไม่สามารถตรวจสอบบัตรได้ กรุณาลองใหม่อีกครั้ง',
+        confirmButtonColor: '#3ACE00'
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   // Verify ID card
@@ -265,8 +316,71 @@ const IDCardScanner = ({ onNavigate }) => {
         </div>
 
         <div className="scanner-form-card">
+          {/* Manual Input Section */}
+          {!showPreview && !stream && !showManualInput && (
+            <div style={{ marginBottom: '20px' }}>
+              <button
+                className="form-submit-btn"
+                onClick={() => setShowManualInput(true)}
+                style={{ width: '100%', background: '#2196F3' }}
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: '20px', height: '20px', marginRight: '8px' }}>
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                </svg>
+                พิมพ์เลขบัตรเอง
+              </button>
+            </div>
+          )}
+
+          {/* Manual Input Form */}
+          {showManualInput && !showPreview && (
+            <div style={{ marginBottom: '20px' }}>
+              <label style={{ display: 'block', marginBottom: '10px', fontWeight: 'bold', color: '#333' }}>
+                เลขบัตรประชาชน
+              </label>
+              <input
+                type="text"
+                maxLength="13"
+                value={manualIdNumber}
+                onChange={(e) => setManualIdNumber(e.target.value.replace(/\D/g, ''))}
+                placeholder="1-2345-67890-12-3"
+                style={{
+                  width: '100%',
+                  padding: '12px',
+                  fontSize: '16px',
+                  border: '2px solid #ddd',
+                  borderRadius: '8px',
+                  marginBottom: '15px',
+                  boxSizing: 'border-box'
+                }}
+              />
+              <p style={{ fontSize: '14px', color: '#666', marginBottom: '15px' }}>
+                กรุณากรอกข้อมูลให้ถูกต้อง
+              </p>
+              <button
+                className="form-submit-btn"
+                onClick={verifyManualIdCard}
+                disabled={isLoading || manualIdNumber.length !== 13}
+                style={{ width: '100%', marginBottom: '10px' }}
+              >
+                {isLoading ? 'กำลังตรวจสอบ...' : 'ยืนยัน'}
+              </button>
+              <button
+                className="form-submit-btn"
+                onClick={() => {
+                  setShowManualInput(false);
+                  setManualIdNumber('');
+                }}
+                style={{ width: '100%', background: '#888' }}
+              >
+                ยกเลิก
+              </button>
+            </div>
+          )}
+
           {/* Instructions */}
-          {!showPreview && !stream && (
+          {!showPreview && !stream && !showManualInput && (
             <div className="instruction-box" style={{ marginBottom: '20px', padding: '15px', background: '#F0F8FF', borderRadius: '8px' }}>
               <h4 style={{ margin: '0 0 10px 0', color: '#2196F3' }}>📝 วิธีถ่ายรูปให้ชัด</h4>
               <ul style={{ margin: 0, paddingLeft: '20px', color: '#555' }}>

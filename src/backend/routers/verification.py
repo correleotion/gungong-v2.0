@@ -424,5 +424,93 @@ async def verify_id_card(request: Request, req_body: IDCardVerificationRequest):
         )
 
 
+class IDNumberVerificationRequest(BaseModel):
+    """Request model for ID number verification without image."""
+
+    id_number: str = Field(..., min_length=13, max_length=13, description="Thai National ID number (13 digits)")
+    user_id: Optional[str] = Field(None, description="User ID for tracking")
+
+
+@router.post("/verify-id-number", response_model=IDCardVerificationResponse)
+@limiter.limit("30/minute")
+async def verify_id_number(request: Request, req_body: IDNumberVerificationRequest):
+    """
+    Verify Thai National ID number (without image scanning).
+
+    **Features:**
+    - 13-digit checksum validation (Thai ID algorithm)
+    - Blacklist checking against fraud database
+
+    **Input:**
+    - id_number: 13-digit Thai National ID number
+    - user_id: Optional user identifier
+
+    **Output:**
+    - id_number: Validated ID number
+    - is_valid_format: Whether checksum is valid
+    - is_blacklisted: Whether ID is in blacklist
+    - is_safe: Overall safety status
+    - risk_level: LOW, MEDIUM, HIGH, CRITICAL
+
+    **Example:**
+    ```json
+    POST /api/v2/verify-id-number
+    {
+        "id_number": "1234567890123"
+    }
+
+    Response:
+    {
+        "id_number": "1234567890123",
+        "is_valid_format": true,
+        "is_blacklisted": false,
+        "is_safe": true,
+        "reports_count": 0,
+        "risk_level": "LOW"
+    }
+    ```
+
+    **Rate Limit:** 30 requests/minute
+    """
+    try:
+        logger.info(f"🪪 Verifying ID number: {req_body.id_number[:4]}****{req_body.id_number[-2:]}")
+
+        # Get ID card service
+        id_card_service = get_id_card_service()
+
+        # Verify ID number only (no OCR)
+        result = id_card_service.verify_id_number_only(req_body.id_number)
+
+        if not result.get("success"):
+            raise HTTPException(
+                status_code=400,
+                detail=result.get("error", "ID number verification failed")
+            )
+
+        logger.info(f"✅ ID number verified: {result['id_number'][:4]}****{result['id_number'][-2:]}, "
+                   f"safe: {result['is_safe']}, risk: {result['risk_level']}")
+
+        return IDCardVerificationResponse(
+            id_number=result["id_number"],
+            is_valid_format=result["is_valid_format"],
+            is_blacklisted=result["is_blacklisted"],
+            is_safe=result["is_safe"],
+            reports_count=result["reports_count"],
+            risk_level=result["risk_level"],
+            extracted_data=None,
+            category=result.get("category"),
+            timestamp=datetime.now()
+        )
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"❌ ID number verification failed: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"ID number verification failed: {str(e)}"
+        )
+
+
 # Export router
 __all__ = ["router"]

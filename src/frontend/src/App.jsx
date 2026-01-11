@@ -20,6 +20,7 @@ import Scanner from './components/scanner';
 import Social from './components/social';
 import History from './components/history';
 import IDCardScanner from './components/IDCardScanner';
+import ScanImage from './components/ScanImage';
 
 function App() {
   const [activeSection, setActiveSection] = useState('home');
@@ -139,6 +140,11 @@ function App() {
     // Handle ID card scanner route
     if (activeSection === 'id-card-scanner') {
       return <IDCardScanner onNavigate={handleNavigate} />;
+    }
+
+    // Handle scan image mode selection route
+    if (activeSection === 'scan-image') {
+      return <ScanImage onNavigate={handleNavigate} />;
     }
 
     // Get the main section from activeSection

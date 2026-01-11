@@ -29,7 +29,14 @@ const IDCardScanner = ({ onNavigate }) => {
         video: {
           facingMode: 'environment', // Use back camera on mobile
           width: { ideal: 1920 },
-          height: { ideal: 1080 }
+          height: { ideal: 1080 },
+          // Enable autofocus
+          focusMode: 'continuous',
+          // Advanced camera settings for better focus
+          advanced: [
+            { focusMode: 'continuous' },
+            { focusDistance: { ideal: 0 } }
+          ]
         }
       });
 
@@ -83,6 +90,49 @@ const IDCardScanner = ({ onNavigate }) => {
     if (stream) {
       stream.getTracks().forEach(track => track.stop());
       setStream(null);
+    }
+  };
+
+  // Tap to focus on video
+  const handleVideoTap = async (e) => {
+    if (!stream) return;
+
+    try {
+      const videoTrack = stream.getVideoTracks()[0];
+      const capabilities = videoTrack.getCapabilities();
+
+      // Check if focus is supported
+      if (capabilities.focusMode && capabilities.focusMode.includes('manual')) {
+        // Try to focus
+        await videoTrack.applyConstraints({
+          advanced: [{ focusMode: 'continuous' }]
+        });
+
+        // Visual feedback
+        const rect = e.currentTarget.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        // Show focus indicator
+        const indicator = document.createElement('div');
+        indicator.style.cssText = `
+          position: absolute;
+          left: ${x}px;
+          top: ${y}px;
+          width: 80px;
+          height: 80px;
+          margin-left: -40px;
+          margin-top: -40px;
+          border: 2px solid #3ACE00;
+          border-radius: 50%;
+          pointer-events: none;
+          animation: focusPulse 0.6s ease-out;
+        `;
+        e.currentTarget.appendChild(indicator);
+        setTimeout(() => indicator.remove(), 600);
+      }
+    } catch (error) {
+      console.log('Focus not supported or failed:', error);
     }
   };
 
@@ -382,15 +432,19 @@ const IDCardScanner = ({ onNavigate }) => {
           {/* Video Stream */}
           {stream && !showPreview && (
             <>
-              <div style={{
-                marginBottom: '20px',
-                position: 'relative',
-                width: '100%',
-                paddingBottom: '62.5%',
-                background: '#000',
-                borderRadius: '8px',
-                overflow: 'hidden'
-              }}>
+              <div
+                onClick={handleVideoTap}
+                style={{
+                  marginBottom: '20px',
+                  position: 'relative',
+                  width: '100%',
+                  paddingBottom: '62.5%',
+                  background: '#000',
+                  borderRadius: '8px',
+                  overflow: 'hidden',
+                  cursor: 'pointer'
+                }}
+              >
                 <video
                   ref={videoRef}
                   autoPlay
@@ -421,6 +475,22 @@ const IDCardScanner = ({ onNavigate }) => {
                   pointerEvents: 'none',
                   boxShadow: '0 0 0 9999px rgba(0, 0, 0, 0.3)'
                 }}></div>
+                {/* Tap to focus hint */}
+                <div style={{
+                  position: 'absolute',
+                  bottom: '15px',
+                  left: '50%',
+                  transform: 'translateX(-50%)',
+                  background: 'rgba(0, 0, 0, 0.6)',
+                  color: 'white',
+                  padding: '8px 15px',
+                  borderRadius: '20px',
+                  fontSize: '13px',
+                  pointerEvents: 'none',
+                  whiteSpace: 'nowrap'
+                }}>
+                  👆 แตะหน้าจอเพื่อโฟกัส
+                </div>
               </div>
               <button
                 className="form-submit-btn"
@@ -524,6 +594,23 @@ const IDCardScanner = ({ onNavigate }) => {
 
         {/* Hidden Canvas for capturing */}
         <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
+
+        {/* Focus animation CSS */}
+        <style>{`
+          @keyframes focusPulse {
+            0% {
+              transform: scale(1.2);
+              opacity: 0;
+            }
+            50% {
+              opacity: 1;
+            }
+            100% {
+              transform: scale(1);
+              opacity: 0;
+            }
+          }
+        `}</style>
       </div>
     </section>
   );

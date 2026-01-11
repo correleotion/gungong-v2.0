@@ -17,7 +17,14 @@ steps:
       - '.'
     timeout: 1800s
 
-  # 2. Deploy to Cloud Run
+  # 2. Push Docker Image to Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - '--all-tags'
+      - 'asia-southeast1-docker.pkg.dev/$PROJECT_ID/gungong/gungong-fullstack'
+
+  # 3. Deploy to Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
     args:

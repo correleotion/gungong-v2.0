@@ -318,6 +318,9 @@ html.dark-mode .sidebar-item.has-submenu.expanded .submenu-chevron {
 .sidebar-footer {
   padding: 12px;
   border-top: 1px solid #eaeaea;
+  margin-top: auto;
+  flex-shrink: 0;
+  min-height: fit-content;
 }
 
 .sidebar-footer .menu-group-title {

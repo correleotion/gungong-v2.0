@@ -457,11 +457,9 @@ const Scanner = ({ onNavigate, currentSubPage: externalSubPage }) => {
             <h3 className="package-title">ตรวจสอบเนื้อหา</h3>
             <p className="package-desc">วิเคราะห์ลิงก์และข้อความ</p>
             <ul className="package-features">
-              <li className="feature-yes"><span className="check-icon">✓</span> ตรวจสอบลิงก์หลอกลวง</li>
+              <li className="feature-yes"><span className="check-icon">✓</span> ตรวจสอบลิงก์อันตราย</li>
               <li className="feature-yes"><span className="check-icon">✓</span> วิเคราะห์ข้อความ SMS</li>
               <li className="feature-yes"><span className="check-icon">✓</span> ตรวจจับ Phishing URL</li>
-              <li className="feature-no"><span className="cross-icon">✕</span> สแกน QR Code</li>
-              <li className="feature-no"><span className="cross-icon">✕</span> ตรวจสอบเลขบัญชี</li>
             </ul>
             <button className="package-btn">เลือกใช้งาน</button>
           </div>
@@ -475,18 +473,16 @@ const Scanner = ({ onNavigate, currentSubPage: externalSubPage }) => {
               </svg>
             </div>
             <h3 className="package-title">ตรวจสอบข้อมูลส่วนตัว</h3>
-            <p className="package-desc">ค้นหา Blacklist</p>
+            <p className="package-desc">ค้นหาบัญชีและเบอร์โทร Blacklist</p>
             <ul className="package-features">
-              <li className="feature-yes"><span className="check-icon">✓</span> ตรวจสอบเลขบัญชี</li>
-              <li className="feature-yes"><span className="check-icon">✓</span> ตรวจสอบเบอร์โทร</li>
-              <li className="feature-yes"><span className="check-icon">✓</span> ค้นหา Call Center</li>
-              <li className="feature-no"><span className="cross-icon">✕</span> สแกน QR Code</li>
-              <li className="feature-no"><span className="cross-icon">✕</span> วิเคราะห์ข้อความ</li>
+              <li className="feature-yes"><span className="check-icon">✓</span> ตรวจสอบเลขบัญชีธนาคาร</li>
+              <li className="feature-yes"><span className="check-icon">✓</span> ตรวจสอบเบอร์โทรศัพท์</li>
+              <li className="feature-yes"><span className="check-icon">✓</span> ค้นหาจากฐานข้อมูล Blacklist</li>
             </ul>
             <button className="package-btn">เลือกใช้งาน</button>
           </div>
 
-          {/* Card 3: Scan QR */}
+          {/* Card 3: Scan Image */}
           <div className="scanner-package-card animate-card" style={{ animationDelay: '0.25s' }} onClick={() => openFeature('scan-qr')}>
             <div className="package-icon icon-qrcode">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -494,14 +490,12 @@ const Scanner = ({ onNavigate, currentSubPage: externalSubPage }) => {
                 <circle cx="12" cy="13" r="4"></circle>
               </svg>
             </div>
-            <h3 className="package-title">สแกน QR Code</h3>
-            <p className="package-desc">ตรวจสอบ QR อันตราย</p>
+            <h3 className="package-title">ตรวจสอบรูปภาพ</h3>
+            <p className="package-desc">สแกน QR Code และบัตรประชาชน</p>
             <ul className="package-features">
               <li className="feature-yes"><span className="check-icon">✓</span> สแกน QR Code</li>
-              <li className="feature-yes"><span className="check-icon">✓</span> ตรวจ Payment QR</li>
-              <li className="feature-yes"><span className="check-icon">✓</span> เปิดลิงก์จาก QR</li>
-              <li className="feature-no"><span className="cross-icon">✕</span> ตรวจสอบเลขบัญชี</li>
-              <li className="feature-no"><span className="cross-icon">✕</span> วิเคราะห์ข้อความ</li>
+              <li className="feature-yes"><span className="check-icon">✓</span> สแกนบัตรประชาชน</li>
+              <li className="feature-yes"><span className="check-icon">✓</span> ตรวจสอบ Payment QR</li>
             </ul>
             <button className="package-btn">เลือกใช้งาน</button>
           </div>

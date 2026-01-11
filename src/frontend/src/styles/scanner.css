@@ -375,25 +375,24 @@
   }
 }
 
-/* Netflix Package Card Style */
+/* Netflix Package Card Style - Updated to Match Verify Menu */
 .scanner-package-card {
   background: #ffffff;
-  border-radius: 20px;
-  padding: 24px 20px;
+  border-radius: 16px;
+  padding: 20px 18px;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
   cursor: pointer;
-  transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
-  border: 2px solid transparent;
+  transition: transform 0.2s, box-shadow 0.2s;
+  border: none;
 }
 
 .scanner-package-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 32px rgba(58, 206, 0, 0.15);
-  background: #f0fdf4;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
 }
 
 .scanner-package-card:active {
@@ -402,18 +401,18 @@
 
 /* Package Icon */
 .package-icon {
-  width: 60px;
-  height: 60px;
-  border-radius: 16px;
+  width: 50px;
+  height: 50px;
+  border-radius: 14px;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
 }
 
 .package-icon svg {
-  width: 30px;
-  height: 30px;
+  width: 26px;
+  height: 26px;
   stroke: #fff;
 }
 
@@ -425,34 +424,34 @@
 
 /* Package Title & Description */
 .package-title {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 700;
-  color: #333;
-  margin: 0 0 6px 0;
+  color: #6d6d6d;
+  margin: 0 0 4px 0;
 }
 
 .package-desc {
-  font-size: 12px;
+  font-size: 11px;
   color: #999;
-  margin: 0 0 16px 0;
+  margin: 0 0 14px 0;
 }
 
 /* Package Features List */
 .package-features {
   list-style: none;
   padding: 0;
-  margin: 0 0 20px 0;
+  margin: 0 0 16px 0;
   text-align: left;
   width: 100%;
 }
 
 .package-features li {
-  font-size: 12px;
-  padding: 6px 0;
+  font-size: 11px;
+  padding: 5px 0;
   display: flex;
   align-items: center;
-  gap: 8px;
-  border-bottom: 1px solid #f0f0f0;
+  gap: 6px;
+  border-bottom: 1px solid #f5f5f5;
 }
 
 .package-features li:last-child {
@@ -460,7 +459,7 @@
 }
 
 .feature-yes {
-  color: #333;
+  color: #6d6d6d;
 }
 
 .feature-no {
@@ -470,24 +469,24 @@
 .check-icon {
   color: #10B981;
   font-weight: bold;
-  font-size: 14px;
+  font-size: 12px;
 }
 
 .cross-icon {
   color: #dc2626;
   font-weight: bold;
-  font-size: 14px;
+  font-size: 12px;
 }
 
 /* Package Button */
 .package-btn {
   width: 100%;
-  padding: 12px;
+  padding: 10px;
   background: #1de165;
   border: none;
-  border-radius: 12px;
+  border-radius: 10px;
   color: #fff;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
@@ -496,7 +495,28 @@
 
 .package-btn:hover {
   background: #34b800;
-  transform: scale(1.02);
+}
+
+/* Dark Mode Scanner Package Cards */
+html.dark-mode .scanner-package-card {
+  background: #2d3748;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+html.dark-mode .package-title {
+  color: #e2e8f0;
+}
+
+html.dark-mode .package-desc {
+  color: #94a3b8;
+}
+
+html.dark-mode .package-features li {
+  border-bottom-color: #3d4a5c;
+}
+
+html.dark-mode .feature-yes {
+  color: #d1d5db;
 }
 
 /* Scanner Tabs */

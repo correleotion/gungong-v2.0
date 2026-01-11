@@ -1,91 +1,59 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React from 'react';
+// Swiper imports
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Pagination, Autoplay, EffectCoverflow } from 'swiper/modules';
+// Swiper styles
+import 'swiper/css';
+import 'swiper/css/effect-coverflow';
+import 'swiper/css/pagination';
+// Data Visualization Component
+import DataVisualization from './DataVisualization';
 
 const Home = () => {
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const sliderRef = useRef(null);
-  const autoPlayRef = useRef(null);
-  const slides = ['/img/banner2.png', '/img/banner1.png'];
-
-  useEffect(() => {
-    startAutoPlay();
-    return () => stopAutoPlay();
-  }, []);
-
-  const startAutoPlay = () => {
-    stopAutoPlay();
-    autoPlayRef.current = setInterval(() => {
-      setCurrentSlide((prev) => {
-        const next = (prev + 1) % slides.length;
-        scrollToSlide(next);
-        return next;
-      });
-    }, 5000);
-  };
-
-  const stopAutoPlay = () => {
-    if (autoPlayRef.current) {
-      clearInterval(autoPlayRef.current);
-    }
-  };
-
-  const scrollToSlide = (index) => {
-    if (sliderRef.current) {
-      const width = sliderRef.current.offsetWidth;
-      sliderRef.current.scrollTo({
-        left: index * width,
-        behavior: 'smooth',
-      });
-    }
-  };
-
-  const handleSlideChange = (index) => {
-    setCurrentSlide(index);
-    scrollToSlide(index);
-    stopAutoPlay();
-    startAutoPlay();
-  };
-
-  const handleScroll = () => {
-    if (sliderRef.current) {
-      const scrollLeft = sliderRef.current.scrollLeft;
-      const width = sliderRef.current.offsetWidth;
-      const activeIndex = Math.round(scrollLeft / width);
-      setCurrentSlide(activeIndex);
-    }
-  };
+  // 3 slides - order for center view
+  const slides = [
+    '/img/banner2.png',  // Will be CENTER
+    '/img/banner1.png',  // Will be RIGHT
+    '/img/banner3.png',  // Will be LEFT (wraps from loop)
+  ];
 
   return (
     <section id="home-page" className="active">
       <div className="section-content">
-        {/* Banner Slider */}
-        <div className="banner">
-          <div
-            className="banner-slider"
-            ref={sliderRef}
-            onScroll={handleScroll}
-            onTouchStart={stopAutoPlay}
-            onTouchEnd={startAutoPlay}
-            onMouseEnter={stopAutoPlay}
-            onMouseLeave={startAutoPlay}
+        {/* 3D Coverflow Banner Slider */}
+        <div className="coverflow-banner-container">
+          <Swiper
+            effect="coverflow"
+            grabCursor={true}
+            centeredSlides={true}
+            slidesPerView="auto"
+            initialSlide={2}
+            loop={true}
+            speed={600}
+            coverflowEffect={{
+              rotate: 50,
+              stretch: 0,
+              depth: 100,
+              modifier: 1,
+              slideShadows: true,
+            }}
+            autoplay={{
+              delay: 4000,
+              disableOnInteraction: false,
+            }}
+            pagination={{
+              clickable: true,
+              dynamicBullets: true,
+            }}
+            modules={[EffectCoverflow, Pagination, Autoplay]}
+            className="coverflow-swiper"
           >
             {slides.map((slide, index) => (
-              <img
-                key={index}
-                src={slide}
-                className="banner-slide"
-                alt={`Banner ${index + 1}`}
-              />
+              <SwiperSlide key={index} className="coverflow-slide">
+                <img src={slide} alt={`Banner ${index + 1}`} />
+              </SwiperSlide>
             ))}
-          </div>
-          <div className="banner-pagination">
-            {slides.map((_, index) => (
-              <div
-                key={index}
-                className={`dot ${currentSlide === index ? 'active' : ''}`}
-                onClick={() => handleSlideChange(index)}
-              />
-            ))}
-          </div>
+          </Swiper>
         </div>
 
         {/* Status Bar */}
@@ -107,43 +75,8 @@ const Home = () => {
           </div>
         </div>
 
-        {/* Summary Card */}
-        <div className="summary-card animate-card" style={{ animationDelay: '0.15s' }}>
-          <div className="summary-header">
-            <div className="summary-title">
-              <h3>Summary</h3>
-              <span>of this week</span>
-            </div>
-            <div className="summary-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="5"></circle>
-                <line x1="12" y1="1" x2="12" y2="3"></line>
-                <line x1="12" y1="21" x2="12" y2="23"></line>
-                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-                <line x1="1" y1="12" x2="3" y2="12"></line>
-                <line x1="21" y1="12" x2="23" y2="12"></line>
-                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-              </svg>
-            </div>
-          </div>
-
-          <div className="summary-stats-row">
-            <div className="summary-item green-1">
-              <span className="label">check</span>
-              <span className="value">43</span>
-            </div>
-            <div className="summary-item green-2">
-              <span className="label">block</span>
-              <span className="value">36</span>
-            </div>
-            <div className="summary-item green-3">
-              <span className="label">scam</span>
-              <span className="value">12</span>
-            </div>
-          </div>
-        </div>
+        {/* Summary + Data Visualization (Combined) */}
+        <DataVisualization />
       </div>
     </section>
   );

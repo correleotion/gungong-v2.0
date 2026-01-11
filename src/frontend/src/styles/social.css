@@ -5,21 +5,26 @@
 .social-feed {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 12px;
   padding-bottom: 20px;
 }
 
-/* ==================== SOCIAL CARD (เลียนแบบ History) ==================== */
+/* ==================== SOCIAL CARD (Verify Menu Style) ==================== */
 .social-card {
   background: #fff;
-  border-radius: 20px;
+  border-radius: 16px;
   position: relative;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
   display: flex;
   overflow: hidden;
-  transition: transform 0.2s, opacity 0.3s ease-out;
+  transition: transform 0.2s, box-shadow 0.2s;
   min-height: 120px;
   cursor: pointer;
+}
+
+.social-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
 }
 
 .social-card:active {
@@ -55,7 +60,7 @@
   justify-content: space-between;
   align-items: center;
   font-size: 11px;
-  color: #9CA3AF;
+  color: #999;
   font-weight: 500;
 }
 
@@ -90,27 +95,27 @@
 }
 
 .author-name {
-  font-weight: 600;
-  color: #333;
+  font-weight: 700;
+  color: #6d6d6d;
   font-size: 14px;
 }
 
 .post-time {
   font-size: 11px;
-  color: #9CA3AF;
+  color: #999;
 }
 
 .more-btn {
   background: none;
   border: none;
-  color: #9CA3AF;
+  color: #999;
   font-size: 22px;
   cursor: pointer;
   padding: 5px;
 }
 
 .more-btn:hover {
-  color: #6B7280;
+  color: #6d6d6d;
 }
 
 .s-card-main {
@@ -146,8 +151,8 @@
 
 .post-text {
   font-size: 14px;
-  font-weight: 600;
-  color: #4B5563;
+  font-weight: 500;
+  color: #6d6d6d;
   margin: 0;
   line-height: 1.5;
 }
@@ -207,6 +212,7 @@
 /* Dark Mode Support */
 html.dark-mode .social-card {
   background: #2D3748;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 html.dark-mode .author-name {
@@ -226,4 +232,12 @@ html.dark-mode .post-text {
 html.dark-mode .social-action-btn {
   border-color: #4A5568;
   color: #A0AEC0;
+}
+
+html.dark-mode .social-action-btn:hover {
+  background: #374151;
+}
+
+html.dark-mode .s-card-bottom {
+  border-top-color: #3D4A5C;
 }

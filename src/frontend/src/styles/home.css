@@ -1,63 +1,101 @@
-/* ==================== BANNER  ==================== */
-.banner {
+/* ==================== COVERFLOW 3D BANNER SLIDER ==================== */
+.coverflow-banner-container {
   width: 100%;
-  max-width: 600px;
-  margin: -5px auto 10px auto;
-  padding: 0;
+  padding: 20px 0 10px 0;
+  perspective: 1200px;
   box-sizing: border-box;
-  border-radius: 25px;
-  box-shadow: 0 10px 20px rgba(109, 109, 109, 0.15);
-  position: relative;
+}
+
+.coverflow-swiper {
+  width: 100%;
+  padding-top: 10px;
+  padding-bottom: 50px;
+  overflow: visible !important;
+}
+
+.coverflow-swiper .swiper-wrapper {
+  align-items: center;
+}
+
+.coverflow-swiper .swiper-slide {
+  width: 340px !important;
+  max-width: 100%;
+  border-radius: 20px;
   overflow: hidden;
-  background: #fff;}
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  transition: opacity 0.5s ease;
+  background: #fff;
+}
 
-.banner-slider {
-  display: flex;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-  -ms-overflow-style: none;}
-
-.banner-slider::-webkit-scrollbar {
-  display: none;}
-
-.banner-slide {
-  flex: 0 0 100%;
+.coverflow-swiper .swiper-slide img {
   width: 100%;
   height: auto;
   aspect-ratio: 780 / 388;
+  object-fit: cover;
   display: block;
-  scroll-snap-align: center;
-  object-fit: cover;}
+}
 
-.banner-pagination {
-  position: absolute;
-  bottom: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 5px;
-  z-index: 10;
-  background: rgba(85, 85, 85, 0.1);
-  padding: 4px 10px;
-  border-radius: 20px;}
+/* Active slide - full opacity */
+.coverflow-swiper .swiper-slide-active {
+  opacity: 1;
+}
 
-.dot {
-  width: 5px;
-  height: 5px;
-  background: rgba(255, 255, 255, 0.6);
-  border-radius: 50%;
-  transition: all 0.3s;}
+/* Non-active slides - reduced opacity */
+.coverflow-swiper .swiper-slide:not(.swiper-slide-active) {
+  opacity: 0.7;
+}
 
-.dot.active {
-  background: #fff;
-  width: 15px;
+/* Custom Pagination Bullets */
+.coverflow-swiper .swiper-pagination-bullet {
+  width: 8px;
+  height: 8px;
+  background: #d1d5db;
+  opacity: 1;
+  transition: all 0.3s ease;
+}
+
+.coverflow-swiper .swiper-pagination-bullet-active {
+  width: 24px;
   border-radius: 10px;
-  background-color: #3ACE00;}
+  background: #3ACE00;
+}
 
-/* ==================== STATUS BAR ==================== */
+/* Custom Navigation Arrows */
+.coverflow-swiper .swiper-button-prev,
+.coverflow-swiper .swiper-button-next {
+  width: 32px;
+  height: 32px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+}
+
+.coverflow-swiper .swiper-button-prev:after,
+.coverflow-swiper .swiper-button-next:after {
+  font-size: 100px;
+  font-weight: 900;
+  color: #3ACE00;
+}
+
+.coverflow-swiper .swiper-button-prev:hover,
+.coverflow-swiper .swiper-button-next:hover {
+  background: #3ACE00;
+  transform: scale(1.1);
+}
+
+.coverflow-swiper .swiper-button-prev:hover:after,
+.coverflow-swiper .swiper-button-next:hover:after {
+  color: #fff;
+}
+
+.coverflow-swiper .swiper-button-disabled {
+  opacity: 0.3;
+}
+
+
+
+/* ==================== STATUS BAR (Verify Menu Style) ==================== */
 .status-bar {
   display: flex;
   align-items: center;
@@ -66,12 +104,17 @@
   padding: 12px 15px;
   margin-top: 20px;
   margin-bottom: 20px;
-  box-shadow: 0 10px 20px rgba(187, 187, 187, 0.15);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
   width: 100%;
   box-sizing: border-box;
   cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s, opacity 0.3s ease-out;
-  /* opacity: 1 removed */
+  transition: transform 0.2s, box-shadow 0.2s;
+  border: none;
+}
+
+.status-bar:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
 }
 
 .status-bar:active {
@@ -81,48 +124,86 @@
 .status-icon-bg {
   width: 40px;
   height: 40px;
-  background: #8ef168;
+  background: #86EFAC;
   border-radius: 12px;
   display: flex;
   justify-content: center;
   align-items: center;
   margin-right: 12px;
-  flex-shrink: 0;}
+  flex-shrink: 0;
+}
 
 .status-icon-bg svg {
   width: 20px;
   height: 20px;
-  stroke: #fff;}
+  stroke: #fff;
+}
 
 .status-info {
-  flex-grow: 1;}
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
 
 .status-info h3 {
   font-size: 14px;
   font-weight: 700;
-  color: #58d206;
-  margin: 0 0 2px 0;}
+  color: #6d6d6d;
+  margin: 0 0 2px 0;
+}
 
 .status-info p {
   font-size: 11px;
-  color: #99b68d;
+  color: #999;
   font-weight: 500;
-  margin: 0;}
+  margin: 0;
+}
 
 .status-action {
   display: flex;
   align-items: center;
-  gap: 2px;
-  opacity: 0.6;}
+  gap: 4px;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+}
+
+.status-bar:hover .status-action {
+  opacity: 1;
+}
 
 .status-action span {
-  font-size: 10px;
-  color: #64748b;}
+  font-size: 11px;
+  color: #64748b;
+  font-weight: 500;
+}
 
 .status-action svg {
   width: 14px;
   height: 14px;
-  stroke: #64748b;}
+  stroke: #64748b;
+}
+
+/* Dark Mode Status Bar */
+html.dark-mode .status-bar {
+  background: #2d3748;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+html.dark-mode .status-info h3 {
+  color: #e2e8f0;
+}
+
+html.dark-mode .status-info p {
+  color: #94a3b8;
+}
+
+html.dark-mode .status-action span {
+  color: #94a3b8;
+}
+
+html.dark-mode .status-action svg {
+  stroke: #94a3b8;
+}
 
 /* ==================== SUMMARY CARD ==================== */
 .summary-card {

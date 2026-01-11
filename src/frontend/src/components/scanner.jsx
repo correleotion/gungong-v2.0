@@ -17,12 +17,49 @@ const Scanner = ({ onNavigate }) => {
     phone: ''
   });
 
+  // State สำหรับแสดงข้อความเตือนเมื่อพิมพ์ตัวอักษรในช่องตัวเลข
+  const [inputWarnings, setInputWarnings] = useState({
+    bank: false,
+    phone: false
+  });
+
   const handleInputChange = (field, value) => {
     setInputs(prev => ({ ...prev, [field]: value }));
   };
 
+  // Handler สำหรับ input ตัวเลขเท่านั้น พร้อมแสดง warning และจัดรูปแบบเบอร์โทร
+  const handleNumericInput = (field, value) => {
+    // ตรวจสอบว่ามีตัวอักษรที่ไม่ใช่ตัวเลขและเครื่องหมายขีดหรือไม่
+    const hasInvalidChar = /[^\d-]/.test(value);
+    // ดึงเฉพาะตัวเลขออกมา
+    const numericOnly = value.replace(/\D/g, '');
+
+    if (hasInvalidChar) {
+      setInputWarnings(prev => ({ ...prev, [field]: true }));
+    } else if (numericOnly.length > 0) {
+      setInputWarnings(prev => ({ ...prev, [field]: false }));
+    }
+
+    let finalValue = numericOnly;
+
+    // จัดรูปแบบสำหรับเบอร์โทรศัพท์ (0xx-xxx-xxxx)
+    if (field === 'phone') {
+      const limitedNumber = numericOnly.slice(0, 10); // จำกัด 10 หลัก
+      if (limitedNumber.length > 6) {
+        finalValue = `${limitedNumber.slice(0, 3)}-${limitedNumber.slice(3, 6)}-${limitedNumber.slice(6)}`;
+      } else if (limitedNumber.length > 3) {
+        finalValue = `${limitedNumber.slice(0, 3)}-${limitedNumber.slice(3)}`;
+      } else {
+        finalValue = limitedNumber;
+      }
+    }
+
+    setInputs(prev => ({ ...prev, [field]: finalValue }));
+  };
+
   const clearInput = (field) => {
     setInputs(prev => ({ ...prev, [field]: '' }));
+    setInputWarnings(prev => ({ ...prev, [field]: false }));
   };
   // -----------------------------------------------------
 
@@ -100,6 +137,18 @@ const Scanner = ({ onNavigate }) => {
 
 
 
+  const handleContentTabChange = (tab) => {
+    setContentTab(tab);
+    setInputs(prev => ({ ...prev, link: '', sms: '' }));
+  };
+
+  const handlePersonalTabChange = (tab) => {
+    setPersonalTab(tab);
+    setInputs(prev => ({ ...prev, bank: '', phone: '' }));
+    setInputWarnings(prev => ({ ...prev, bank: false, phone: false }));
+    setIsBankDropdownOpen(false); // Close dropdown if open
+  };
+
   // Sub-pages Logic
   if (currentSubPage === 'check-content') {
     return (
@@ -124,14 +173,14 @@ const Scanner = ({ onNavigate }) => {
           </div>
 
           <div className="scanner-tabs-modern">
-            <button className={`tab-modern ${contentTab === 'link' ? 'active' : ''}`} onClick={() => setContentTab('link')}>
+            <button className={`tab-modern ${contentTab === 'link' ? 'active' : ''}`} onClick={() => handleContentTabChange('link')}>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
                 <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
               </svg>
               ลิงก์
             </button>
-            <button className={`tab-modern ${contentTab === 'sms' ? 'active' : ''}`} onClick={() => setContentTab('sms')}>
+            <button className={`tab-modern ${contentTab === 'sms' ? 'active' : ''}`} onClick={() => handleContentTabChange('sms')}>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
               </svg>
@@ -259,14 +308,14 @@ const Scanner = ({ onNavigate }) => {
           </div>
 
           <div className="scanner-tabs-modern">
-            <button className={`tab-modern ${personalTab === 'bank' ? 'active' : ''}`} onClick={() => setPersonalTab('bank')}>
+            <button className={`tab-modern ${personalTab === 'bank' ? 'active' : ''}`} onClick={() => handlePersonalTabChange('bank')}>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
                 <line x1="1" y1="10" x2="23" y2="10"></line>
               </svg>
               บัญชี
             </button>
-            <button className={`tab-modern ${personalTab === 'phone' ? 'active' : ''}`} onClick={() => setPersonalTab('phone')}>
+            <button className={`tab-modern ${personalTab === 'phone' ? 'active' : ''}`} onClick={() => handlePersonalTabChange('phone')}>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
               </svg>
@@ -320,16 +369,21 @@ const Scanner = ({ onNavigate }) => {
                 <label className="form-label" style={{ marginTop: '20px' }}>ระบุเลขบัญชี</label>
                 <div className="form-input-group">
                   <input
-                    type="number"
-                    className="form-input"
+                    type="text"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
+                    className={`form-input ${inputWarnings.bank ? 'input-error' : ''}`}
                     placeholder="เลขบัญชี 10-12 หลัก"
                     value={inputs.bank}
-                    onChange={(e) => handleInputChange('bank', e.target.value)}
+                    onChange={(e) => handleNumericInput('bank', e.target.value)}
                   />
                   <button className="form-clear-btn" onClick={() => clearInput('bank')}>
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                   </button>
                 </div>
+                {inputWarnings.bank && (
+                  <p className="input-warning-text">กรุณากรอกเฉพาะตัวเลขเท่านั้น</p>
+                )}
                 <p className="form-hint">ตรวจสอบว่าเลขบัญชีอยู่ในรายชื่อมิจฉาชีพหรือไม่</p>
                 <button className="form-submit-btn" onClick={checkBank}>
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>
@@ -341,16 +395,21 @@ const Scanner = ({ onNavigate }) => {
                 <label className="form-label">ระบุเบอร์โทรศัพท์</label>
                 <div className="form-input-group">
                   <input
-                    type="tel"
-                    className="form-input"
+                    type="text"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
+                    className={`form-input ${inputWarnings.phone ? 'input-error' : ''}`}
                     placeholder="09x-xxx-xxxx"
                     value={inputs.phone}
-                    onChange={(e) => handleInputChange('phone', e.target.value)}
+                    onChange={(e) => handleNumericInput('phone', e.target.value)}
                   />
                   <button className="form-clear-btn" onClick={() => clearInput('phone')}>
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                   </button>
                 </div>
+                {inputWarnings.phone && (
+                  <p className="input-warning-text">กรุณากรอกเฉพาะตัวเลขเท่านั้น</p>
+                )}
                 <p className="form-hint">ตรวจสอบว่าเบอร์นี้เป็น Call Center หลอกลวงหรือไม่</p>
                 <button className="form-submit-btn" onClick={checkPhone}>
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>

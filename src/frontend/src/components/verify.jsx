@@ -6,6 +6,43 @@ const Verify = ({ userProfile, onNavigate, currentSubPage }) => {
   const [touchEnd, setTouchEnd] = useState(0);
   const [activeSubPage, setActiveSubPage] = useState(null);
 
+  // State สำหรับ input และ validation warning
+  const [inputValue, setInputValue] = useState('');
+  const [inputWarning, setInputWarning] = useState(false);
+
+  // Handler สำหรับ input ตัวเลขเท่านั้น พร้อมแสดง warning
+  const handleNumericInput = (value) => {
+    const hasInvalidChar = /[^\d-]/.test(value);
+    const numericOnly = value.replace(/\D/g, '');
+
+    if (hasInvalidChar) {
+      setInputWarning(true);
+    } else if (numericOnly.length > 0) {
+      setInputWarning(false);
+    }
+
+    let finalValue = numericOnly;
+
+    // Auto-format for Phone Number (0xx-xxx-xxxx)
+    if (activeSubPage === 'verify-phone') {
+      const limitedNumber = numericOnly.slice(0, 10);
+      if (limitedNumber.length > 6) {
+        finalValue = `${limitedNumber.slice(0, 3)}-${limitedNumber.slice(3, 6)}-${limitedNumber.slice(6)}`;
+      } else if (limitedNumber.length > 3) {
+        finalValue = `${limitedNumber.slice(0, 3)}-${limitedNumber.slice(3)}`;
+      } else {
+        finalValue = limitedNumber;
+      }
+    }
+
+    setInputValue(finalValue);
+  };
+
+  const clearInput = () => {
+    setInputValue('');
+    setInputWarning(false);
+  };
+
   const levels = ['silver', 'gold', 'diamond'];
 
   // Handle external navigation to subpages
@@ -15,6 +52,9 @@ const Verify = ({ userProfile, onNavigate, currentSubPage }) => {
     } else {
       setActiveSubPage(null);
     }
+    // Reset input state when navigation changes
+    setInputValue('');
+    setInputWarning(false);
   }, [currentSubPage]);
 
   // Get card position based on current level
@@ -387,17 +427,24 @@ const Verify = ({ userProfile, onNavigate, currentSubPage }) => {
                 <label className="form-label">{config.inputLabel}</label>
                 <div className="form-input-group">
                   <input
-                    type={config.inputType}
-                    className="form-input"
+                    type="text"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
+                    className={`form-input ${inputWarning ? 'input-error' : ''}`}
                     placeholder={config.inputPlaceholder}
+                    value={inputValue}
+                    onChange={(e) => handleNumericInput(e.target.value)}
                   />
-                  <button className="form-clear-btn">
+                  <button className="form-clear-btn" onClick={clearInput}>
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                       <line x1="18" y1="6" x2="6" y2="18"></line>
                       <line x1="6" y1="6" x2="18" y2="18"></line>
                     </svg>
                   </button>
                 </div>
+                {inputWarning && (
+                  <p className="input-warning-text">กรุณากรอกเฉพาะตัวเลขเท่านั้น</p>
+                )}
                 <p className="form-hint">กรุณากรอกข้อมูลให้ถูกต้อง</p>
                 <button className="form-submit-btn">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

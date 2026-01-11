@@ -299,10 +299,12 @@ const IDCardScanner = ({ onNavigate }) => {
             </svg>
           </button>
           <div className="subpage-title-block">
-            <div className="subpage-icon" style={{ background: 'linear-gradient(135deg, #FFA726 0%, #FB8C00 100%)' }}>
-              <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
-                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
-                <circle cx="12" cy="13" r="4"></circle>
+            <div className="subpage-icon icon-id-card">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <rect x="3" y="4" width="18" height="16" rx="2" ry="2"></rect>
+                <line x1="7" y1="8" x2="7.01" y2="8"></line>
+                <line x1="7" y1="12" x2="17" y2="12"></line>
+                <line x1="7" y1="16" x2="17" y2="16"></line>
               </svg>
             </div>
             <div>
@@ -313,41 +315,66 @@ const IDCardScanner = ({ onNavigate }) => {
         </div>
 
         <div className="scanner-form-card">
-          {/* Instruction Section with QR Graphic */}
-          {!showPreview && !stream && (
-            <div style={{
-              textAlign: 'center',
-              marginBottom: '30px',
-              padding: '30px 20px'
-            }}>
-              {/* QR Code Icon */}
-              <div style={{
-                width: '100px',
-                height: '100px',
-                margin: '0 auto 20px',
-                background: 'rgba(128, 128, 128, 0.1)',
-                borderRadius: '12px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}>
-                <svg viewBox="0 0 24 24" fill="none" stroke="rgba(128, 128, 128, 0.6)" strokeWidth="1.5" style={{ width: '60px', height: '60px' }}>
-                  <rect x="3" y="3" width="7" height="7"></rect>
-                  <rect x="14" y="3" width="7" height="7"></rect>
-                  <rect x="14" y="14" width="7" height="7"></rect>
-                  <rect x="3" y="14" width="7" height="7"></rect>
+          {/* Manual Input Section */}
+          {!showPreview && !stream && !showManualInput && (
+            <div style={{ marginBottom: '20px' }}>
+              <button
+                className="form-submit-btn"
+                onClick={() => setShowManualInput(true)}
+                style={{ width: '100%', background: '#2196F3' }}
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: '20px', height: '20px', marginRight: '8px' }}>
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                 </svg>
-              </div>
+                พิมพ์เลขบัตรเอง
+              </button>
+            </div>
+          )}
 
-              {/* Instruction Text */}
-              <p style={{
-                fontSize: '14px',
-                color: '#999',
-                margin: 0,
-                lineHeight: '1.6'
-              }}>
-                กดปุ่มด้านล่างเพื่อเปิดกล้องและสแกนรูปภาพ
+          {/* Manual Input Form */}
+          {showManualInput && !showPreview && (
+            <div style={{ marginBottom: '20px' }}>
+              <label style={{ display: 'block', marginBottom: '10px', fontWeight: 'bold', color: '#333' }}>
+                เลขบัตรประชาชน
+              </label>
+              <input
+                type="text"
+                maxLength="13"
+                value={manualIdNumber}
+                onChange={(e) => setManualIdNumber(e.target.value.replace(/\D/g, ''))}
+                placeholder="1-2345-67890-12-3"
+                style={{
+                  width: '100%',
+                  padding: '12px',
+                  fontSize: '16px',
+                  border: '2px solid #ddd',
+                  borderRadius: '8px',
+                  marginBottom: '15px',
+                  boxSizing: 'border-box'
+                }}
+              />
+              <p style={{ fontSize: '14px', color: '#666', marginBottom: '15px' }}>
+                กรุณากรอกข้อมูลให้ถูกต้อง
               </p>
+              <button
+                className="form-submit-btn"
+                onClick={verifyManualIdCard}
+                disabled={isLoading || manualIdNumber.length !== 13}
+                style={{ width: '100%', marginBottom: '10px' }}
+              >
+                {isLoading ? 'กำลังตรวจสอบ...' : 'ยืนยัน'}
+              </button>
+              <button
+                className="form-submit-btn"
+                onClick={() => {
+                  setShowManualInput(false);
+                  setManualIdNumber('');
+                }}
+                style={{ width: '100%', background: '#888' }}
+              >
+                ยกเลิก
+              </button>
             </div>
           )}
 
@@ -362,9 +389,10 @@ const IDCardScanner = ({ onNavigate }) => {
                   width: '100%',
                   paddingBottom: '62.5%',
                   background: '#000',
-                  borderRadius: '8px',
+                  borderRadius: '16px',
                   overflow: 'hidden',
-                  cursor: 'pointer'
+                  cursor: 'pointer',
+                  boxShadow: '0 4px 15px rgba(0,0,0,0.1)'
                 }}
               >
                 <video
@@ -393,7 +421,7 @@ const IDCardScanner = ({ onNavigate }) => {
                   width: '90%',
                   height: '85%',
                   border: '3px solid rgba(255, 255, 255, 0.6)',
-                  borderRadius: '8px',
+                  borderRadius: '12px',
                   pointerEvents: 'none',
                   boxShadow: '0 0 0 9999px rgba(0, 0, 0, 0.3)'
                 }}></div>
@@ -419,7 +447,7 @@ const IDCardScanner = ({ onNavigate }) => {
                 onClick={capturePhoto}
                 style={{ marginTop: '15px', width: '100%' }}
               >
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: '20px', height: '20px', marginRight: '8px' }}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
                   <circle cx="12" cy="13" r="4"></circle>
                 </svg>
@@ -428,7 +456,7 @@ const IDCardScanner = ({ onNavigate }) => {
               <button
                 className="form-submit-btn"
                 onClick={stopCamera}
-                style={{ marginTop: '10px', width: '100%', background: '#888' }}
+                style={{ marginTop: '10px', width: '100%', background: '#f3f4f6', color: '#6b7280' }}
               >
                 ปิดกล้อง
               </button>
@@ -441,7 +469,7 @@ const IDCardScanner = ({ onNavigate }) => {
               <img
                 src={capturedImage}
                 alt="ID Card Preview"
-                style={{ width: '100%', borderRadius: '8px', marginBottom: '15px' }}
+                style={{ width: '100%', borderRadius: '16px', marginBottom: '15px', boxShadow: '0 4px 15px rgba(0,0,0,0.1)' }}
               />
 
               {isLoading ? (
@@ -450,22 +478,22 @@ const IDCardScanner = ({ onNavigate }) => {
                   <p>กำลังตรวจสอบบัตร...</p>
                 </div>
               ) : (
-                <>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                   <button
                     className="form-submit-btn"
                     onClick={verifyIDCard}
-                    style={{ width: '100%', marginBottom: '10px' }}
+                    style={{ width: '100%' }}
                   >
                     ✅ ตรวจสอบบัตร
                   </button>
                   <button
                     className="form-submit-btn"
                     onClick={retake}
-                    style={{ width: '100%', background: '#888' }}
+                    style={{ width: '100%', background: '#f3f4f6', color: '#6b7280' }}
                   >
                     🔄 ถ่ายใหม่
                   </button>
-                </>
+                </div>
               )}
             </div>
           )}
@@ -478,7 +506,7 @@ const IDCardScanner = ({ onNavigate }) => {
                 onClick={openCamera}
                 style={{ width: '100%', marginBottom: '10px', background: '#3ACE00' }}
               >
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: '20px', height: '20px', marginRight: '8px' }}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
                   <circle cx="12" cy="13" r="4"></circle>
                 </svg>
@@ -490,13 +518,15 @@ const IDCardScanner = ({ onNavigate }) => {
                 className="form-submit-btn"
                 style={{
                   width: '100%',
-                  display: 'inline-block',
-                  textAlign: 'center',
-                  background: '#666',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  background: '#f3f4f6',
+                  color: '#6b7280',
                   cursor: 'pointer'
                 }}
               >
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: '20px', height: '20px', marginRight: '8px', verticalAlign: 'middle' }}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ marginRight: '8px' }}>
                   <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
                   <circle cx="8.5" cy="8.5" r="1.5"></circle>
                   <polyline points="21 15 16 10 5 21"></polyline>

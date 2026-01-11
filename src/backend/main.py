@@ -93,7 +93,17 @@ frontend_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "fronte
 
 if os.path.exists(static_path):
     # Production: Serve Vite-built React app
-    app.mount("/assets", StaticFiles(directory=os.path.join(static_path, "assets")), name="assets")
+    # Mount assets (JS/CSS bundles from Vite)
+    assets_path = os.path.join(static_path, "assets")
+    if os.path.exists(assets_path):
+        app.mount("/assets", StaticFiles(directory=assets_path), name="assets")
+
+    # Mount img folder (copied from public/img by Vite)
+    img_path = os.path.join(static_path, "img")
+    if os.path.exists(img_path):
+        app.mount("/img", StaticFiles(directory=img_path), name="img")
+        logger.info(f"✅ Images mounted from {img_path}")
+
     logger.info(f"✅ Frontend (Vite build) mounted from {static_path}")
 elif os.path.exists(frontend_path):
     # Fallback: Old frontend structure

@@ -866,13 +866,13 @@ async def webhook(
                             # Reply to user with Flex Message
                             line_service.reply_message(reply_token, flex_message=flex_message_dict)
                             print("[FLEX] Flex Message sent successfully!")
-                    except Exception as flex_error:
-                        print(f"[ERROR] Flex Message creation failed: {flex_error}")
-                        import traceback
-                        traceback.print_exc()
+                        except Exception as flex_error:
+                            print(f"[ERROR] Flex Message creation failed: {flex_error}")
+                            import traceback
+                            traceback.print_exc()
 
-                        # Fallback to text message
-                        fallback_text = f"""
+                            # Fallback to text message
+                            fallback_text = f"""
 {icon} ผลการตรวจสอบบัตรประชาชน
 
 ข้อมูลบัตร:
@@ -884,8 +884,8 @@ async def webhook(
 • สถานะ: {status}
 • ระดับความเสี่ยง: {risk_level}
 • จำนวนรายงาน: {reports_count} ครั้ง
-                        """.strip()
-                        line_service.reply_message(reply_token, text=fallback_text)
+                            """.strip()
+                            line_service.reply_message(reply_token, text=fallback_text)
 
             except Exception as e:
                 print(f"[ERROR] Image processing error: {e}")

@@ -189,6 +189,61 @@ class IDCardService:
                 "error": None
             }
 
+    def verify_id_number_only(self, id_number: str) -> dict:
+        """
+        Verify Thai National ID number without image scanning.
+
+        Args:
+            id_number: 13-digit Thai National ID number
+
+        Returns:
+            dict: Verification result
+        """
+        print(f"[ID-CHECK] Verifying ID number: {id_number[:4]}****{id_number[-2:]}")
+
+        # Validate format
+        is_valid_format = self.thai_id_validator.validate(id_number)
+        print(f"[VALIDATION] Format validation: {'Valid' if is_valid_format else 'Invalid'}")
+
+        # Check blacklist
+        print("[CHECK] Checking blacklist...")
+        blacklist_result = self.database_service.check_blacklist_id_card(id_number)
+
+        is_blacklisted = blacklist_result.get("is_blacklisted", False)
+        reports_count = blacklist_result.get("reports_count", 0)
+        category = blacklist_result.get("category")
+        last_reported = blacklist_result.get("last_reported")
+
+        # Determine risk level
+        if is_blacklisted:
+            if reports_count >= 10:
+                risk_level = "CRITICAL"
+            elif reports_count >= 5:
+                risk_level = "HIGH"
+            else:
+                risk_level = "MEDIUM"
+            print(f"[WARNING] BLACKLISTED: {reports_count} reports, risk: {risk_level}")
+        else:
+            risk_level = "LOW" if is_valid_format else "MEDIUM"
+            print(f"[OK] Safe: Not in blacklist, risk: {risk_level}")
+
+        # Overall safety
+        is_safe = is_valid_format and not is_blacklisted
+
+        return {
+            "success": True,
+            "id_number": id_number,
+            "is_valid_format": is_valid_format,
+            "is_blacklisted": is_blacklisted,
+            "is_safe": is_safe,
+            "reports_count": reports_count,
+            "risk_level": risk_level,
+            "category": category,
+            "last_reported": last_reported,
+            "extracted_data": None,
+            "error": None
+        }
+
 
 # Singleton instance
 _id_card_service_instance = None

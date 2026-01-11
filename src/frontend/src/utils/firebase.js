@@ -1,7 +1,6 @@
-// Firebase configuration for GunGong
-// Replace with your Firebase project credentials
 import { initializeApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider } from 'firebase/auth';
+import { getAnalytics } from 'firebase/analytics';
 
 const firebaseConfig = {
     apiKey: "AIzaSyBmtYwembGaFfwovG8bZQ-EEikc1EK_VfM",
@@ -13,18 +12,16 @@ const firebaseConfig = {
     measurementId: "G-8R3F5JPBPB"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-// Initialize Firebase Authentication
+// Firebase Authentication
 export const auth = getAuth(app);
-
-// Google Auth Provider
 export const googleProvider = new GoogleAuthProvider();
 
-// Optional: Add custom parameters for better UX
 googleProvider.setCustomParameters({
-    prompt: 'select_account' // Always show account selection
+    prompt: 'select_account'
 });
 
+// Firebase Analytics
+export const analytics = getAnalytics(app);
 export default app;

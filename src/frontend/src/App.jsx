@@ -195,35 +195,7 @@ function App() {
 
         {/* BottomNav hidden on desktop via CSS media queries usually, but let's keep it structurally here */}
         <BottomNav activeSection={activeSection} onNavigate={handleNavigate} />
-
-
-
-        {/* TEMPORARY: Reset PDPA Button */}
-        <button
-          onClick={() => {
-            localStorage.removeItem('gungong_pdpa_accepted');
-            window.location.reload();
-          }}
-          style={{
-            position: 'fixed',
-            bottom: '80px',
-            right: '20px',
-            zIndex: 9999,
-            backgroundColor: 'red',
-            color: 'white',
-            border: 'none',
-            padding: '10px 15px',
-            borderRadius: '5px',
-            fontWeight: 'bold',
-            boxShadow: '0 2px 5px rgba(0,0,0,0.3)',
-            cursor: 'pointer'
-          }}
-        >
-          Reset PDPA ชั่วคราว
-        </button>
-
-
-
+        
       </div>
     </div>
   );

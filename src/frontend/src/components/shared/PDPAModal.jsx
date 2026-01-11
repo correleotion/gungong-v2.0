@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 
 const PDPAModal = ({ isOpen, onAccept }) => {
-  const [canCheck, setCanCheck] = useState(false);
+  const [canCheck, setCanCheck] = useState(true); // Temporarily disabled scroll requirement
   const [isChecked, setIsChecked] = useState(false);
   const scrollAreaRef = useRef(null);
 

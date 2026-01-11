@@ -1,4 +1,5 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
+import { banks } from '../utils/script';
 
 const Verify = ({ userProfile, onNavigate, currentSubPage }) => {
   const [currentLevel, setCurrentLevel] = useState('silver');
@@ -10,6 +11,21 @@ const Verify = ({ userProfile, onNavigate, currentSubPage }) => {
   const [inputValue, setInputValue] = useState('');
   const [inputWarning, setInputWarning] = useState(false);
 
+  // State สำหรับ bank dropdown
+  const [isBankDropdownOpen, setIsBankDropdownOpen] = useState(false);
+  const [selectedBank, setSelectedBank] = useState(null);
+  const bankDropdownRef = useRef(null);
+
+  // Close bank dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (bankDropdownRef.current && !bankDropdownRef.current.contains(event.target)) {
+        setIsBankDropdownOpen(false);
+      }
+    };
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, []);
   // Handler สำหรับ input ตัวเลขเท่านั้น พร้อมแสดง warning
   const handleNumericInput = (value) => {
     const hasInvalidChar = /[^\d-]/.test(value);
@@ -420,6 +436,78 @@ const Verify = ({ userProfile, onNavigate, currentSubPage }) => {
                     <circle cx="12" cy="13" r="4"></circle>
                   </svg>
                   เปิดกล้อง
+                </button>
+              </>
+            ) : activeSubPage === 'verify-bank' ? (
+              <>
+                <label className="form-label">เลือกธนาคาร</label>
+                <div
+                  className={`bank-select-wrapper ${isBankDropdownOpen ? 'active' : ''}`}
+                  ref={bankDropdownRef}
+                >
+                  <div
+                    className="selected-bank-box"
+                    onClick={() => setIsBankDropdownOpen(!isBankDropdownOpen)}
+                  >
+                    <div className="bank-info">
+                      {selectedBank ? (
+                        <>
+                          <img src={`/img/banks/${selectedBank.code}.png`} alt={selectedBank.name} className="bank-logo" />
+                          <span>{selectedBank.name}</span>
+                        </>
+                      ) : (
+                        <span className="placeholder-text">เลือกธนาคาร</span>
+                      )}
+                    </div>
+                    <svg className="dropdown-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                  </div>
+
+                  <div className="bank-options-list">
+                    {banks.map((bank) => (
+                      <div
+                        key={bank.code}
+                        className="bank-option-item"
+                        onClick={() => {
+                          setSelectedBank(bank);
+                          setIsBankDropdownOpen(false);
+                        }}
+                      >
+                        <img src={`/img/banks/${bank.code}.png`} alt={bank.name} className="bank-logo" />
+                        <span>{bank.name}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <label className="form-label" style={{ marginTop: '20px' }}>{config.inputLabel}</label>
+                <div className="form-input-group">
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
+                    className={`form-input ${inputWarning ? 'input-error' : ''}`}
+                    placeholder={config.inputPlaceholder}
+                    value={inputValue}
+                    onChange={(e) => handleNumericInput(e.target.value)}
+                  />
+                  <button className="form-clear-btn" onClick={clearInput}>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <line x1="18" y1="6" x2="6" y2="18"></line>
+                      <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                  </button>
+                </div>
+                {inputWarning && (
+                  <p className="input-warning-text">กรุณากรอกเฉพาะตัวเลขเท่านั้น</p>
+                )}
+                <p className="form-hint">กรุณากรอกข้อมูลให้ถูกต้อง</p>
+                <button className="form-submit-btn">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                  ยืนยัน
                 </button>
               </>
             ) : (

@@ -49,6 +49,21 @@ const Sidebar = ({ isCollapsed, onToggle, currentPage, onNavigate }) => {
     signInWithGoogle(); // Re-trigger Google sign-in to select different account
   };
 
+  // State for expanded menu items
+  const [expandedMenus, setExpandedMenus] = useState({ scanner: false });
+
+  const toggleSubmenu = (menuId) => {
+    setExpandedMenus(prev => ({ ...prev, [menuId]: !prev[menuId] }));
+  };
+
+  // Auto-expand scanner submenu when navigating to a scanner sub-page
+  useEffect(() => {
+    const scannerSubPages = ['check-content', 'check-personal', 'scan-qr'];
+    if (scannerSubPages.includes(currentPage)) {
+      setExpandedMenus(prev => ({ ...prev, scanner: true }));
+    }
+  }, [currentPage]);
+
   // Menu groups following Modern SaaS pattern
   const menuGroups = [
     {
@@ -56,7 +71,7 @@ const Sidebar = ({ isCollapsed, onToggle, currentPage, onNavigate }) => {
       items: [
         {
           id: 'home',
-          label: 'หน้าหลัก',
+          label: 'Home',
           icon: (
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
@@ -66,7 +81,7 @@ const Sidebar = ({ isCollapsed, onToggle, currentPage, onNavigate }) => {
         },
         {
           id: 'verify',
-          label: 'ยืนยันตัวตน',
+          label: 'Verify',
           icon: (
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <circle cx="12" cy="8" r="7"></circle>
@@ -74,24 +89,9 @@ const Sidebar = ({ isCollapsed, onToggle, currentPage, onNavigate }) => {
             </svg>
           ),
         },
-      ],
-    },
-    {
-      title: 'Tools',
-      items: [
-        {
-          id: 'scanner',
-          label: 'สแกนเนอร์',
-          icon: (
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-              <polyline points="22 4 12 14.01 9 11.01"></polyline>
-            </svg>
-          ),
-        },
         {
           id: 'social',
-          label: 'ชุมชน',
+          label: 'Community',
           icon: (
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
@@ -102,11 +102,59 @@ const Sidebar = ({ isCollapsed, onToggle, currentPage, onNavigate }) => {
       ],
     },
     {
+      title: 'Tools',
+      items: [
+        {
+          id: 'scanner',
+          label: 'Scanner',
+          icon: (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+              <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+          ),
+          hasSubItems: true,
+          subItems: [
+            {
+              id: 'check-content',
+              label: 'Check Content',
+              icon: (
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                  <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+                </svg>
+              ),
+            },
+            {
+              id: 'check-personal',
+              label: 'Check Personal',
+              icon: (
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                  <line x1="1" y1="10" x2="23" y2="10"></line>
+                </svg>
+              ),
+            },
+            {
+              id: 'scan-qr',
+              label: 'Scan QR',
+              icon: (
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                  <circle cx="12" cy="13" r="4"></circle>
+                </svg>
+              ),
+            },
+          ],
+        },
+      ],
+    },
+    {
       title: 'Management',
       items: [
         {
           id: 'history',
-          label: 'ประวัติ',
+          label: 'History',
           icon: (
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
@@ -153,16 +201,67 @@ const Sidebar = ({ isCollapsed, onToggle, currentPage, onNavigate }) => {
             {isCollapsed && groupIndex > 0 && <div className="menu-divider"></div>}
             <div className="menu-group-items">
               {group.items.map((item) => (
-                <button
-                  key={item.id}
-                  className={`sidebar-item ${currentPage === item.id ? 'active' : ''}`}
-                  onClick={() => onNavigate(item.id)}
-                  title={isCollapsed ? item.label : ''}
-                >
-                  {currentPage === item.id && <div className="active-indicator"></div>}
-                  <div className="item-icon">{item.icon}</div>
-                  {!isCollapsed && <span className="item-label">{item.label}</span>}
-                </button>
+                <div key={item.id} className="sidebar-item-wrapper">
+                  {item.hasSubItems ? (
+                    <>
+                      <button
+                        className={`sidebar-item has-submenu ${expandedMenus[item.id] ? 'expanded' : ''} ${
+                          currentPage === item.id || item.subItems?.some(sub => currentPage === sub.id) ? 'active' : ''
+                        }`}
+                        onClick={() => {
+                          if (isCollapsed) {
+                            onNavigate(item.id);
+                          } else {
+                            toggleSubmenu(item.id);
+                          }
+                        }}
+                        title={isCollapsed ? item.label : ''}
+                      >
+                        {(currentPage === item.id || item.subItems?.some(sub => currentPage === sub.id)) && (
+                          <div className="active-indicator"></div>
+                        )}
+                        <div className="item-icon">{item.icon}</div>
+                        {!isCollapsed && <span className="item-label">{item.label}</span>}
+                        {!isCollapsed && (
+                          <svg
+                            className={`submenu-chevron ${expandedMenus[item.id] ? 'rotated' : ''}`}
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                          >
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                          </svg>
+                        )}
+                      </button>
+                      {!isCollapsed && expandedMenus[item.id] && (
+                        <div className="submenu-items">
+                          {item.subItems.map((subItem) => (
+                            <button
+                              key={subItem.id}
+                              className={`sidebar-item submenu-item ${currentPage === subItem.id ? 'active' : ''}`}
+                              onClick={() => onNavigate(subItem.id)}
+                            >
+                              {currentPage === subItem.id && <div className="active-indicator"></div>}
+                              <div className="item-icon">{subItem.icon}</div>
+                              <span className="item-label">{subItem.label}</span>
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    <button
+                      className={`sidebar-item ${currentPage === item.id ? 'active' : ''}`}
+                      onClick={() => onNavigate(item.id)}
+                      title={isCollapsed ? item.label : ''}
+                    >
+                      {currentPage === item.id && <div className="active-indicator"></div>}
+                      <div className="item-icon">{item.icon}</div>
+                      {!isCollapsed && <span className="item-label">{item.label}</span>}
+                    </button>
+                  )}
+                </div>
               ))}
             </div>
           </div>

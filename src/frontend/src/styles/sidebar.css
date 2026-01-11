@@ -223,6 +223,97 @@
   color: #171717;
 }
 
+/* ==================== SUBMENU STYLES ==================== */
+.sidebar-item-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-item.has-submenu {
+  justify-content: flex-start;
+}
+
+.sidebar-item.has-submenu .item-label {
+  flex: 1;
+}
+
+.submenu-chevron {
+  width: 16px;
+  height: 16px;
+  stroke: #a3a3a3;
+  margin-left: auto;
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.submenu-chevron.rotated {
+  transform: rotate(180deg);
+}
+
+.sidebar-item.has-submenu:hover .submenu-chevron {
+  stroke: #3ACE00;
+}
+
+.sidebar-item.has-submenu.expanded .submenu-chevron {
+  stroke: #3ACE00;
+}
+
+/* Submenu Items Container */
+.submenu-items {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-left: 20px;
+  margin-top: 4px;
+  margin-bottom: 4px;
+  border-left: 2px solid #eaeaea;
+  margin-left: 22px;
+  animation: submenuSlideIn 0.2s ease;
+}
+
+@keyframes submenuSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.submenu-item {
+  padding: 8px 12px !important;
+}
+
+.submenu-item .item-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.submenu-item .item-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+.submenu-item .item-label {
+  font-size: 13px;
+}
+
+/* Dark mode submenu */
+html.dark-mode .submenu-items {
+  border-left-color: #404040;
+}
+
+html.dark-mode .submenu-chevron {
+  stroke: #737373;
+}
+
+html.dark-mode .sidebar-item.has-submenu:hover .submenu-chevron,
+html.dark-mode .sidebar-item.has-submenu.expanded .submenu-chevron {
+  stroke: #3ACE00;
+}
+
 /* ==================== FOOTER ==================== */
 .sidebar-footer {
   padding: 12px;

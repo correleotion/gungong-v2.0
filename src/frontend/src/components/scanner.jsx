@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { banks } from '../utils/script';
 
-const Scanner = ({ onNavigate }) => {
+const Scanner = ({ onNavigate, currentSubPage: externalSubPage }) => {
   const [currentSubPage, setCurrentSubPage] = useState(null);
   const [isBankDropdownOpen, setIsBankDropdownOpen] = useState(false);
   const [selectedBank, setSelectedBank] = useState(null);
@@ -22,6 +22,15 @@ const Scanner = ({ onNavigate }) => {
     bank: false,
     phone: false
   });
+
+  // Sync external subpage prop with internal state
+  useEffect(() => {
+    if (externalSubPage && externalSubPage !== 'scanner') {
+      setCurrentSubPage(externalSubPage);
+    } else if (externalSubPage === 'scanner') {
+      setCurrentSubPage(null);
+    }
+  }, [externalSubPage]);
 
   const handleInputChange = (field, value) => {
     setInputs(prev => ({ ...prev, [field]: value }));
@@ -75,10 +84,18 @@ const Scanner = ({ onNavigate }) => {
 
   const goBack = () => {
     setCurrentSubPage(null);
+    // Also notify parent to update activeSection if needed
+    if (onNavigate) {
+      onNavigate('scanner');
+    }
   };
 
   const openFeature = (feature) => {
     setCurrentSubPage(feature);
+    // Notify parent to update activeSection for sidebar highlighting
+    if (onNavigate) {
+      onNavigate(feature);
+    }
   };
 
   const checkLink = async () => {

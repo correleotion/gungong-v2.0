@@ -135,18 +135,18 @@ function App() {
   };
 
   const renderPage = () => {
-    switch (activeSection) {
+    // Get the main section from activeSection
+    const mainSection = activeSection.startsWith('verify-') ? 'verify' :
+                        activeSection.startsWith('check-') || activeSection === 'scan-qr' ? 'scanner' :
+                        activeSection;
+
+    switch (mainSection) {
       case 'home':
         return <Home />;
       case 'verify':
-      case 'verify-phone':
-      case 'verify-bank':
-      case 'verify-id-card':
-      case 'verify-face':
-      case 'verify-business':
         return <Verify userProfile={userProfile} onNavigate={handleNavigate} currentSubPage={activeSection} />;
       case 'scanner':
-        return <Scanner onNavigate={handleNavigate} />;
+        return <Scanner onNavigate={handleNavigate} currentSubPage={activeSection} />;
       case 'social':
         return <Social userProfile={userProfile} />;
       case 'history':

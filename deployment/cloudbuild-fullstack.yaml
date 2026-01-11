@@ -4,6 +4,14 @@
 # ========================================
 
 steps:
+  # 0. Configure Docker to authenticate with Artifact Registry
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args:
+      - 'auth'
+      - 'configure-docker'
+      - 'asia-southeast1-docker.pkg.dev'
+      - '--quiet'
+
   # 1. Build Docker Image with Frontend + Backend
   - name: 'gcr.io/cloud-builders/docker'
     args:

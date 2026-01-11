@@ -5,6 +5,7 @@ const IDCardScanner = ({ onNavigate }) => {
   const [capturedImage, setCapturedImage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
+  const [manualIdNumber, setManualIdNumber] = useState('');
 
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
@@ -158,6 +159,55 @@ const IDCardScanner = ({ onNavigate }) => {
     reader.readAsDataURL(file);
   };
 
+  // Verify ID card by manual input
+  const verifyManualIdCard = async () => {
+    if (!manualIdNumber || manualIdNumber.length !== 13) {
+      window.Swal?.fire({
+        icon: 'warning',
+        title: 'กรุณากรอกเลขบัตร',
+        text: 'กรุณากรอกเลขบัตรประชาชน 13 หลัก',
+        confirmButtonColor: '#3ACE00'
+      });
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const response = await fetch('/api/v2/verify-id-number', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id_number: manualIdNumber,
+          user_id: 'web-user'
+        })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.detail || 'API Error');
+      }
+
+      // Show result
+      showResult(data);
+      setManualIdNumber('');
+
+    } catch (error) {
+      console.error('Verification error:', error);
+      window.Swal?.fire({
+        icon: 'error',
+        title: 'เกิดข้อผิดพลาด',
+        text: error.message || 'ไม่สามารถตรวจสอบบัตรได้ กรุณาลองใหม่อีกครั้ง',
+        confirmButtonColor: '#3ACE00'
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   // Verify ID card
   const verifyIDCard = async () => {
     if (!capturedImage) return;
@@ -284,7 +334,7 @@ const IDCardScanner = ({ onNavigate }) => {
   const goBack = () => {
     stopCamera();
     if (onNavigate) {
-      onNavigate('scan-image');
+      onNavigate('verify');
     }
   };
 
@@ -315,67 +365,126 @@ const IDCardScanner = ({ onNavigate }) => {
         </div>
 
         <div className="scanner-form-card">
-          {/* Manual Input Section */}
-          {!showPreview && !stream && !showManualInput && (
-            <div style={{ marginBottom: '20px' }}>
-              <button
-                className="form-submit-btn"
-                onClick={() => setShowManualInput(true)}
-                style={{ width: '100%', background: '#2196F3' }}
-              >
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: '20px', height: '20px', marginRight: '8px' }}>
-                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                </svg>
-                พิมพ์เลขบัตรเอง
-              </button>
-            </div>
-          )}
+          {!stream && !showPreview && (
+            <>
+              {/* Manual Input Form - Always Visible */}
+              <div style={{ marginBottom: '25px' }}>
+                <label className="form-label">
+                  เลขบัตรประชาชน
+                </label>
+                <div className="form-input-group">
+                  <input
+                    type="text"
+                    maxLength="13"
+                    className="form-input"
+                    value={manualIdNumber}
+                    onChange={(e) => setManualIdNumber(e.target.value.replace(/\D/g, ''))}
+                    placeholder="1-2345-67890-12-3"
+                  />
+                </div>
 
-          {/* Manual Input Form */}
-          {showManualInput && !showPreview && (
-            <div style={{ marginBottom: '20px' }}>
-              <label style={{ display: 'block', marginBottom: '10px', fontWeight: 'bold', color: '#333' }}>
-                เลขบัตรประชาชน
-              </label>
-              <input
-                type="text"
-                maxLength="13"
-                value={manualIdNumber}
-                onChange={(e) => setManualIdNumber(e.target.value.replace(/\D/g, ''))}
-                placeholder="1-2345-67890-12-3"
-                style={{
-                  width: '100%',
-                  padding: '12px',
-                  fontSize: '16px',
-                  border: '2px solid #ddd',
-                  borderRadius: '8px',
-                  marginBottom: '15px',
-                  boxSizing: 'border-box'
-                }}
-              />
-              <p style={{ fontSize: '14px', color: '#666', marginBottom: '15px' }}>
-                กรุณากรอกข้อมูลให้ถูกต้อง
-              </p>
-              <button
-                className="form-submit-btn"
-                onClick={verifyManualIdCard}
-                disabled={isLoading || manualIdNumber.length !== 13}
-                style={{ width: '100%', marginBottom: '10px' }}
-              >
-                {isLoading ? 'กำลังตรวจสอบ...' : 'ยืนยัน'}
-              </button>
-              <button
-                className="form-submit-btn"
-                onClick={() => {
-                  setShowManualInput(false);
-                  setManualIdNumber('');
-                }}
-                style={{ width: '100%', background: '#888' }}
-              >
-                ยกเลิก
-              </button>
-            </div>
+                <button
+                  className="form-submit-btn"
+                  onClick={verifyManualIdCard}
+                  disabled={isLoading || manualIdNumber.length !== 13}
+                  style={{ width: '100%' }}
+                >
+                  {isLoading ? 'กำลังตรวจสอบ...' : 'ตรวจสอบข้อมูล'}
+                </button>
+              </div>
+
+              {/* Divider */}
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                margin: '20px 0',
+                color: '#9ca3af',
+                fontSize: '13px'
+              }}>
+                <div style={{ flex: 1, height: '1px', background: '#e5e7eb' }}></div>
+                <span style={{ padding: '0 10px' }}>หรือสแกนด้วยรูปภาพ</span>
+                <div style={{ flex: 1, height: '1px', background: '#e5e7eb' }}></div>
+              </div>
+
+              {/* Camera and Gallery Buttons */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                <button
+                  className="form-submit-btn"
+                  onClick={openCamera}
+                  style={{
+                    width: '100%',
+                    background: '#f3f4f6',
+                    color: '#4b5563',
+                    border: '1px solid #e5e7eb',
+                    flexDirection: 'column',
+                    padding: '15px 10px',
+                    gap: '8px',
+                    height: 'auto'
+                  }}
+                >
+                  <div style={{
+                    width: '40px',
+                    height: '40px',
+                    background: '#ffffff',
+                    borderRadius: '50%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    boxShadow: '0 2px 5px rgba(0,0,0,0.05)'
+                  }}>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#3ACE00" strokeWidth="2" style={{ width: '24px', height: '24px' }}>
+                      <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                      <circle cx="12" cy="13" r="4"></circle>
+                    </svg>
+                  </div>
+                  <span>ถ่ายรูปบัตร</span>
+                </button>
+
+                <label
+                  htmlFor="file-input"
+                  className="form-submit-btn"
+                  style={{
+                    width: '100%',
+                    background: '#f3f4f6',
+                    color: '#4b5563',
+                    border: '1px solid #e5e7eb',
+                    flexDirection: 'column',
+                    padding: '15px 10px',
+                    gap: '8px',
+                    height: 'auto',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}
+                >
+                  <div style={{
+                    width: '40px',
+                    height: '40px',
+                    background: '#ffffff',
+                    borderRadius: '50%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    boxShadow: '0 2px 5px rgba(0,0,0,0.05)'
+                  }}>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#2196F3" strokeWidth="2" style={{ width: '24px', height: '24px' }}>
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                      <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                      <polyline points="21 15 16 10 5 21"></polyline>
+                    </svg>
+                  </div>
+                  <span>เลือกจากคลัง</span>
+                </label>
+                <input
+                  id="file-input"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileSelect}
+                  style={{ display: 'none' }}
+                />
+              </div>
+            </>
           )}
 
           {/* Video Stream */}
@@ -495,51 +604,6 @@ const IDCardScanner = ({ onNavigate }) => {
                   </button>
                 </div>
               )}
-            </div>
-          )}
-
-          {/* Camera and Gallery Buttons */}
-          {!stream && !showPreview && (
-            <div>
-              <button
-                className="form-submit-btn"
-                onClick={openCamera}
-                style={{ width: '100%', marginBottom: '10px', background: '#3ACE00' }}
-              >
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
-                  <circle cx="12" cy="13" r="4"></circle>
-                </svg>
-                เริ่มสแกนรูปภาพ
-              </button>
-
-              <label
-                htmlFor="file-input"
-                className="form-submit-btn"
-                style={{
-                  width: '100%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  background: '#f3f4f6',
-                  color: '#6b7280',
-                  cursor: 'pointer'
-                }}
-              >
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ marginRight: '8px' }}>
-                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                  <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                  <polyline points="21 15 16 10 5 21"></polyline>
-                </svg>
-                เลือกจากคลัง
-              </label>
-              <input
-                id="file-input"
-                type="file"
-                accept="image/*"
-                onChange={handleFileSelect}
-                style={{ display: 'none' }}
-              />
             </div>
           )}
         </div>

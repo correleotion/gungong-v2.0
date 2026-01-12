@@ -162,22 +162,27 @@ LINE Bot ที่ใช้ Gemini AI และเทคโนโลยีหล
 gungong/
 ├── src/
 │   ├── backend/
-│   │   ├── main.py                      # FastAPI app (122 lines) ✨
-│   │   ├── routers/                     # API Endpoints (modular)
+│   │   ├── main.py                      # FastAPI app (145 lines) ✨
+│   │   ├── routers/                     # API Endpoints (9 routers)
 │   │   │   ├── health.py               # Health check
 │   │   │   ├── blacklist.py            # Bank/Phone verification
 │   │   │   ├── history.py              # Cache & Feedback
 │   │   │   ├── fraud.py                # Fraud detection & URL check
+│   │   │   ├── fraud_v2.py             # Fraud detection v2
+│   │   │   ├── conversation.py         # Conversation analysis
+│   │   │   ├── verification.py         # Multi-verification hub
 │   │   │   └── webhook.py              # LINE webhook handler
-│   │   ├── utils/                       # Helper functions
-│   │   │   └── message_helpers.py      # Message analysis helpers
+│   │   ├── utils/                       # Helper functions (4 files)
+│   │   │   ├── message_helpers.py      # Message analysis helpers
+│   │   │   ├── flex_templates.py       # LINE Flex Message templates
+│   │   │   └── thai_id_validator.py    # Thai ID validation
 │   │   ├── core/
 │   │   │   ├── config.py               # Environment config
 │   │   │   ├── models.py               # Pydantic models
 │   │   │   ├── fraud_detector.py       # AI fraud detection logic
 │   │   │   ├── fraud_patterns.json     # Pattern matching rules
 │   │   │   └── performance_config.py   # Performance optimization
-│   │   └── services/                    # External services
+│   │   └── services/                    # External services (21 services)
 │   │       ├── gemini_service.py       # Gemini AI
 │   │       ├── line_service.py         # LINE Messaging API
 │   │       ├── virustotal_service.py   # VirusTotal scanning
@@ -185,29 +190,41 @@ gungong/
 │   │       ├── prescreen_service.py    # Pattern matching
 │   │       ├── similarity_service.py   # TF-IDF analysis
 │   │       ├── headless_scraper_service.py  # Browser scraping
-│   │       ├── gambling_detector.py    # Gambling detection
-│   │       ├── homoglyph_detector.py   # Unicode spoofing
+│   │       ├── gambling_detector_service.py # Gambling detection
+│   │       ├── homoglyph_detector_service.py # Unicode spoofing
 │   │       ├── blacklist_service.py    # Bank/Phone blacklist
 │   │       ├── feedback_service.py     # User feedback
-│   │       ├── image_classifier_service.py  # Image classification (NEW!)
+│   │       ├── image_classifier_service.py  # Image classification
 │   │       ├── id_card_service.py      # ID card verification
-│   │       └── verification_service.py # Multi-verification hub
-│   └── frontend/                        # LIFF Mini App
+│   │       ├── verification_service.py # Verification orchestration
+│   │       ├── conversation_analyzer_service.py # Conversation analysis
+│   │       └── ...                     # และอื่นๆ
+│   └── frontend/                        # React LIFF Mini App
 │       ├── index.html
-│       ├── js/
-│       │   ├── script.js               # Main application logic
-│       │   └── liff.js                 # LIFF SDK
-│       ├── img/                         # Assets
-│       └── style/                       # CSS
+│       ├── src/
+│       │   ├── components/             # React Components
+│       │   │   ├── home.jsx            # Home page
+│       │   │   ├── history.jsx         # History page
+│       │   │   ├── IDCardScanner.jsx   # ID Card scanner
+│       │   │   ├── ScanImage.jsx       # Image scanner
+│       │   │   └── ...
+│       │   ├── utils/                  # Utility functions
+│       │   │   ├── firebase.js         # Firebase config
+│       │   │   └── liff.js             # LIFF SDK helpers
+│       │   └── styles/                 # CSS styles
+│       └── public/                      # Static assets
 ├── config/                               # Configuration files
 │   ├── firebase.json
 │   ├── firestore.indexes.json
-│   ├── firestore.rules
-│   └── .env.example                     # Template for reviewers
+│   └── firestore.rules
 ├── deployment/                           # Deployment files
 │   ├── Dockerfile
+│   ├── Dockerfile.fullstack
 │   ├── docker-compose.yml
-│   └── cloudbuild.yaml
+│   ├── cloudbuild.yaml
+│   ├── cloudbuild-fullstack.yaml
+│   └── cloudbuild-build-only.yaml
+├── .env.example                          # Environment template
 ├── requirements.txt
 ├── pyproject.toml
 └── secrets/
@@ -224,8 +241,8 @@ gungong/
 
 ```bash
 # 1. Setup environment
-cp config/.env.example .env.yaml
-nano .env.yaml
+cp .env.example .env
+nano .env
 
 # 2. Add Firebase credentials
 # Download service-account.json from Firebase Console
@@ -252,8 +269,8 @@ pip install -r requirements.txt
 playwright install chromium
 
 # 2. Setup environment
-cp config/.env.example .env.yaml
-# Edit .env.yaml with your credentials
+cp .env.example .env
+# Edit .env with your credentials
 
 # 3. Run server
 uvicorn src.backend.main:app --reload --port 8000
@@ -266,25 +283,30 @@ uvicorn src.backend.main:app --reload --port 8000
 ### 1. Gemini API Key
 - Visit: https://aistudio.google.com/apikey
 - Create API key
-- Add to `.env.yaml`: `GOOGLE_API_KEY: "your_key"`
+- Add to `.env`: `GOOGLE_API_KEY=your_key`
 
 ### 2. LINE Bot
 - Visit: https://developers.line.biz/console/
 - Create Messaging API Channel
 - Get credentials:
-  - `LINE_CHANNEL_ACCESS_TOKEN`
-  - `LINE_CHANNEL_SECRET`
+  - `LINE_CHANNEL_ACCESS_TOKEN=your_token`
+  - `LINE_CHANNEL_SECRET=your_secret`
+  - `LINE_LIFF_ID=your_liff_id`
 
 ### 3. Firebase
 - Visit: https://console.firebase.google.com/
 - Create project → Enable Firestore
 - Download service account key → `secrets/service-account.json`
-- Get project ID → `FIRESTORE_PROJECT_ID`
+- Get project ID → `FIRESTORE_PROJECT_ID=your_project_id`
+- Get Firebase web app credentials for frontend:
+  - `VITE_FIREBASE_API_KEY=your_firebase_api_key`
+  - `VITE_FIREBASE_PROJECT_ID=your_project_id`
+  - และอื่นๆ (ดูใน `.env.example`)
 
 ### 4. VirusTotal (Optional)
 - Visit: https://www.virustotal.com/
 - Create account → Get API key
-- Add to `.env.yaml`: `VIRUSTOTAL_API_KEY: "your_key"`
+- Add to `.env`: `VIRUSTOTAL_API_KEY=your_key`
 
 ---
 
@@ -629,15 +651,15 @@ uvicorn src.backend.main:app --reload
 **LINE Webhook Not Working**
 1. Check ngrok is running: `curl http://localhost:4040/api/tunnels`
 2. Verify webhook URL in LINE console
-3. Check LINE credentials in `.env.emulator`
+3. Check LINE credentials in `.env`
 
 **Gemini API Error**
-- Verify `GOOGLE_API_KEY` in `.env.emulator`
+- Verify `GOOGLE_API_KEY` in `.env`
 - Check quota: https://aistudio.google.com/
 
 **Firestore Connection Error**
 - Verify `secrets/service-account.json` exists
-- Check `FIRESTORE_PROJECT_ID` in `.env.emulator`
+- Check `FIRESTORE_PROJECT_ID` in `.env`
 
 ---
 
@@ -662,11 +684,13 @@ uvicorn src.backend.main:app --reload
 - ✅ Updated verification router with image endpoints
 
 ### v2.0.0 - Modular Refactoring (2025-12-01)
-- ✅ Refactored main.py from 1,662 lines → 122 lines (93% reduction)
-- ✅ Created router-based architecture (health, blacklist, history, fraud, webhook)
-- ✅ Added utils module for helper functions
+- ✅ Refactored main.py from 1,662 lines → 145 lines (91% reduction)
+- ✅ Created router-based architecture (9 routers: health, blacklist, history, fraud, fraud_v2, conversation, verification, webhook)
+- ✅ Added utils module for helper functions (message_helpers, flex_templates, thai_id_validator)
+- ✅ Expanded services to 21+ specialized services
 - ✅ Improved code maintainability and scalability
 - ✅ Implemented mention-based group message processing
+- ✅ Migrated frontend to React with modern component architecture
 
 ### v1.0.0 - Initial Release
 - ✅ Gemini AI integration
